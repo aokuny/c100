@@ -9,9 +9,6 @@ import java.util.Map;
  */
 public interface IRequest {
 
-    public Request combineRequestBrowsePolicyNo();
-
-    public Request combineRequestQueryPolicyList();
 
     Request combineRequest(String url);
 

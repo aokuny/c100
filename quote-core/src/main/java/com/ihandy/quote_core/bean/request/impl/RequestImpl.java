@@ -3,6 +3,8 @@ package com.ihandy.quote_core.bean.request.impl;
 import com.ihandy.quote_common.HttpUtils;
 import com.ihandy.quote_core.bean.linkedList.Request;
 import com.ihandy.quote_core.bean.request.IRequest;
+import com.ihandy.quote_core.bean.response.IResponseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,13 +15,10 @@ import java.util.Map;
  */
 @Service
 public class RequestImpl implements IRequest {
-    public Request combineRequestBrowsePolicyNo() {
-        return null;
-    }
 
-    public Request combineRequestQueryPolicyList() {
-        return null;
-    }
+    @Autowired
+    private IResponseService responseService;
+
 
     public Request combineRequest(String url) {
         Request request =new Request();
@@ -46,12 +45,7 @@ public class RequestImpl implements IRequest {
         // TODO: 2016/5/8  将从页面解析出来的信息中分类
         // 1、返回信息中有下次页面请求需要的参数，返回nextParam map
         // 2、返回信息中有最终返回map中需要的结果, 返回response map
-        Map map =new HashMap();
-        Map requestMap =new HashMap();
-        Map responseMap = new HashMap();
-
-        map.put("requestParam",requestMap);
-        map.put("responseResult",responseMap);
+        Map map = responseService.parseCarInfoByNodeId(nodeId,returnMap);
         return map;
     }
 }

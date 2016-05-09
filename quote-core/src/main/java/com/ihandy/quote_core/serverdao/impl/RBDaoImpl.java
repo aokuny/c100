@@ -1,6 +1,6 @@
-package com.ihandy.quote_core.dao.impl;
+package com.ihandy.quote_core.serverdao.impl;
 
-import com.ihandy.quote_core.dao.IRBDao;
+import com.ihandy.quote_core.serverdao.IRBDao;
 import org.springframework.stereotype.Repository;
 
 /**

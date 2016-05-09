@@ -1,4 +1,4 @@
-package com.ihandy.quote_core.dao;
+package com.ihandy.quote_core.serverdao;
 
 /**
  * Created by fengwen on 2016/5/5.

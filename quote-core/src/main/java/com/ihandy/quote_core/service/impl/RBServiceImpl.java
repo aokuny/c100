@@ -8,7 +8,7 @@ import com.ihandy.quote_core.bean.linkedList.SortedHSLinkedList;
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.ClaimResponse;
 import com.ihandy.quote_core.bean.other.QuoteResponse;
-import com.ihandy.quote_core.dao.IRBDao;
+import com.ihandy.quote_core.serverdao.IRBDao;
 import com.ihandy.quote_core.service.IRBService;
 import com.ihandy.quote_core.bean.request.IRequest;
 

@@ -1,4 +1,4 @@
-package com.ihandy.quote_core.bean.response;
+package com.ihandy.quote_core.bean.other;
 
 import java.security.Timestamp;
 

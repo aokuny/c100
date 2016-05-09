@@ -1,6 +1,4 @@
-package com.ihandy.quote_core.bean;
-
-import java.util.LinkedList;
+package com.ihandy.quote_core.bean.linkedList;
 
 /**
  * Created by fengwen on 2016/5/7.

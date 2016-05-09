@@ -1,9 +1,8 @@
-package com.ihandy.quote_core.service.impl;
+package com.ihandy.quote_core.bean.request.impl;
 
 import com.ihandy.quote_common.HttpUtils;
-import com.ihandy.quote_core.bean.Request;
-import com.ihandy.quote_core.bean.Response;
-import com.ihandy.quote_core.service.IRequest;
+import com.ihandy.quote_core.bean.linkedList.Request;
+import com.ihandy.quote_core.bean.request.IRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,15 +29,10 @@ public class RequestImpl implements IRequest {
     }
 
     public Map<String, Object> sendPostAndParseResponseForCarInfo(int nodeId , Request request) {
-        Map<String, String> returnMap =null;
+        Map<String, String> returnMap = null;
         //1、httpUtils 请求页面,返回map;
-        if(null!=request){//参数非空
-            if(null!=request.getRequestParam()){
-                returnMap = HttpUtils.sendPost(request.getUrl(),request.getRequestParam().toString());
-            }
-           else{
-                returnMap = HttpUtils.sendPost(request.getUrl(),null);
-            }
+        if(null!=request && null!=request.getRequestParam()){//参数非空
+            returnMap = HttpUtils.sendPost(request.getUrl(),request.getRequestParam().toString());
         }else{
             returnMap = HttpUtils.sendPost(request.getUrl(),null);
         }
@@ -48,13 +42,16 @@ public class RequestImpl implements IRequest {
         return map;
     }
 
-    private Map ParseCarInfo(int nodeId,Map<String, String> returnMap) {
+    private Map ParseCarInfo( int nodeId , Map<String, String> returnMap) {
         // TODO: 2016/5/8  将从页面解析出来的信息中分类
         // 1、返回信息中有下次页面请求需要的参数，返回nextParam map
         // 2、返回信息中有最终返回map中需要的结果, 返回response map
         Map map =new HashMap();
-        map.put("requestParam",null);
-        map.put("responseResult",null);
+        Map requestMap =new HashMap();
+        Map responseMap = new HashMap();
+
+        map.put("requestParam",requestMap);
+        map.put("responseResult",responseMap);
         return map;
     }
 }

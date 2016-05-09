@@ -114,14 +114,24 @@ public class SysConfigInfo {
         try {
             Class clazz = Class.forName("com.ihandy.quote_core.utils.SysConfigInfo");//根据类名获得其对应的Class对象 写上你想要的类名就是了 注意是全名 如果有包的话要加上 比如java.Lang.String
             Field[]  fields = clazz.getDeclaredFields();//根据Class对象获得属性 私有的也可以获得
+
             for(Field f : fields) {
                 String name = f.getName();
-
                 if(name.contains(prex)){
+                    Object value =null;
+                    Method[] methods = clazz.getMethods();
+                    for(int i = 0; i < methods.length; i++){
+                        Method method = methods[i];
+                        if(method.getName().equals("get"+name)){
+                            value = method.invoke(null);
+                            break;
+                        }
+                    }
                     if(f.getType().getName().equals("java.lang.String")){
-                        urlMap.put(name, null );
+                        urlMap.put(name, value );
+
                     }else if(f.getType().getName().equals("int")){
-                        numMap.put(name, null);
+                        numMap.put(name, value );
                     }else{}
                 }
             }
@@ -136,8 +146,8 @@ public class SysConfigInfo {
             for (Iterator itUrlKey = urlKey.iterator(); itUrlKey.hasNext();) {
                 String s = (String) itUrlKey.next();
                 if(s.equals(numS.substring(0,numS.length()-8))){
-                    map.put(s,numS);
-                   // urlMap.remove(s);
+                   // map.put(s,numS);
+                    map.put(urlMap.get(s),numMap.get(numS));
                 }
             }
         }
@@ -150,5 +160,163 @@ public class SysConfigInfo {
 
     }
 
+    public static String getRB_index() {
+        return RB_index;
+    }
 
+    public static void setRB_index(String RB_index) {
+        SysConfigInfo.RB_index = RB_index;
+    }
+
+    public static int getRB_index_pageNum() {
+        return RB_index_pageNum;
+    }
+
+    public static void setRB_index_pageNum(int RB_index_pageNum) {
+        SysConfigInfo.RB_index_pageNum = RB_index_pageNum;
+    }
+
+    public static String getRB_calogin() {
+        return RB_calogin;
+    }
+
+    public static void setRB_calogin(String RB_calogin) {
+        SysConfigInfo.RB_calogin = RB_calogin;
+    }
+
+    public static int getRB_calogin_pageNum() {
+        return RB_calogin_pageNum;
+    }
+
+    public static void setRB_calogin_pageNum(int RB_calogin_pageNum) {
+        SysConfigInfo.RB_calogin_pageNum = RB_calogin_pageNum;
+    }
+
+    public static String getRB_quickProposal() {
+        return RB_quickProposal;
+    }
+
+    public static void setRB_quickProposal(String RB_quickProposal) {
+        SysConfigInfo.RB_quickProposal = RB_quickProposal;
+    }
+
+    public static int getRB_quickProposal_pageNum() {
+        return RB_quickProposal_pageNum;
+    }
+
+    public static void setRB_quickProposal_pageNum(int RB_quickProposal_pageNum) {
+        SysConfigInfo.RB_quickProposal_pageNum = RB_quickProposal_pageNum;
+    }
+
+    public static String getRB_editRenewalSearch() {
+        return RB_editRenewalSearch;
+    }
+
+    public static void setRB_editRenewalSearch(String RB_editRenewalSearch) {
+        SysConfigInfo.RB_editRenewalSearch = RB_editRenewalSearch;
+    }
+
+    public static int getRB_editRenewalSearch_pageNum() {
+        return RB_editRenewalSearch_pageNum;
+    }
+
+    public static void setRB_editRenewalSearch_pageNum(int RB_editRenewalSearch_pageNum) {
+        SysConfigInfo.RB_editRenewalSearch_pageNum = RB_editRenewalSearch_pageNum;
+    }
+
+    public static String getRB_selectRenewal() {
+        return RB_selectRenewal;
+    }
+
+    public static void setRB_selectRenewal(String RB_selectRenewal) {
+        SysConfigInfo.RB_selectRenewal = RB_selectRenewal;
+    }
+
+    public static int getRB_selectRenewal_pageNum() {
+        return RB_selectRenewal_pageNum;
+    }
+
+    public static void setRB_selectRenewal_pageNum(int RB_selectRenewal_pageNum) {
+        SysConfigInfo.RB_selectRenewal_pageNum = RB_selectRenewal_pageNum;
+    }
+
+    public static String getRB_browsePolicyNo() {
+        return RB_browsePolicyNo;
+    }
+
+    public static void setRB_browsePolicyNo(String RB_browsePolicyNo) {
+        SysConfigInfo.RB_browsePolicyNo = RB_browsePolicyNo;
+    }
+
+    public static int getRB_browsePolicyNo_pageNum() {
+        return RB_browsePolicyNo_pageNum;
+    }
+
+    public static void setRB_browsePolicyNo_pageNum(int RB_browsePolicyNo_pageNum) {
+        SysConfigInfo.RB_browsePolicyNo_pageNum = RB_browsePolicyNo_pageNum;
+    }
+
+    public static String getRB_carTab() {
+        return RB_carTab;
+    }
+
+    public static void setRB_carTab(String RB_carTab) {
+        SysConfigInfo.RB_carTab = RB_carTab;
+    }
+
+    public static int getRB_carTab_pageNum() {
+        return RB_carTab_pageNum;
+    }
+
+    public static void setRB_carTab_pageNum(int RB_carTab_pageNum) {
+        SysConfigInfo.RB_carTab_pageNum = RB_carTab_pageNum;
+    }
+
+    public static String getRB_insuredTab() {
+        return RB_insuredTab;
+    }
+
+    public static void setRB_insuredTab(String RB_insuredTab) {
+        SysConfigInfo.RB_insuredTab = RB_insuredTab;
+    }
+
+    public static int getRB_insuredTab_pageNum() {
+        return RB_insuredTab_pageNum;
+    }
+
+    public static void setRB_insuredTab_pageNum(int RB_insuredTab_pageNum) {
+        SysConfigInfo.RB_insuredTab_pageNum = RB_insuredTab_pageNum;
+    }
+
+    public static String getRB_kindTab() {
+        return RB_kindTab;
+    }
+
+    public static void setRB_kindTab(String RB_kindTab) {
+        SysConfigInfo.RB_kindTab = RB_kindTab;
+    }
+
+    public static int getRB_kindTab_pageNum() {
+        return RB_kindTab_pageNum;
+    }
+
+    public static void setRB_kindTab_pageNum(int RB_kindTab_pageNum) {
+        SysConfigInfo.RB_kindTab_pageNum = RB_kindTab_pageNum;
+    }
+
+    public static String getRB_queryClaimsMsg() {
+        return RB_queryClaimsMsg;
+    }
+
+    public static void setRB_queryClaimsMsg(String RB_queryClaimsMsg) {
+        SysConfigInfo.RB_queryClaimsMsg = RB_queryClaimsMsg;
+    }
+
+    public static int getRB_queryClaimsMsg_pageNum() {
+        return RB_queryClaimsMsg_pageNum;
+    }
+
+    public static void setRB_queryClaimsMsg_pageNum(int RB_queryClaimsMsg_pageNum) {
+        SysConfigInfo.RB_queryClaimsMsg_pageNum = RB_queryClaimsMsg_pageNum;
+    }
 }

@@ -2,18 +2,22 @@ package com.ihandy.quote_core.service.impl;
 
 
 import com.ihandy.quote_core.bean.*;
-import com.ihandy.quote_core.bean.response.CarInfoResponse;
-import com.ihandy.quote_core.bean.response.ClaimResponse;
-import com.ihandy.quote_core.bean.response.QuoteResponse;
+import com.ihandy.quote_core.bean.linkedList.Node;
+import com.ihandy.quote_core.bean.linkedList.Request;
+import com.ihandy.quote_core.bean.linkedList.SortedHSLinkedList;
+import com.ihandy.quote_core.bean.other.CarInfoResponse;
+import com.ihandy.quote_core.bean.other.ClaimResponse;
+import com.ihandy.quote_core.bean.other.QuoteResponse;
 import com.ihandy.quote_core.dao.IRBDao;
 import com.ihandy.quote_core.service.IRBService;
-import com.ihandy.quote_core.service.IRequest;
+import com.ihandy.quote_core.bean.request.IRequest;
 
 import com.ihandy.quote_core.utils.SysConfigInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -21,8 +25,7 @@ import java.util.*;
  */
 @Service
 public class RBServiceImpl implements IRBService {
-    private  String[] carInfoStrArr={"a.html","b.html","c.html"};
-    private  Integer[] carInfoIntArr={1,3,2};
+    private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
     @Autowired
     private IRBDao iRbDao;
     @Autowired
@@ -30,46 +33,47 @@ public class RBServiceImpl implements IRBService {
     public CarInfoResponse getCarInfoByLicenseNo(String licenseNo, Cookie cookie) {
         SortedHSLinkedList<Integer,Request> list = new SortedHSLinkedList<Integer,Request>();
         CarInfoResponse  carInfoResponse =null;
+        //填充链表id和 data中的url信息
         Map initMap = SysConfigInfo.getSelectedFields("RB_");
         Set<String> Key = initMap.keySet();
         for (Iterator it = Key.iterator(); it.hasNext();) {
-            String s = (String) it.next();
+            String url = (String) it.next();
+            Integer num = (Integer) initMap.get(url);
+            Request request = iRequest.combineRequest(url);
+            list.insertNode(num,request);
+        }
 
-           // SysConfigInfo.getRB_index();
-        }
-        //SysConfigInfo.
-        //填充链表id和部分url data
-        for(int i=0;i<carInfoIntArr.length;i++){
-                    Request request = iRequest.combineRequest(carInfoStrArr[i]);
-                    list.insertNode(i,request);
-        }
         Node position = list.getHead();
         int count =1;
         while(position!=null){
             position = position.next;
-            Request request = (Request) position.data;
-            int nodeId = (Integer) position.id;
-            System.out.println("id = "+ nodeId + " ------->  data = " + position.data+"\n");
-            if(count==1){
-                //第一次发出页面请求
-                Map map=new HashMap();
-                map.put("carNo",licenseNo);
-                request.setRequestParam(map);
+            Request request = null;
+            if(null != position){
+                if(null != position.id) {
+                    request = (Request) position.data;
+                    int nodeId = (Integer) position.id;
+                    System.out.println("id = " + nodeId + " ------->  data = " + position.data + "\n");
+                    if (count == 1) {
+                        //第一次发出页面请求
+                        Map map = new HashMap();
+                        map.put("carNo", licenseNo);
+                        request.setRequestParam(map);
+                    }
+                    Map<String, Object> map = iRequest.sendPostAndParseResponseForCarInfo(nodeId, request);
+                    Map<String, Object> returnMap = new HashMap<String, Object>();
+                    if (position == null) {
+                        //即将跳出循环，返回信息
+                    } else {
+                        //赋值下一页面需求参数
+                        Request requestNext = (Request) position.data;
+                        Map requestMap = (Map) map.get("requestParam");
+                        requestNext.setRequestParam(requestMap);
+                        //将返回信息赋值到 carInfoResponse 对象
+                        returnMap.put(nodeId + "", map.get("responseResult"));
+                    }
+                    count++;
+                }
             }
-            Map<String, Object> map = iRequest.sendPostAndParseResponseForCarInfo(nodeId ,request);
-            Map<String, Object> returnMap = new HashMap<String, Object>();
-            position = position.next;
-            if(position == null){
-                //即将跳出循环，返回信息
-            }else {
-                //赋值下一页面需求参数
-                Request requestNext = (Request) position.data;
-                Map requestMap =(Map) map.get("requestParam");
-                requestNext.setRequestParam(requestMap);
-                //将返回信息赋值到 carInfoResponse 对象
-                returnMap.put(nodeId+"", map.get("responseResult"));
-            }
-            count++;
         }
 
         return carInfoResponse;

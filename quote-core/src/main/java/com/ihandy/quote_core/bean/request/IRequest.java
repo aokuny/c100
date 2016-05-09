@@ -1,8 +1,6 @@
-package com.ihandy.quote_core.service;
+package com.ihandy.quote_core.bean.request;
 
-import com.ihandy.quote_core.bean.Request;
-import com.ihandy.quote_core.bean.Response;
-import com.ihandy.quote_core.bean.SortedHSLinkedList;
+import com.ihandy.quote_core.bean.linkedList.Request;
 
 import java.util.Map;
 

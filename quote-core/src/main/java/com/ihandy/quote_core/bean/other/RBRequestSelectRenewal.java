@@ -1,4 +1,4 @@
-package com.ihandy.quote_core.bean.request;
+package com.ihandy.quote_core.bean.other;
 
 import java.util.Map;
 

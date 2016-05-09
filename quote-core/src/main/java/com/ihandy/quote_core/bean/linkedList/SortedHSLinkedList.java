@@ -1,7 +1,4 @@
-package com.ihandy.quote_core.bean;
-
-import java.util.HashSet;
-import java.util.Set;
+package com.ihandy.quote_core.bean.linkedList;
 
 /**
  * Created by fengwen on 2016/5/7.

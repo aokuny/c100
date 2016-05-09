@@ -1,9 +1,9 @@
 package com.ihandy.quote_core.service;
 
 import com.ihandy.quote_core.bean.Cookie;
-import com.ihandy.quote_core.bean.response.CarInfoResponse;
-import com.ihandy.quote_core.bean.response.ClaimResponse;
-import com.ihandy.quote_core.bean.response.QuoteResponse;
+import com.ihandy.quote_core.bean.other.CarInfoResponse;
+import com.ihandy.quote_core.bean.other.ClaimResponse;
+import com.ihandy.quote_core.bean.other.QuoteResponse;
 
 import java.util.List;
 

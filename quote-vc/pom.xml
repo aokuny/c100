@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>quote</artifactId>
+        <groupId>chelenet.chexian-quote</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>quote-vc</artifactId>
+    <packaging>war</packaging>
+    <name>rbquote-vc Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <commons-dbcp.version>1.3</commons-dbcp.version>
+        <mybatis.version>3.2.7</mybatis.version>
+        <mybatis-spring.version>1.2.2</mybatis-spring.version>
+        <chexian-quote.version>1.0-SNAPSHOT</chexian-quote.version>
+
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>chelenet.chexian-quote</groupId>
+            <artifactId>quote-common</artifactId>
+            <version>${chexian-quote.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>chelenet.chexian-quote</groupId>
+            <artifactId>quote-core</artifactId>
+            <version>${chexian-quote.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${commons-dbcp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis-spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <finalName>quote-vc</finalName>
+    </build>
+</project>

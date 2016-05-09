@@ -27,8 +27,6 @@ import java.util.*;
 public class RBServiceImpl implements IRBService {
     private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
     @Autowired
-    private IRBDao iRbDao;
-    @Autowired
     private  IRequest iRequest;
     public CarInfoResponse getCarInfoByLicenseNo(String licenseNo, Cookie cookie) {
         SortedHSLinkedList<Integer,Request> list = new SortedHSLinkedList<Integer,Request>();

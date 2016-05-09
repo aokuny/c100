@@ -1,10 +1,13 @@
 package com.ihandy.quote_core.bean.response.impl;
 
 import com.ihandy.quote_core.bean.response.IResponseService;
+import com.ihandy.quote_core.utils.SysConfigInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by fengwen on 2016/5/9.
@@ -18,6 +21,35 @@ public class ResponseServiceImpl implements IResponseService {
         Map map =new HashMap();
         Map requestMap =new HashMap();
         Map responseMap = new HashMap();
+        switch(nodeId){
+            case 101:
+                Set<String> Key = returnMap.keySet();
+                for (Iterator it = Key.iterator(); it.hasNext();) {
+                    String keyName = (String) it.next();
+
+                }
+               break;
+            case 102:
+                break;
+            case 103:
+                break;
+            case 104:
+                break;
+            case 105:
+                break;
+            case 106:
+                break;
+            case 107:
+                break;
+            case 108:
+                break;
+            case 109:
+                break;
+            case 110:
+                break;
+            default:
+                break;
+        }
         map.put("requestParam",requestMap);
         map.put("responseResult",responseMap);
         return map;

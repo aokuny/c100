@@ -42,11 +42,11 @@ public class RBServiceImpl implements IRBService {
             Request request = iRequest.combineRequest(url);
             list.insertNode(num,request);
         }
-
+        Map<String, Object> returnMap = new HashMap<String, Object>();
         Node position = list.getHead();
         int count =1;
         while(position!=null){
-            position = position.next;
+
             Request request = null;
             if(null != position){
                 if(null != position.id) {
@@ -60,9 +60,11 @@ public class RBServiceImpl implements IRBService {
                         request.setRequestParam(map);
                     }
                     Map<String, Object> map = iRequest.sendPostAndParseResponseForCarInfo(nodeId, request);
-                    Map<String, Object> returnMap = new HashMap<String, Object>();
+                    position = position.next;//获取下一个节点;
                     if (position == null) {
                         //即将跳出循环，返回信息
+                        returnMap.put(nodeId + "", map.get("responseResult"));//将最后一次请求返回的结果写入最终结果中
+                        break;
                     } else {
                         //赋值下一页面需求参数
                         Request requestNext = (Request) position.data;
@@ -72,6 +74,9 @@ public class RBServiceImpl implements IRBService {
                         returnMap.put(nodeId + "", map.get("responseResult"));
                     }
                     count++;
+                }
+                else{
+                    position = position.next;//获取下一个节点;
                 }
             }
         }

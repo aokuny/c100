@@ -1,7 +1,6 @@
 package com.ihandy.quote_core.bean.response.impl;
 
 import com.ihandy.quote_core.bean.response.IResponseService;
-import com.ihandy.quote_core.utils.SysConfigInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

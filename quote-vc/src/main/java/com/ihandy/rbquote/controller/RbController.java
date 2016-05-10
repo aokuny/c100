@@ -1,5 +1,6 @@
 package com.ihandy.rbquote.controller;
 
+import com.ihandy.quote_common.jedis.BinaryJedisCluster;
 import com.ihandy.quote_core.bean.Cookie;
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.service.IRBService;
@@ -24,6 +25,8 @@ public class RbController {
 
      @Autowired
      private IRBService rbService;
+     @Autowired
+     private BinaryJedisCluster binaryJedisCluster;
     /**
      * 查询续保信息
      *

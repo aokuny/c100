@@ -1,4 +1,4 @@
-package com.ihandy.quote_core.bean.linkedList;
+package com.ihandy.quote_core.bean;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.ihandy.quote_common;
+package com.ihandy.quote_common.httpUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

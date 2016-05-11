@@ -1,4 +1,4 @@
-package com.ihandy.quote_common;
+package com.ihandy.quote_common.httpUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

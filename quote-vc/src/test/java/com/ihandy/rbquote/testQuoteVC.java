@@ -1,14 +1,12 @@
 package com.ihandy.rbquote;
 
-import com.ihandy.quote_core.service.IRBService;
+import com.ihandy.quote_core.service.IService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by fengwen on 2016/5/9.
@@ -17,7 +15,7 @@ import java.util.Map;
 @ContextConfiguration("classpath:spring/spring-config.xml")
 public class testQuoteVC   {
     @Resource(name="RBServiceImpl")
-    private IRBService irbService;
+    private IService irbService;
 
 
     @Test

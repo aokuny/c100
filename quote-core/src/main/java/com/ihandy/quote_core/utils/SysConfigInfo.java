@@ -53,6 +53,17 @@ public class SysConfigInfo {
      public static int RB_queryClaimsMsg_pageNum;
 
 
+    /**测试信息 */
+    public static  String  test_domain;
+
+    public static  String  TEST_login;
+    public static  String  TEST_index;
+    public static  String  TEST_product;
+
+    public static int  TEST_login_pageNum;
+    public static int  TEST_index_pageNum;
+    public static int  TEST_product_pageNum;
+
     static {
         try {
             properties = new Properties();
@@ -83,6 +94,16 @@ public class SysConfigInfo {
             RB_kindTab_pageNum = getInt("rb.kindTab.pageNum", 80);
             RB_queryClaimsMsg = getString("rb.queryClaimsMsg", "");
             RB_queryClaimsMsg_pageNum = getInt("rb.queryClaimsMsg.pageNum", 90);
+
+            //测试信息
+            test_domain = getString("test.domain", "");
+            TEST_login = getString("test.login", "");
+            TEST_index = getString("test.index","");
+            TEST_product = getString("test.product", "");
+
+            TEST_login_pageNum = getInt("test.login.pageNum", 121);
+            TEST_index_pageNum  = getInt("test.index.pageNum", 122);
+            TEST_product_pageNum = getInt("test.product.pageNum", 123);
 
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);
@@ -155,7 +176,7 @@ public class SysConfigInfo {
         return map;
     }
     public static void main(String[] args) {
-        Map map  = getSelectedFields("RB_");
+        Map map  = getSelectedFields("TEST_");
         logger.info(map+"");
 
     }
@@ -318,5 +339,64 @@ public class SysConfigInfo {
 
     public static void setRB_queryClaimsMsg_pageNum(int RB_queryClaimsMsg_pageNum) {
         SysConfigInfo.RB_queryClaimsMsg_pageNum = RB_queryClaimsMsg_pageNum;
+    }
+
+
+
+
+    public static String getTest_domain() {
+        return test_domain;
+    }
+
+    public static void setTest_domain(String test_domain) {
+        SysConfigInfo.test_domain = test_domain;
+    }
+
+    public static String getTEST_login() {
+        return TEST_login;
+    }
+
+    public static void setTEST_login(String TEST_login) {
+        SysConfigInfo.TEST_login = TEST_login;
+    }
+
+    public static String getTEST_index() {
+        return TEST_index;
+    }
+
+    public static void setTEST_index(String TEST_index) {
+        SysConfigInfo.TEST_index = TEST_index;
+    }
+
+    public static String getTEST_product() {
+        return TEST_product;
+    }
+
+    public static void setTEST_product(String TEST_product) {
+        SysConfigInfo.TEST_product = TEST_product;
+    }
+
+    public static int getTEST_login_pageNum() {
+        return TEST_login_pageNum;
+    }
+
+    public static void setTEST_login_pageNum(int TEST_login_pageNum) {
+        SysConfigInfo.TEST_login_pageNum = TEST_login_pageNum;
+    }
+
+    public static int getTEST_index_pageNum() {
+        return TEST_index_pageNum;
+    }
+
+    public static void setTEST_index_pageNum(int TEST_index_pageNum) {
+        SysConfigInfo.TEST_index_pageNum = TEST_index_pageNum;
+    }
+
+    public static int getTEST_product_pageNum() {
+        return TEST_product_pageNum;
+    }
+
+    public static void setTEST_product_pageNum(int TEST_product_pageNum) {
+        SysConfigInfo.TEST_product_pageNum = TEST_product_pageNum;
     }
 }

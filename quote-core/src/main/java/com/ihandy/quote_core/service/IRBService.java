@@ -31,4 +31,5 @@ public interface IRBService {
     List<ClaimResponse> getClaimInfoList(CarInfoResponse carInfo, Cookie cookie);
 
 
+    void getAdminTest(String admin, String password);
 }

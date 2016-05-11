@@ -27,4 +27,11 @@ public class testQuoteVC   {
 
     }
 
+    @Test
+    public void testGetAdmin() {
+
+        irbService.getAdminTest("admin","admin");
+
+    }
+
 }

@@ -15,7 +15,8 @@ import java.util.Set;
 public class ResponseServiceImpl implements IResponseService {
 
     public Map parseCarInfoByNodeId(int nodeId , Map returnMap) {
-        // 1、返回信息中有下次页面请求需要的参数，返回nextParam map
+        // 1、返回信息中有下次页面请求需要的参数，返回nextParam map(若还有其他需要请求的参数一并加入)
+
         // 2、返回信息中有最终返回map中需要的结果, 返回response map
         Map map =new HashMap();
         Map requestMap =new HashMap();

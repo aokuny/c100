@@ -9,7 +9,7 @@ import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.ClaimResponse;
 import com.ihandy.quote_core.bean.other.QuoteResponse;
 import com.ihandy.quote_core.service.IRBService;
-import com.ihandy.quote_core.bean.request.IRequest;
+import com.ihandy.quote_core.bean.request.IRbRequest;
 
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import java.util.*;
 public class RBServiceImpl implements IRBService {
     private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
     @Autowired
-    private  IRequest iRequest;
+    private IRbRequest iRequest;
     public CarInfoResponse getCarInfoByLicenseNo(String licenseNo, Cookie cookie) {
         SortedHSLinkedList<Integer,Request> list = new SortedHSLinkedList<Integer,Request>();
         CarInfoResponse  carInfoResponse =null;
@@ -39,11 +39,11 @@ public class RBServiceImpl implements IRBService {
             Request request = iRequest.combineRequest(url);
             list.insertNode(num,request);
         }
+        //遍历链表
         Map<String, Object> returnMap = new HashMap<String, Object>();
         Node position = list.getHead();
         int count =1;
         while(position!=null){
-
             Request request = null;
             if(null != position){
                 if(null != position.id) {

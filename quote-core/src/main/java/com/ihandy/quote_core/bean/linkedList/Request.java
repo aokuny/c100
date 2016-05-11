@@ -8,6 +8,7 @@ import java.util.Map;
 public class Request {
     private Map requestParam;
     private String Url;
+    private String sessionId;
 
     public Map getRequestParam() {
         return requestParam;
@@ -25,4 +26,11 @@ public class Request {
         Url = url;
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 }

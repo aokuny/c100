@@ -1,6 +1,6 @@
 package com.ihandy.quote_core.bean.response.impl;
 
-import com.ihandy.quote_core.bean.response.IResponseService;
+import com.ihandy.quote_core.bean.response.IRbResponseService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Set;
  * Created by fengwen on 2016/5/9.
  */
 @Service
-public class ResponseServiceImpl implements IResponseService {
+public class RbResponseServiceImpl implements IRbResponseService {
 
     public Map parseCarInfoByNodeId(int nodeId , Map returnMap) {
         // 1、返回信息中有下次页面请求需要的参数，返回nextParam map(若还有其他需要请求的参数一并加入)

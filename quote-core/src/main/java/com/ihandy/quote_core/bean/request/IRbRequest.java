@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by fengwen on 2016/5/7.
  */
-public interface IRequest {
+public interface IRbRequest {
 
 
     Request combineRequest(String url);

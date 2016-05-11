@@ -5,6 +5,6 @@ import java.util.Map;
 /**
  * Created by fengwen on 2016/5/9.
  */
-public interface IResponseService  {
+public interface IRbResponseService {
     Map parseCarInfoByNodeId(int nodeId,Map map);
 }

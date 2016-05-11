@@ -54,7 +54,7 @@ public class RbController {
      * @param LicenseNo
      * @return
      */
-    @RequestMapping("/getCarInfoByLicenseNo")
+    @RequestMapping("/getCarInfoByLicenseNo1")
     @Transactional
     @ResponseBody
     public Map<String, Object> getCarInfoByLicenseNo( String LicenseNo ,  Cookie cookie) {

@@ -24,7 +24,7 @@ import java.util.*;
 @Service
 public class RBServiceImpl implements IService {
     private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
-
+    @Override
     public CarInfoResponse getCarInfoByLicenseNo(String licenseNo, Cookie cookie) {
         XubaoAPage xubaoAPage = new XubaoAPage();
         Request request = new Request();
@@ -35,21 +35,18 @@ public class RBServiceImpl implements IService {
         Response response = xubaoAPage.run(request);
         return null;
     }
-
+    @Override
     public QuoteResponse getQuoteInfoByCarInfo(CarInfoResponse carInfo, Cookie cookie) {
         return null;
     }
-
+    @Override
     public ClaimResponse getClaimInfoByCarInfo(CarInfoResponse carInfo, Cookie cookie) {
         return null;
     }
-
+    @Override
     public List<ClaimResponse> getClaimInfoList(CarInfoResponse carInfo, Cookie cookie) {
         return null;
     }
 
-    public void getAdminTest(String admin, String password) {
-
-    }
 
 }

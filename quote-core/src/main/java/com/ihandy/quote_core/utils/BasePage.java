@@ -89,4 +89,6 @@ public abstract class BasePage  implements  IPage{
 		logger.info("抓取机器人，【PICC获取ticket成功，使用密码：" + password + "，ticket：" + ticket + "】");
 		return ticket;
     }
+
+
 }

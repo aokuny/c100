@@ -31,5 +31,4 @@ public interface IService {
     List<ClaimResponse> getClaimInfoList(CarInfoResponse carInfo, Cookie cookie);
 
 
-    void getAdminTest(String admin, String password);
 }

@@ -63,6 +63,19 @@ public class SysConfigInfo {
     public static int  TEST_login_pageNum;
     public static int  TEST_index_pageNum;
     public static int  TEST_product_pageNum;
+    
+    /**----------------------------- 人保URL ----------------------------------*/
+    /** PICC登录URL */
+    public static String PICC_LOGIN1_URL;
+    /** PICC用户名 */
+    public static String PICC_USERNAME;
+    /** PICC密码1 */
+    public static String PICC_PWD1;
+    /** PICC密码2 */
+    public static String PICC_PWD2;
+    public static String PICC_LOGIN2_URL;
+    public static String PICC_LOGIN3_URL;
+    
 
     static {
         try {
@@ -104,6 +117,13 @@ public class SysConfigInfo {
             TEST_login_pageNum = getInt("test.login.pageNum", 121);
             TEST_index_pageNum  = getInt("test.index.pageNum", 122);
             TEST_product_pageNum = getInt("test.product.pageNum", 123);
+            
+            PICC_LOGIN1_URL = getString("picc_login1_url", "");
+            PICC_USERNAME = getString("picc_username", "");
+            PICC_PWD1 = getString("picc_pwd1", "");
+            PICC_PWD2 = getString("picc_pwd2", "");
+            PICC_LOGIN2_URL = getString("picc_login2_url","");
+            PICC_LOGIN3_URL = getString("picc_login3_url","");
 
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);

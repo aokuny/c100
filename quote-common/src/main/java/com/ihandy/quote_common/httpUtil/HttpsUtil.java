@@ -1,12 +1,10 @@
 package com.ihandy.quote_common.httpUtil;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.CertificateException;
@@ -26,15 +24,15 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 无视Https证书是否正确的Java Http Client
- *
- *
+ * 
+ * 
  * @author renbao99
  *
  * @create 20160509
  * @version 1.0
  */
 public class HttpsUtil {
-
+	
 	static{
 		//设置系统支持SSLv2Hello
 		java.lang.System.setProperty( "jdk.tls.client.protocols", "SSLv3,SSLv2Hello");
@@ -71,7 +69,7 @@ public class HttpsUtil {
 			return null;
 		}
 	};
-
+	
 	/**
 	 * 发送http请求
 	 * @param urlString
@@ -119,20 +117,20 @@ public class HttpsUtil {
 		}
 		String cookieValue = conn.getHeaderField("Set-Cookie");
 		String html = new String(buffer.toByteArray());
-		Map<String, String> result = new HashMap();
+		Map<String, String> result = new HashMap<>();
 		result.put("cookieValue", cookieValue);
 		result.put("html", html);
 		return result;
 	}
-
+	
 	/**
 	 * 向指定 URL 发送POST方法的请求
-	 *
+	 * 
 	 * @param url
 	 *            发送请求的 URL
 	 * @param param
 	 *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
-	 *  @param sessionId
+	 * @param sessionId
 	 *  			保持回话的sessionId
 	 * @return 所代表远程资源的响应结果
 	 */
@@ -171,12 +169,12 @@ public class HttpsUtil {
 			conn.getOutputStream().write(param.getBytes());
 			conn.getOutputStream().flush();
 			conn.getOutputStream().close();
-			in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			cookieValue = conn.getHeaderField("Set-Cookie");
-			String line;
-			while ((line = in.readLine()) != null) {
-				resultStr += line;
-			}
+	        in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        cookieValue = conn.getHeaderField("Set-Cookie");
+	        String line;
+	        while ((line = in.readLine()) != null) {
+	        	resultStr += line;
+	        }
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -193,49 +191,123 @@ public class HttpsUtil {
 				ex.printStackTrace();
 			}
 		}
-		Map<String, String> result = new HashMap();
+		Map<String, String> result = new HashMap<>();
 		result.put("cookieValue", cookieValue);
 		result.put("html", resultStr);
 		return result;
 	}
-
+	
 	/**
-	 * Get Request
-	 * @return
-	 * @throws Exception
-	 */
-	public static String sendGet(String urlString) throws Exception {
-		URL url = new URL(urlString);
-		URLConnection connection = url.openConnection();
-		HttpURLConnection httpURLConnection = (HttpURLConnection)connection;
-		httpURLConnection.setRequestProperty("Accept", " */*");
-		httpURLConnection.setRequestProperty("Accept-Language", "zh-CN");
-		httpURLConnection.setRequestProperty("User-Agent", " Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)");
-		System.err.println("**************************************************" + httpURLConnection.getHeaderField("Set-Cookie"));
-		InputStream inputStream = null;
-		InputStreamReader inputStreamReader = null;
-		BufferedReader reader = null;
-		StringBuffer resultBuffer = new StringBuffer();
-		String tempLine = null;
-		try {
-			inputStream = httpURLConnection.getInputStream();
-			inputStreamReader = new InputStreamReader(inputStream);
-			reader = new BufferedReader(inputStreamReader);
-			while ((tempLine = reader.readLine()) != null) {
-				resultBuffer.append(tempLine);
+     * 普通post请求
+     * @param urlString
+     * @param sessionId
+     * @return
+     */
+    public static Map<String, String> sendPost(String urlString, String param, String sessionId){
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader reader = null;
+        StringBuffer resultBuffer = new StringBuffer();
+        String tempLine = null;
+        URLConnection conn = null;
+        String cookieValue = null;
+        try {
+        	URL url = new URL(urlString);
+        	conn = url.openConnection();
+        	conn.setRequestProperty("Accept", "application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, */*");
+			conn.setRequestProperty("Accept-Language", "zh-CN");
+			conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+			conn.setRequestProperty("Content-Length", "259");
+			conn.setRequestProperty("Connection", "Keep-Alive");
+			conn.setRequestProperty("Cache-Control", "no-cache");
+			if (StringUtils.isNotBlank(sessionId)) {
+				conn.setRequestProperty("Cookie", sessionId);
 			}
-		} finally {
-			if (reader != null) {
-				reader.close();
+			conn.setUseCaches(false);
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.getOutputStream().write(param.getBytes());
+			conn.getOutputStream().flush();
+			conn.getOutputStream().close();
+            inputStream = conn.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            reader = new BufferedReader(inputStreamReader);
+            while ((tempLine = reader.readLine()) != null) {
+                resultBuffer.append(tempLine);
+            }
+            cookieValue = conn.getHeaderField("Set-Cookie");
+        } catch(Exception e){
+        	e.printStackTrace();
+        } finally {
+        	try {
+        		 if (reader != null) {
+                     reader.close();
+                 }
+                 if (inputStreamReader != null) {
+                     inputStreamReader.close();
+                 }
+                 if (inputStream != null) {
+                     inputStream.close();
+                 }
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-			if (inputStreamReader != null) {
-				inputStreamReader.close();
+        }
+    	Map<String, String> result = new HashMap<>();
+		result.put("cookieValue", cookieValue);
+		result.put("html", resultBuffer.toString());
+        return result;
+    }
+    
+    /**
+     * 普通get请求
+     * @param urlString
+     * @param sessionId
+     * @return
+     */
+    public static Map<String, String> sendGet(String urlString, String sessionId){
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader reader = null;
+        StringBuffer resultBuffer = new StringBuffer();
+        String tempLine = null;
+        URLConnection conn = null;
+        String cookieValue = null;
+        try {
+        	URL url = new URL(urlString);
+        	conn = url.openConnection();
+            if (StringUtils.isNotBlank(sessionId)) {
+            	conn.setRequestProperty("Cookie", sessionId);
+    		}
+            inputStream = conn.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            reader = new BufferedReader(inputStreamReader);
+            while ((tempLine = reader.readLine()) != null) {
+                resultBuffer.append(tempLine);
+            }
+            cookieValue = conn.getHeaderField("Set-Cookie");
+        } catch(Exception e){
+        	e.printStackTrace();
+        } finally {
+        	try {
+        		 if (reader != null) {
+                     reader.close();
+                 }
+                 if (inputStreamReader != null) {
+                     inputStreamReader.close();
+                 }
+                 if (inputStream != null) {
+                     inputStream.close();
+                 }
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-			if (inputStream != null) {
-				inputStream.close();
-			}
-		}
-		return resultBuffer.toString();
-	}
-
+        }
+    	Map<String, String> result = new HashMap<>();
+		result.put("cookieValue", cookieValue);
+		result.put("html", resultBuffer.toString());
+        return result;
+    }
 }

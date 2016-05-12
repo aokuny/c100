@@ -19,39 +19,28 @@ public class SysConfigInfo {
 
     /** ====================================================人保begin====================*/
     /** 人保域名*/
-     public static String rb_domain ;
+     public static String PICC_DOMIAN ;
 
     /**首页面*/
-     public  static String  RB_index;
-     public  static int RB_index_pageNum;
+     public  static String  PICC_INDEX;
     /**承保页面 */
-     public static String  RB_calogin;
-     public static int RB_calogin_pageNum;
+     public static String  PICC_CALOGIN;
      /**车商渠道专用出单页面 */
-     public static String RB_quickProposal ;
-     public static int RB_quickProposal_pageNum;
+     public static String PICC_QUICKPROPOSAL ;
      /**续保对话框 */
-     public static String  RB_editRenewalSearch ;
-     public static int  RB_editRenewalSearch_pageNum;
+     public static String  PICC_EDITRENEWALSEARCH ;
      /**查看保单数据源 */
-     public static String  RB_selectRenewal;
-     public static int RB_selectRenewal_pageNum;
+     public static String  PICC_SELECTRENEWAL;
      /**浏览保单 */
-     public static String  RB_browsePolicyNo;
-     public static int RB_browsePolicyNo_pageNum;
+     public static String  PICC_BROWSEPOLICYNO;
      /**车辆信息 */
-     public static String  RB_carTab;
-     public static int RB_carTab_pageNum;
+     public static String  PICC_CARTAB;
      /**关系人信息 */
-     public static String  RB_insuredTab ;
-     public static int RB_insuredTab_pageNum;
+     public static String  PICC_INSUREDTAB;
      /**保险责任 */
-     public static String  RB_kindTab;
-     public static int RB_kindTab_pageNum;
+     public static String  PICC_KINDTAB;
      /**查询理赔信息 */
-     public static String  RB_queryClaimsMsg;
-     public static int RB_queryClaimsMsg_pageNum;
-
+     public static String  PICC_QUERYCLAIMSMSG;
 
     
     /**----------------------------- 人保URL ----------------------------------*/
@@ -65,7 +54,12 @@ public class SysConfigInfo {
     public static String PICC_PWD2;
     public static String PICC_LOGIN2_URL;
     public static String PICC_LOGIN3_URL;
-    
+
+    /**----------------------------- 返回错误信息 ----------------------------------*/
+    public static Integer ERROR404;
+    public static String ERROR404MSG;
+    public static Integer SUCCESS200;
+    public static String  SUCCESS200MSG;
 
     static {
         try {
@@ -74,29 +68,29 @@ public class SysConfigInfo {
             //FileInputStream fis = new FileInputStream(classpath:);// 属性文件输入流
             InputStream is = SysConfigInfo.class.getClassLoader().getResource("url.properties").openStream();
             properties.load(is);
-            // 微信相关接口
-            rb_domain = getString("rb.domain", "");
 
-            RB_index = getString("rb.index", "");
-            RB_index_pageNum =getInt("rb.index.pageNum",1);
-            RB_calogin = getString("rb.calogin", "");
-            RB_calogin_pageNum =getInt("rb.calogin.pageNum", 10);
-            RB_quickProposal = getString("rb.quickProposal", "");
-            RB_quickProposal_pageNum =getInt("rb.quickProposal.pageNum", 20);
-            RB_editRenewalSearch = getString("rb.editRenewalSearch", "");
-            RB_editRenewalSearch_pageNum = getInt("rb.editRenewalSearch.pageNum", 30);
-            RB_selectRenewal = getString("rb.selectRenewal", "");
-            RB_selectRenewal_pageNum = getInt("rb.selectRenewal.pageNum", 40);
-            RB_browsePolicyNo = getString("rb.browsePolicyNo", "");
-            RB_browsePolicyNo_pageNum = getInt("rb.browsePolicyNo.pageNum", 50);
-            RB_carTab=getString("rb.carTab","");
-            RB_carTab_pageNum = getInt("rb.carTab.pageNum", 60);
-            RB_insuredTab = getString("rb.insuredTab", "");
-            RB_insuredTab_pageNum =getInt("rb.insuredTab.pageNum", 70);
-            RB_kindTab = getString("rb.kindTab", "");
-            RB_kindTab_pageNum = getInt("rb.kindTab.pageNum", 80);
-            RB_queryClaimsMsg = getString("rb.queryClaimsMsg", "");
-            RB_queryClaimsMsg_pageNum = getInt("rb.queryClaimsMsg.pageNum", 90);
+            PICC_DOMIAN = getString("picc_domain", "");
+
+            PICC_INDEX = getString("picc_index", "");
+
+            PICC_CALOGIN = getString("picc_calogin", "");
+
+            PICC_QUICKPROPOSAL = getString("picc_quickProposal", "");
+
+            PICC_EDITRENEWALSEARCH = getString("picc_editRenewalSearch", "");
+
+            PICC_SELECTRENEWAL = getString("picc_selectRenewal", "");
+
+            PICC_BROWSEPOLICYNO = getString("picc_browsePolicyNo", "");
+
+            PICC_CARTAB=getString("picc_carTab","");
+
+            PICC_INSUREDTAB = getString("picc_insuredTab", "");
+
+            PICC_KINDTAB = getString("picc_kindTab", "");
+
+            PICC_QUERYCLAIMSMSG = getString("picc_queryClaimsMsg", "");
+
 
 
             
@@ -106,6 +100,12 @@ public class SysConfigInfo {
             PICC_PWD2 = getString("picc_pwd2", "");
             PICC_LOGIN2_URL = getString("picc_login2_url","");
             PICC_LOGIN3_URL = getString("picc_login3_url","");
+
+            //错误信息获取
+            ERROR404 = getInt("picc_error404",404);
+            ERROR404MSG =  getString("picc_error404msg","");
+            SUCCESS200 = getInt("picc_error404",200);
+            SUCCESS200MSG =  getString("picc_error404msg","");
 
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);
@@ -130,58 +130,6 @@ public class SysConfigInfo {
         }
     }
 
-    public static Map getSelectedFields(String prex){
-        Map map =new HashMap();
-        Map urlMap = new HashMap();
-        Map numMap = new HashMap();
-        try {
-            Class clazz = Class.forName("com.ihandy.quote_core.utils.SysConfigInfo");//根据类名获得其对应的Class对象 写上你想要的类名就是了 注意是全名 如果有包的话要加上 比如java.Lang.String
-            Field[]  fields = clazz.getDeclaredFields();//根据Class对象获得属性 私有的也可以获得
-
-            for(Field f : fields) {
-                String name = f.getName();
-                if(name.contains(prex)){
-                    Object value =null;
-                    Method[] methods = clazz.getMethods();
-                    for(int i = 0; i < methods.length; i++){
-                        Method method = methods[i];
-                        if(method.getName().equals("get"+name)){
-                            value = method.invoke(null);
-                            break;
-                        }
-                    }
-                    if(f.getType().getName().equals("java.lang.String")){
-                        urlMap.put(name, value );
-
-                    }else if(f.getType().getName().equals("int")){
-                        numMap.put(name, value );
-                    }else{}
-                }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        Set<String> numKey = numMap.keySet();
-        for (Iterator it = numKey.iterator(); it.hasNext();) {
-            String numS = (String) it.next();
-            Set<String> urlKey = urlMap.keySet();
-            for (Iterator itUrlKey = urlKey.iterator(); itUrlKey.hasNext();) {
-                String s = (String) itUrlKey.next();
-                if(s.equals(numS.substring(0,numS.length()-8))){
-                   // map.put(s,numS);
-                    map.put(urlMap.get(s),numMap.get(numS));
-                }
-            }
-        }
-
-        return map;
-    }
-    public static void main(String[] args) {
-        Map map  = getSelectedFields("TEST_");
-        logger.info(map+"");
-
-    }
 
 
 }

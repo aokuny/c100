@@ -34,7 +34,6 @@ public abstract class BasePage  implements  IPage{
     	//TODO  尝试sessionId是否可用
     	boolean f = false;
     	if(f){
-    		
     	}else{//不可用的时候，重新获取保持会话sessionid
     		String ticket = this.getTicket(SysConfigInfo.PICC_LOGIN1_URL, SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
         	Map<String, String> map1 = HttpsUtil.sendGet(ticket, null);

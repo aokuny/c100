@@ -17,4 +17,6 @@ public abstract  class BasePage  implements  IPage{
     public void initPiccLogin(){
     	
     }
+
+
 }

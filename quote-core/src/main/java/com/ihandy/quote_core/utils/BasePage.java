@@ -28,7 +28,7 @@ public abstract class BasePage  implements  IPage{
      */
     public void initPiccLogin(){
     	//TODO 以下代码未测试
-    	String ticket = this.getTicket(SysConfigInfo.PICC_LOGIN1_URL, SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD2);
+    	String ticket = this.getTicket(SysConfigInfo.PICC_LOGIN1_URL, SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
     	Map<String, String> map1 = HttpsUtil.sendGet(ticket, null);
     	Map<String, String> map2 = HttpsUtil.sendGet(SysConfigInfo.PICC_LOGIN2_URL + SysConfigInfo.PICC_USERNAME, map1.get("cookieValue"));
     	Map<String, String> map3 = HttpsUtil.sendGet(SysConfigInfo.PICC_LOGIN3_URL, map2.get("cookieValue"));

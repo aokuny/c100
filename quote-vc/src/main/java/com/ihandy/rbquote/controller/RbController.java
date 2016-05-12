@@ -24,8 +24,6 @@ public class RbController {
 
      @Autowired
      private IService rbService;
-     @Autowired
-     private BinaryJedisCluster binaryJedisCluster;
     /**
      * 查询续保信息
      *

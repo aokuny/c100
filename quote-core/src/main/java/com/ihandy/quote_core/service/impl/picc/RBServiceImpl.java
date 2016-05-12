@@ -32,9 +32,7 @@ public class RBServiceImpl implements IService {
 
         request.setRequestParam(map);
         request.setUrl("");
-        Map mapA = xubaoAPage.run(request);
-
-
+        Response response = xubaoAPage.run(request);
         return null;
     }
 

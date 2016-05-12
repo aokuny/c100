@@ -132,7 +132,7 @@ public class TestRedis {
 
     @Test
     public void testRedisPool() {
-        JedisUtil.getJedis().set("newname", "中文测试");
+        JedisUtil.getJedis().set("newname", "中文测试");//没有密码的redis池
         System.out.println(JedisUtil.getJedis().get("newname"));
     }
 }

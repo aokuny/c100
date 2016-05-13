@@ -29,7 +29,6 @@
       <protobuf-java.version>2.6.1</protobuf-java.version>
       <fst.version>2.42</fst.version>
       <oracle.version>10.2.0.4.0</oracle.version>
-      <fastjson.version>1.2.11</fastjson.version>
   </properties>
 
   <dependencies>
@@ -251,12 +250,6 @@
       <artifactId>ojdbc14</artifactId>
       <version>${oracle.version}</version>
     </dependency>
-    
-    <dependency>
-		<groupId>com.alibaba</groupId>
-		<artifactId>fastjson</artifactId>
-		<version>${fastjson.version}</version>
-	</dependency>
 
   </dependencies>
 

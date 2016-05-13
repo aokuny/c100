@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class Response {
     private Map responseMap;
-    private int ErrCode;
+    private int ReturnCode;
     private String ErrMsg;
 
     public Map getResponseMap() {
@@ -18,12 +18,12 @@ public class Response {
         this.responseMap = responseMap;
     }
 
-    public int getErrCode() {
-        return ErrCode;
+    public int getReturnCode() {
+        return ReturnCode;
     }
 
-    public void setErrCode(int errCode) {
-        ErrCode = errCode;
+    public void setReturnCode(int returnCode) {
+        ReturnCode = returnCode;
     }
 
     public String getErrMsg() {

@@ -16,7 +16,7 @@ import java.util.Map;
 public class XubaoBrowsePolicyPage extends BasePage {
     @Override
     public String doRequest(Request request) {
-        String html= null;
+        String html= "";
         String url = request.getUrl();
         Map paraMap = request.getRequestParam();
         url = url+ StringBaseUtils.Map2GetParam(paraMap);
@@ -30,14 +30,15 @@ public class XubaoBrowsePolicyPage extends BasePage {
         Response response = new Response();
         if(null!=html){
             Map  returnMap  = new HashMap<>();
-            returnMap.put("nextParams",null);
+            Map mapNextParam = new HashMap<>();
+            returnMap.put("nextParams",mapNextParam);
             returnMap.put("lastResult",null);
             response.setResponseMap(returnMap);
-            response.setErrCode(SysConfigInfo.SUCCESS200);
+            response.setReturnCode(SysConfigInfo.SUCCESS200);
             response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
         }else{
             response.setResponseMap(null);
-            response.setErrCode(SysConfigInfo.ERROR404);
+            response.setReturnCode(SysConfigInfo.ERROR404);
             response.setErrMsg(SysConfigInfo.ERROR404MSG);
         }
         return response;
@@ -47,6 +48,9 @@ public class XubaoBrowsePolicyPage extends BasePage {
     public Response run(Request request) {
         String html = doRequest(request);
         Response response = getResponse(html);
+        Map map =(Map) response.getResponseMap().get("nextParams");
+        map.put("bizNo",request.getRequestParam().get("bizNo")); //将保单号传到下一个请求页面参数中
+
         return response;
     }
 }

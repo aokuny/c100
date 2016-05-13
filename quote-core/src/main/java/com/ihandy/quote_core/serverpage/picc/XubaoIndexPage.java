@@ -35,11 +35,11 @@ public class XubaoIndexPage extends BasePage {
 			returnMap.put("nextParams",null);
 			returnMap.put("lastResult",null);
 			response.setResponseMap(returnMap);
-			response.setErrCode(SysConfigInfo.SUCCESS200);
+			response.setReturnCode(SysConfigInfo.SUCCESS200);
 			response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
 		}else{
 			response.setResponseMap(null);
-			response.setErrCode(SysConfigInfo.ERROR404);
+			response.setReturnCode(SysConfigInfo.ERROR404);
 			response.setErrMsg(SysConfigInfo.ERROR404MSG);
 		}
 		return response;

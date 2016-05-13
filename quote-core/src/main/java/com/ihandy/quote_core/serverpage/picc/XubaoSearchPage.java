@@ -7,7 +7,6 @@ import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,36 +52,44 @@ public class XubaoSearchPage extends BasePage {
             Map  returnMap  = new HashMap<>();
             Map nextParamsMap = new HashMap<>();
             Map lastResultMap = new HashMap<>();
-            Map map  = new HashMap<>();
-            map = StringBaseUtils.parseJSON2Map(html);
-            JSONArray jsonArray = new JSONArray();
-            jsonArray = JSONArray.fromObject(map);
+            Map map  = StringBaseUtils.parseJSON2Map(html);
+            JSONArray jsonArray = JSONArray.fromObject(map);
             Map map1 = (Map)jsonArray.get(0);
             JSONArray jsonArray2 = (JSONArray)map1.get("data");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-            Date date = new Date();
-            int thisYear = Integer.parseInt( sdf.format(date));
-            for(int i=0;i<jsonArray2.size();i++){
-                Map map2 = (Map)jsonArray2.get(i);
-                String riskCode = map2.get("riskCode").toString();
-                String policyNo = map2.get("policyNo").toString();
-                int year = Integer.parseInt(policyNo.substring(4,8));
-                if(riskCode.equals("DAT") && year+1 == thisYear){
-                    nextParamsMap.put("DAT",policyNo);//上年商业险保单号
+            if(null!=jsonArray2 && jsonArray2.size()>0){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+                Date date = new Date();
+                int thisYear = Integer.parseInt( sdf.format(date));
+                for(int i=0;i<jsonArray2.size();i++){
+                    Map map2 = (Map)jsonArray2.get(i);
+                    String riskCode = map2.get("riskCode").toString();
+                    String policyNo = map2.get("policyNo").toString();
+                    int year = Integer.parseInt(policyNo.substring(4,8));
+                    if(riskCode.equals("DAT") && year+1 == thisYear){
+                        nextParamsMap.put("bizNo",policyNo);//上年商业险保单号
+                    }
+                    else if(riskCode.equals("DZA") && year+1 == thisYear){
+                        nextParamsMap.put("DZA",policyNo);//上年交强险保单号
+                    }else{}
+                    // System.out.println("policyNo = "+policyNo+" riskCode = "+riskCode+"\n");
                 }
-                else if(riskCode.equals("DZA") && year+1 == thisYear){
-                    nextParamsMap.put("DZA",policyNo);//上年交强险保单号
-                }else{}
-                System.out.println("policyNo = "+policyNo+" riskCode = "+riskCode+"\n");
+                //返回最终需要的车辆基本信息
+                Map map3 = (Map)jsonArray2.get(0);
+
+                lastResultMap.put("LicenseNo",map3.get("licenseNo"));//车牌号
+                lastResultMap.put("EngineNo",map3.get("engineNo"));//发动机号
+                lastResultMap.put("CarVin",map3.get("frameNo"));//车架号
             }
+
+
             returnMap.put("nextParams",nextParamsMap);
             returnMap.put("lastResult",lastResultMap);
             response.setResponseMap(returnMap);
-            response.setErrCode(SysConfigInfo.SUCCESS200);
+            response.setReturnCode(SysConfigInfo.SUCCESS200);
             response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
         }else{
             response.setResponseMap(null);
-            response.setErrCode(SysConfigInfo.ERROR404);
+            response.setReturnCode(SysConfigInfo.ERROR404);
             response.setErrMsg(SysConfigInfo.ERROR404MSG);
         }
         return response;

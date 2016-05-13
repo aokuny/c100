@@ -61,6 +61,9 @@ public class SysConfigInfo {
     public static Integer SUCCESS200;
     public static String  SUCCESS200MSG;
 
+    /**----------------------------- 返回保险公司信息 ----------------------------------*/
+    public static String  PICC_NAME;
+
     static {
         try {
             properties = new Properties();
@@ -92,8 +95,6 @@ public class SysConfigInfo {
             PICC_QUERYCLAIMSMSG = getString("picc_queryClaimsMsg", "");
 
 
-
-            
             PICC_LOGIN1_URL = getString("picc_login1_url", "");
             PICC_USERNAME = getString("picc_username", "");
             PICC_PWD1 = getString("picc_pwd1", "");
@@ -106,6 +107,11 @@ public class SysConfigInfo {
             ERROR404MSG =  getString("picc_error404msg","");
             SUCCESS200 = getInt("picc_success200",200);
             SUCCESS200MSG =  getString("picc_success200msg","");
+
+            //保险公司信息
+            PICC_NAME =getString("picc_name","PICC");
+
+
 
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);

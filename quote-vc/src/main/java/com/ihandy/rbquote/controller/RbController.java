@@ -57,7 +57,6 @@ public class RbController {
     public Map<String, Object> getCarInfoByLicenseNo( String LicenseNo ,  Cookie cookie) {
         Map map =new HashMap();
         try {
-            CarInfoResponse response = rbService.getCarInfoByLicenseNo(LicenseNo,cookie);
         } catch (Exception e) {
 
         }

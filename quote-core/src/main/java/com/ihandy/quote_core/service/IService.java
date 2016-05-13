@@ -14,21 +14,21 @@ public interface IService {
     /**
      * 通过车牌号获取车辆信息
      */
-    CarInfoResponse getCarInfoByLicenseNo(String licenseNo, Cookie cookie);
+    CarInfoResponse getCarInfoByLicenseNo(String licenseNo);
     /**
      * 通过车辆信息获取报价信息
      */
-    QuoteResponse getQuoteInfoByCarInfo(CarInfoResponse carInfo, Cookie cookie);
+    QuoteResponse getQuoteInfoByCarInfo(CarInfoResponse carInfo);
 
     /**
      * 通过车辆信息获取出险信息
      */
-    ClaimResponse getClaimInfoByCarInfo(CarInfoResponse carInfo, Cookie cookie);
+    ClaimResponse getClaimInfoByCarInfo(CarInfoResponse carInfo);
 
     /**
      * 通过车辆信息获取出险信息list
      */
-    List<ClaimResponse> getClaimInfoList(CarInfoResponse carInfo, Cookie cookie);
+    List<ClaimResponse> getClaimInfoList(CarInfoResponse carInfo);
 
 
 }

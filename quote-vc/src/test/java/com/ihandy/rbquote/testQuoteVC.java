@@ -17,19 +17,15 @@ public class testQuoteVC   {
     @Resource(name="RBServiceImpl")
     private IService irbService;
 
-
     @Test
     public void testGetCarInfoByLicenseNo() {
-
+        
         irbService.getCarInfoByLicenseNo("123");
+
 
     }
 
     @Test
     public void testGetAdmin() {
-
-       // irbService.getAdminTest("admin","admin");
-
     }
-
 }

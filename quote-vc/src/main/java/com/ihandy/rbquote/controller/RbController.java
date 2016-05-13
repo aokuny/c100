@@ -57,7 +57,9 @@ public class RbController {
     public Map<String, Object> getCarInfoByLicenseNo( String LicenseNo) {
         Map map =new HashMap();
         try {
+
             CarInfoResponse response = rbService.getCarInfoByLicenseNo(LicenseNo);
+
         } catch (Exception e) {
 
         }

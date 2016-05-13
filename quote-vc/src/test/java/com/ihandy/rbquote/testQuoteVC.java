@@ -21,7 +21,7 @@ public class testQuoteVC   {
     @Test
     public void testGetCarInfoByLicenseNo() {
 
-        irbService.getCarInfoByLicenseNo("123",null);
+        irbService.getCarInfoByLicenseNo("123");
 
     }
 

@@ -104,8 +104,8 @@ public class SysConfigInfo {
             //错误信息获取
             ERROR404 = getInt("picc_error404",404);
             ERROR404MSG =  getString("picc_error404msg","");
-            SUCCESS200 = getInt("picc_error404",200);
-            SUCCESS200MSG =  getString("picc_error404msg","");
+            SUCCESS200 = getInt("picc_success200",200);
+            SUCCESS200MSG =  getString("picc_success200msg","");
 
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);

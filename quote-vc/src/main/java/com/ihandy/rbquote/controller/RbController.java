@@ -58,7 +58,7 @@ public class RbController {
         Map map =new HashMap();
         try {
 
-            CarInfoResponse response = rbService.getCarInfoByLicenseNo(LicenseNo);
+            CarInfoResponse response = rbService.getCarInfoByLicenseNo(LicenseNo,"02");
 
         } catch (Exception e) {
 

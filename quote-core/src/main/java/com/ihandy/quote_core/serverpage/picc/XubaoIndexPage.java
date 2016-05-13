@@ -8,13 +8,14 @@ import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by fengwen on 2016/5/11.
  */
-public class XubaoAPage extends BasePage {
-	private static Logger logger = Logger.getLogger(XubaoAPage.class);
+public class XubaoIndexPage extends BasePage {
+	private static Logger logger = Logger.getLogger(XubaoIndexPage.class);
 	@Override
 	public String doRequest(Request request) {
 		 String html= null;
@@ -30,7 +31,10 @@ public class XubaoAPage extends BasePage {
 	public Response getResponse(String html) {
 		Response response = new Response();
 	    if(null!=html){
-			response.setResponseMap(null);
+			Map  returnMap  = new HashMap<>();
+			returnMap.put("nextParams",null);
+			returnMap.put("lastResult",null);
+			response.setResponseMap(returnMap);
 			response.setErrCode(SysConfigInfo.SUCCESS200);
 			response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
 		}else{
@@ -46,7 +50,6 @@ public class XubaoAPage extends BasePage {
 		String html = doRequest(request);
 		Response response = getResponse(html);
 		return response;
-
 	}
 
 }

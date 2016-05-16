@@ -11,4 +11,35 @@ public class ClaimResponse extends BaseResponse {
     private Timestamp EndCaseTime;//结案时间
     private Timestamp LossTime;//出险时间
 
+    public String getPayCompanyName() {
+        return PayCompanyName;
+    }
+
+    public void setPayCompanyName(String payCompanyName) {
+        PayCompanyName = payCompanyName;
+    }
+
+    public Double getPayAmount() {
+        return PayAmount;
+    }
+
+    public void setPayAmount(Double payAmount) {
+        PayAmount = payAmount;
+    }
+
+    public Timestamp getEndCaseTime() {
+        return EndCaseTime;
+    }
+
+    public void setEndCaseTime(Timestamp endCaseTime) {
+        EndCaseTime = endCaseTime;
+    }
+
+    public Timestamp getLossTime() {
+        return LossTime;
+    }
+
+    public void setLossTime(Timestamp lossTime) {
+        LossTime = lossTime;
+    }
 }

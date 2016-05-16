@@ -3,6 +3,7 @@ package com.ihandy.quote_core.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ihandy.quote_core.bean.Request;
 import org.apache.log4j.Logger;
 
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
@@ -98,6 +99,5 @@ public abstract class BasePage  implements  IPage{
 		logger.info("抓取机器人，【PICC获取ticket成功，使用密码：" + password + "，ticket：" + ticket + "】");
 		return ticket;
     }
-
 
 }

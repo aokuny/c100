@@ -14,7 +14,7 @@ public interface IService {
     /**
      * 通过车牌号获取车辆信息
      */
-    CarInfoResponse getCarInfoByLicenseNo(String licenseNo);
+    CarInfoResponse getCarInfoByLicenseNo(String licenseNo,String licenseType);
     /**
      * 通过车辆信息获取报价信息
      */

@@ -45,7 +45,7 @@ public class CarInfoResponse extends  BaseResponse{
 
     private QuoteResponse quoteResponse;//报价bean
 
-    private ClaimResponse claimResponse;//出现bean
+    private ClaimResponse claimResponse;//出险bean
 
 
 }

@@ -7,7 +7,8 @@ import com.ihandy.quote_core.bean.Request;
 
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.ClaimResponse;
-import com.ihandy.quote_core.bean.other.QuoteResponse;
+import com.ihandy.quote_core.bean.other.RelaPeopleResponse;
+import com.ihandy.quote_core.bean.other.SaveQuoteResponse;
 import com.ihandy.quote_core.serverpage.picc.*;
 import com.ihandy.quote_core.service.IService;
 
@@ -27,7 +28,7 @@ public class RBServiceImpl implements IService {
     private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
     @Override
     public CarInfoResponse getCarInfoByLicenseNo(String licenseNo ,String licenseType) {
-
+        CarInfoResponse carInfoResponse = new CarInfoResponse();
         Response responseIndex = goXubaoIndex();
         if(responseIndex.getReturnCode() == SysConfigInfo.SUCCESS200){
             Response responseSearch = xubaoSearchByLicenseNo(responseIndex,licenseNo,licenseType);
@@ -40,6 +41,14 @@ public class RBServiceImpl implements IService {
                     Response responseCinsure = xubaoGetCinsure(responseBrowse);
                     //获取车辆险种信息
                     Response responseCitemKind = xubaoGetCitemKind(responseBrowse);
+
+                     //将返回数据填充到carInfoResponse中
+                    Map returnBrowseMap = responseBrowse.getResponseMap();
+                    Map lastResultBrowseMap = (Map) returnBrowseMap.get("lastResult");
+                    carInfoResponse.setCarVin(lastResultBrowseMap.get("CarVin").toString());//车架号
+                    carInfoResponse.setLicenseNo(lastResultBrowseMap.get("LicenseNo").toString());//车牌号
+                    carInfoResponse.setEngineNo(lastResultBrowseMap.get("EngineNo").toString());//发动机号
+
                 }else{
                     logger.info("抓取机器人，【 PICC 按保单号查看保单错误】");
                 }
@@ -54,16 +63,40 @@ public class RBServiceImpl implements IService {
         return null;
     }
     @Override
-    public QuoteResponse getQuoteInfoByCarInfo(CarInfoResponse carInfo) {
+    public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo , String licenseType) {
         return null;
     }
+
     @Override
-    public ClaimResponse getClaimInfoByCarInfo(CarInfoResponse carInfo) {
+    public RelaPeopleResponse getRelaPeopleInfoByCarInfo(String licenseNo, String licenseType) {
         return null;
     }
+
     @Override
-    public List<ClaimResponse> getClaimInfoList(CarInfoResponse carInfo) {
-        return null;
+    public List<ClaimResponse> getClaimInfoList(String licenseNo ,String licenseType) {
+        List<ClaimResponse> ClaimResponseList = new ArrayList<>();
+
+        Response responseIndex = goXubaoIndex();
+        if(responseIndex.getReturnCode() == SysConfigInfo.SUCCESS200) {
+            Response responseSearch = xubaoSearchByLicenseNo(responseIndex,licenseNo, licenseType);
+            if (responseSearch.getReturnCode() == SysConfigInfo.SUCCESS200) {
+                Response claimResponse1 = xubaoQueryClaimsMsg(responseSearch);
+                Map lastResultMap = (Map) claimResponse1.getResponseMap().get("lastResult");
+                Iterator it = lastResultMap.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry entry = (Map.Entry) it.next();
+                    ClaimResponse claimResponse = new ClaimResponse();
+                    Map value = (Map) entry.getValue();
+                    claimResponse.setEndCaseTime( value.get("EndCaseTime").toString());
+                    claimResponse.setLossTime( value.get("LossTime").toString());
+                    claimResponse.setPayAmount( Double.parseDouble(value.get("PayAmount").toString()) );
+                    claimResponse.setPayCompanyName( value.get("PayCompanyName").toString());
+                    ClaimResponseList.add(claimResponse);
+                }
+
+            }
+        }
+        return ClaimResponseList;
     }
 
     /*******************************************************************************
@@ -109,7 +142,6 @@ public class RBServiceImpl implements IService {
         return responseSearch;
     }
 
-
     /*******************************************************************************
      * 按保单号浏览保单
      * @param response
@@ -140,7 +172,7 @@ public class RBServiceImpl implements IService {
         Map<String, String> map = new HashMap<String, String>();
         Map responseParam = response.getResponseMap();
         Map nextParamsMap = (Map) responseParam.get("nextParams");
-        map.put("bizNo",nextParamsMap.get("DAT").toString());//上年商业保单号
+        map.put("bizNo",nextParamsMap.get("bizNo").toString());//上年商业保单号
         map.put("bizType","POLICY");
         map.put("comCode","11029204");
         map.put("contractNo",null);
@@ -166,7 +198,7 @@ public class RBServiceImpl implements IService {
         Map<String, String> map = new HashMap<String, String>();
         Map responseParam = response.getResponseMap();
         Map nextParamsMap = (Map) responseParam.get("nextParams");
-        map.put("bizNo",nextParamsMap.get("DAT").toString());//上年商业保单号
+        map.put("bizNo",nextParamsMap.get("bizNo").toString());//上年商业保单号
         map.put("bizType","POLICY");
         map.put("comCode","11029204");
         map.put("contractNo",null);
@@ -193,7 +225,7 @@ public class RBServiceImpl implements IService {
         Map<String, String> map = new HashMap<String, String>();
         Map responseParam = response.getResponseMap();
         Map nextParamsMap = (Map) responseParam.get("nextParams");
-        map.put("bizNo",nextParamsMap.get("DAT").toString());//上年商业保单号
+        map.put("bizNo",nextParamsMap.get("bizNo").toString());//上年商业保单号
         map.put("bizType","POLICY");
         map.put("comCode","11029204");
         map.put("contractNo",null);
@@ -224,7 +256,7 @@ public class RBServiceImpl implements IService {
         Map<String, String> map = new HashMap<String, String>();
         Map responseParam = response.getResponseMap();
         Map nextParamsMap = (Map) responseParam.get("nextParams");
-        map.put("bizNo",nextParamsMap.get("DAT").toString());//上年商业保单号
+        map.put("bizNo",nextParamsMap.get("bizNo").toString());//上年商业保单号
         map.put("bizType","POLICY");
         request.setRequestParam(map);
         request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_QUERYCLAIMSMSG);//GET

@@ -1,7 +1,9 @@
 package com.ihandy.rbquote;
 
 import com.ihandy.quote_common.httpUtil.StringBaseUtils;
+import com.ihandy.quote_core.bean.other.ClaimResponse;
 import com.ihandy.quote_core.service.IService;
+import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.Inflater;
@@ -357,14 +360,44 @@ public class testQuoteVC   {
                 "\t\t</table>\n" +
                 "\t</body>\n" +
                 "</html>";
+        Map  returnMap  = new HashMap<>();
+        Map lastResult = new HashMap<>();
+        returnMap.put("nextParams",null);
         Document doc = Jsoup.parse(html);
         Elements trs = doc.getElementById("insertUndwrtRow").select("tr");
         for(int i = 1;i<trs.size();i++){
+            Elements tds = trs.get(i).select("td");
+            Map lastResult1 = new HashMap<>();
+
+            lastResult1.put("EndCaseTime", tds.get(7).select("input").val());
+            lastResult1.put("PayCompanyName", SysConfigInfo.PICC_NAME);
+            lastResult1.put("PayAmount", tds.get(9).select("input").val());
+            lastResult1.put("LossTime", tds.get(2).select("input").val());
+            lastResult.put(i,lastResult1);
+        }
+        returnMap.put("lastResult",lastResult);
+
+        List<ClaimResponse> ClaimResponseList = new ArrayList<>();
+        Map lastResultMap = (Map) returnMap.get("lastResult");
+        Iterator it = lastResultMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            ClaimResponse claimResponse = new ClaimResponse();
+            Map value = (Map) entry.getValue();
+            System.out.println(" value = " + value);
+            claimResponse.setEndCaseTime( value.get("EndCaseTime").toString());
+            claimResponse.setLossTime( value.get("LossTime").toString());
+            claimResponse.setPayAmount( Double.parseDouble(value.get("PayAmount").toString()) );
+            claimResponse.setPayCompanyName( value.get("PayCompanyName").toString());
+            ClaimResponseList.add(claimResponse);
+        }
+        System.out.println("ClaimResponseList = "+ClaimResponseList);
+     /*   for(int i = 1;i<trs.size();i++){
             Elements tds = trs.get(i).select("td");
             for(int j = 0;j<tds.size();j++){
                 String text = tds.get(j).select("input").val();
                 System.out.println(j+"---->"+trs.get(0).select("th").get(j).text() +"---->"+text+"\n");
             }
-        }
+        }*/
     }
 }

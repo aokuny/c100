@@ -3,7 +3,9 @@ package com.ihandy.quote_core.bean.other;
 /**
  * Created by fengwen on 2016/4/29.
  */
-public class QuoteResponse extends BaseResponse{
+public class SaveQuoteResponse {
+
+    private int Source;//来源 0：平安 1：太平洋 2：人保
 
     private double CheSun;//车损
     private double SanZhe;//三者

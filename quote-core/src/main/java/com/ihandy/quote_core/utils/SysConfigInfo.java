@@ -63,6 +63,17 @@ public class SysConfigInfo {
 
     /**----------------------------- 返回保险公司信息 ----------------------------------*/
     public static String  PICC_NAME;
+    
+    /** 玻璃险值 */
+    public static List<String> boliValueList = new ArrayList<String>();
+    /** 不计免赔 */
+    public static List<String> chooseValueList = new ArrayList<String>();
+    /** 划痕 */
+    public static List<String> huahenValueList = new ArrayList<String>();
+    /** 司机 */
+    public static List<String> renyuanValueList = new ArrayList<String>();
+    /** 车损 */
+    public static List<String> chesunValueList = new ArrayList<String>();
 
     static {
         try {
@@ -111,8 +122,35 @@ public class SysConfigInfo {
             //保险公司信息
             PICC_NAME =getString("picc_name","PICC");
 
-
-
+            
+            //险种信息验证
+            boliValueList.add("0");
+            boliValueList.add("1");
+            boliValueList.add("2");
+            chooseValueList.add("0");
+            chooseValueList.add("1");
+            huahenValueList.add("0");
+            huahenValueList.add("2000");
+            huahenValueList.add("5000");
+            huahenValueList.add("10000");
+            huahenValueList.add("20000");
+            renyuanValueList.add("0");
+            renyuanValueList.add("10000");
+            renyuanValueList.add("20000");
+            renyuanValueList.add("30000");
+            renyuanValueList.add("40000");
+            renyuanValueList.add("50000");
+            renyuanValueList.add("100000");
+            renyuanValueList.add("200000");
+            chesunValueList.add("0");
+            chesunValueList.add("50000");
+            chesunValueList.add("100000");
+            chesunValueList.add("150000");
+            chesunValueList.add("200000");
+            chesunValueList.add("300000");
+            chesunValueList.add("500000");
+            chesunValueList.add("1000000");
+            chesunValueList.add("1500000");
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);
         }

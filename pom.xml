@@ -30,7 +30,7 @@
       <fst.version>2.42</fst.version>
       <oracle.version>10.2.0.4.0</oracle.version>
       <jsoup.version>1.8.3</jsoup.version>
-
+	  <springside.version>4.0.0</springside.version>
   </properties>
 
   <dependencies>
@@ -119,8 +119,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+     <dependency>
+		<groupId>org.springside</groupId>
+		<artifactId>springside-core</artifactId>
+		<version>${springside.version}</version>
+	</dependency>
     <dependency>
-
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.1.0</version>

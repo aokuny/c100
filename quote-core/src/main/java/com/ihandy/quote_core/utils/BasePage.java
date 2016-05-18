@@ -18,11 +18,13 @@ public abstract class BasePage  implements  IPage{
 	
     public String piccSessionId;//picc登录session
     
+    public String piccTicket;
+    
     private Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
     
     public BasePage(){
     	logger.info("抓取机器人，【初始化PICC登录session开始】");
-    	initPiccLogin();//初始化picc登录session
+    	//initPiccLogin();//初始化picc登录session
     	logger.info("抓取机器人，【初始化PICC登录session完成】");
     }
     
@@ -32,16 +34,19 @@ public abstract class BasePage  implements  IPage{
     public void initPiccLogin(){
     	//TODO 以下代码未测试
     	piccSessionId = piccSessionIdMap.get("picc_sessionId");
+    	piccTicket = piccSessionIdMap.get("picc_ticket");
     	//TODO  尝试sessionId是否可用
     	boolean f = false;
     	if(f){
     	}else{//不可用的时候，重新获取保持会话sessionid
     		String ticket = this.getTicket(SysConfigInfo.PICC_LOGIN1_URL, SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
         	Map<String, String> map1 = HttpsUtil.sendGet(ticket, null);
-        	Map<String, String> map2 = HttpsUtil.sendGet(SysConfigInfo.PICC_LOGIN2_URL + SysConfigInfo.PICC_USERNAME, map1.get("cookieValue"));
-        	Map<String, String> map3 = HttpsUtil.sendGet(SysConfigInfo.PICC_LOGIN3_URL, map2.get("cookieValue"));
+        	Map<String, String> map2 = HttpsUtil.sendGet(SysConfigInfo.PICC_MAIN_URL + SysConfigInfo.PICC_LOGIN2_URL + SysConfigInfo.PICC_USERNAME, map1.get("cookieValue"));
+        	Map<String, String> map3 = HttpsUtil.sendGet(SysConfigInfo.PICC_MAIN_URL + SysConfigInfo.PICC_LOGIN3_URL, map2.get("cookieValue"));
         	piccSessionId = map3.get("cookieValue");
+        	piccTicket = ticket;
         	piccSessionIdMap.put("picc_sessionId", piccSessionId);
+        	piccSessionIdMap.put("picc_ticket", piccTicket);
     	}
     }
     

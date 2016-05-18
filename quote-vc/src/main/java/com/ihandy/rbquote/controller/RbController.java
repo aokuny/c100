@@ -5,6 +5,8 @@ import com.ihandy.quote_core.bean.Cookie;
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
 import com.ihandy.quote_core.service.IService;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -220,6 +223,25 @@ public class RbController {
 			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
 			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
+		//判断是否是get请求
+		if (request.getMethod().equals("GET")) {
+			try {
+				if(StringUtils.isNotBlank(LicenseNo)){
+					LicenseNo = new String(LicenseNo.getBytes("iso8859-1"), "UTF-8");
+				}
+				if(StringUtils.isNotBlank(CarOwnersName)){
+					CarOwnersName = new String(CarOwnersName.getBytes("iso8859-1"), "UTF-8");
+				}
+				if(StringUtils.isNotBlank(InsuredName)){
+					InsuredName = new String(InsuredName.getBytes("iso8859-1"), "UTF-8");
+				}
+				if(StringUtils.isNotBlank(MoldName)){
+					MoldName = new String(MoldName.getBytes("iso8859-1"), "UTF-8");
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
 		try {
 			postPrecisePricerResponse = rbService.postPrecisePrice(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit,

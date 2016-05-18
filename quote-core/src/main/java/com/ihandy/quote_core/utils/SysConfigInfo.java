@@ -46,6 +46,8 @@ public class SysConfigInfo {
     /**----------------------------- 人保URL ----------------------------------*/
     /** PICC登录URL */
     public static String PICC_LOGIN1_URL;
+    /** PICC人保业务登录 */
+    public static String PICC_MAIN_URL;
     /** PICC用户名 */
     public static String PICC_USERNAME;
     /** PICC密码1 */
@@ -54,6 +56,8 @@ public class SysConfigInfo {
     public static String PICC_PWD2;
     public static String PICC_LOGIN2_URL;
     public static String PICC_LOGIN3_URL;
+    /** PICC报价URL */
+    public static String PICC_QUOTE_URL;
 
     /**----------------------------- 返回错误信息 ----------------------------------*/
     public static Integer ERROR404;
@@ -74,6 +78,8 @@ public class SysConfigInfo {
     public static List<String> renyuanValueList = new ArrayList<String>();
     /** 车损 */
     public static List<String> chesunValueList = new ArrayList<String>();
+    /** 险种名称映射关系 */
+    public static Map<String, String> insuranceNameMap = new HashMap<>();
 
     static {
         try {
@@ -112,6 +118,8 @@ public class SysConfigInfo {
             PICC_PWD2 = getString("picc_pwd2", "");
             PICC_LOGIN2_URL = getString("picc_login2_url","");
             PICC_LOGIN3_URL = getString("picc_login3_url","");
+            PICC_MAIN_URL = getString("picc_main_url","");
+            PICC_QUOTE_URL = getString("picc_quote_url","");
 
             //错误信息获取
             ERROR404 = getInt("picc_error404",404);
@@ -151,6 +159,21 @@ public class SysConfigInfo {
             chesunValueList.add("500000");
             chesunValueList.add("1000000");
             chesunValueList.add("1500000");
+            //PICC 险种map
+            insuranceNameMap.put("机动车损失保险", "CheSun");
+            insuranceNameMap.put("盗抢险", "DaoQiang");
+            insuranceNameMap.put("第三者责任保险", "SanZhe");
+            insuranceNameMap.put("车上人员责任险（司机）", "SiJi");
+            insuranceNameMap.put("车上人员责任险（乘客）", "ChengKe");
+            insuranceNameMap.put("车身划痕损失险条款", "HuaHen");
+            insuranceNameMap.put("玻璃单独破碎险", "BoLi");
+            insuranceNameMap.put("自燃损失险条款", "ZiRan");
+            insuranceNameMap.put("发动机特别损失险条款", "SheShui");
+            insuranceNameMap.put("不计免赔率（车辆损失险）", "BuJiMianCheSun");
+            insuranceNameMap.put("不计免赔率（三者险）", "BuJiMianSanZhe");
+            insuranceNameMap.put("不计免赔率（机动车盗抢险）", "BuJiMianDaoQiang");
+            insuranceNameMap.put("不计免赔率（车身划痕损失险）", "BuJiMianFuJia");
+            insuranceNameMap.put("不计免赔率（车上人员责任险（司机））", "BuJiMianRenYuan");
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);
         }

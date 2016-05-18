@@ -95,6 +95,7 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <version>${spring_version}</version>
+      <scope>test</scope>
     </dependency>
     <!-- spring -->
     <dependency>

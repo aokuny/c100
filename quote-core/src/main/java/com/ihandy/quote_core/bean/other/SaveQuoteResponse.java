@@ -31,4 +31,132 @@ public class SaveQuoteResponse {
     {
         return  (this.CheSun + this.SanZhe + this.DaoQiang + this.SiJi + this.ChengKe + this.Boli + this.HuaHen + this.BuJiMianCheSun + this.BuJiMianSanZhe + this.BuJiMianDaoQiang + this.BuJiMianRenYuan + this.BuJiMianFuJia  + this.SheShui + this.CheDeng + this.ZiRan);
     }
+
+    public int getSource() {
+        return Source;
+    }
+
+    public void setSource(int source) {
+        Source = source;
+    }
+
+    public double getCheSun() {
+        return CheSun;
+    }
+
+    public void setCheSun(double cheSun) {
+        CheSun = cheSun;
+    }
+
+    public double getSanZhe() {
+        return SanZhe;
+    }
+
+    public void setSanZhe(double sanZhe) {
+        SanZhe = sanZhe;
+    }
+
+    public double getDaoQiang() {
+        return DaoQiang;
+    }
+
+    public void setDaoQiang(double daoQiang) {
+        DaoQiang = daoQiang;
+    }
+
+    public double getSiJi() {
+        return SiJi;
+    }
+
+    public void setSiJi(double siJi) {
+        SiJi = siJi;
+    }
+
+    public double getChengKe() {
+        return ChengKe;
+    }
+
+    public void setChengKe(double chengKe) {
+        ChengKe = chengKe;
+    }
+
+    public double getBoli() {
+        return Boli;
+    }
+
+    public void setBoli(double boli) {
+        Boli = boli;
+    }
+
+    public double getHuaHen() {
+        return HuaHen;
+    }
+
+    public void setHuaHen(double huaHen) {
+        HuaHen = huaHen;
+    }
+
+    public double getBuJiMianCheSun() {
+        return BuJiMianCheSun;
+    }
+
+    public void setBuJiMianCheSun(double buJiMianCheSun) {
+        BuJiMianCheSun = buJiMianCheSun;
+    }
+
+    public double getBuJiMianSanZhe() {
+        return BuJiMianSanZhe;
+    }
+
+    public void setBuJiMianSanZhe(double buJiMianSanZhe) {
+        BuJiMianSanZhe = buJiMianSanZhe;
+    }
+
+    public double getBuJiMianDaoQiang() {
+        return BuJiMianDaoQiang;
+    }
+
+    public void setBuJiMianDaoQiang(double buJiMianDaoQiang) {
+        BuJiMianDaoQiang = buJiMianDaoQiang;
+    }
+
+    public double getBuJiMianRenYuan() {
+        return BuJiMianRenYuan;
+    }
+
+    public void setBuJiMianRenYuan(double buJiMianRenYuan) {
+        BuJiMianRenYuan = buJiMianRenYuan;
+    }
+
+    public double getBuJiMianFuJia() {
+        return BuJiMianFuJia;
+    }
+
+    public void setBuJiMianFuJia(double buJiMianFuJia) {
+        BuJiMianFuJia = buJiMianFuJia;
+    }
+
+    public double getSheShui() {
+        return SheShui;
+    }
+
+    public void setSheShui(double sheShui) {
+        SheShui = sheShui;
+    }
+
+    public double getCheDeng() {
+        return CheDeng;
+    }
+
+    public void setCheDeng(double cheDeng) {
+        CheDeng = cheDeng;
+    }
+
+    public double getZiRan() {
+        return ZiRan;
+    }
+
+    public void setZiRan(double ziRan) {
+        ZiRan = ziRan;
+    }
 }

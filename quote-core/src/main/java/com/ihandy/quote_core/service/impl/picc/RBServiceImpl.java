@@ -119,13 +119,49 @@ public class RBServiceImpl implements IService {
     }
 
     @Override
-    public CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo) {
-        return null;
+    public CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo,int CityCode) {
+		CarInfoResponse carInfoResponse = new CarInfoResponse();
+		//1）获取车辆基本信息
+		BaseCarInfoResponse carBaseInfoResponse  = getBaseCarInfoByLicenseNo(licenseNo,CityCode);
+        //2) 获取投被保人信息
+		List<RelaPeopleResponse> relaPeopleResponseList = getRelaPeopleInfoByCarInfoList(licenseNo);
+		//3) 获取险种信息
+		SaveQuoteResponse saveQuoteResponse = getQuoteInfoByCarInfo(licenseNo);
+		//4) 获取出险信息
+		List<ClaimResponse> claimResponseList = getClaimInfoList(licenseNo);
+		//信息封装成车辆全部信息
+		carInfoResponse.setCarInfoBaseResponse(carBaseInfoResponse);
+		carInfoResponse.setClaimResponseList(claimResponseList);
+		carInfoResponse.setRelaPeopleResponseList(relaPeopleResponseList);
+		carInfoResponse.setSaveQuoteResponse(saveQuoteResponse);
+        return carInfoResponse;
     }
 
     @Override
     public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo ) {
-        return null;
+		SaveQuoteResponse saveQuoteResponse = new SaveQuoteResponse();
+		Response response = new Response();
+		//TODO 需要根据实际应用来进行参数传递与配置，若缓存中有sessionId
+		Response responseCitemKind = xubaoGetCitemKind(response);
+		Map returnCitemKindMap = responseCitemKind.getResponseMap();
+		Map lastResultCitemKindMap = (Map) returnCitemKindMap.get("lastResult");
+		saveQuoteResponse.setCheSun(Double.parseDouble(lastResultCitemKindMap.get("CheSun").toString()));//CheSun
+		saveQuoteResponse.setDaoQiang(Double.parseDouble(lastResultCitemKindMap.get("DaoQiang").toString()));//DaoQiang
+		saveQuoteResponse.setSanZhe(Double.parseDouble(lastResultCitemKindMap.get("SanZhe").toString()));//SanZhe
+		saveQuoteResponse.setSiJi(Double.parseDouble(lastResultCitemKindMap.get("SiJi").toString()));//SiJi
+		saveQuoteResponse.setChengKe(Double.parseDouble(lastResultCitemKindMap.get("ChengKe").toString()));//ChengKe
+		saveQuoteResponse.setBoli(Double.parseDouble(lastResultCitemKindMap.get("Boli").toString()));//boli
+		saveQuoteResponse.setZiRan(Double.parseDouble(lastResultCitemKindMap.get("ZiRan").toString()));//ZiRan
+		saveQuoteResponse.setHuaHen(Double.parseDouble(lastResultCitemKindMap.get("HuaHen").toString()));//HuaHen
+		saveQuoteResponse.setSheShui(Double.parseDouble(lastResultCitemKindMap.get("SheShui").toString()));//SheShui
+		saveQuoteResponse.setCheDeng(Double.parseDouble(lastResultCitemKindMap.get("CheDeng").toString()));//CheDeng
+		saveQuoteResponse.setBuJiMianCheSun(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianCheSun").toString()));//BuJiMianCheSun
+		saveQuoteResponse.setBuJiMianSanZhe(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianSanZhe").toString()));//BuJiMianSanZhe
+		saveQuoteResponse.setBuJiMianDaoQiang(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianDaoQiang").toString()));//BuJiMianDaoQiang
+		saveQuoteResponse.setBuJiMianRenYuan(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianRenYuan").toString()));//BuJiMianRenYuan
+		saveQuoteResponse.setBuJiMianFuJia(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianFuJia").toString()));//BuJiMianFuJia
+		saveQuoteResponse.setSource(1);//PICC
+        return saveQuoteResponse;
     }
 
     @Override
@@ -157,7 +193,7 @@ public class RBServiceImpl implements IService {
 			}
 
 		}
-		return null;
+		return ClaimResponseList;
 	}
 
 	/*******************************************************************************
@@ -291,13 +327,13 @@ public class RBServiceImpl implements IService {
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
 		map.put("bizType", "POLICY");
-		map.put("comCode", "11029204");
+		map.put("comCode", null);
 		map.put("contractNo", null);
 		map.put("editType", "SHOW_POLICY");
 		map.put("minusFlag", "originQuery");
 		map.put("proposalNo", null);
 		map.put("riskCode", "DAA");
-		map.put("rnd704", new Date().toString());
+		map.put("rnd704", null);
 		request.setRequestParam(map);
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CARTAB);// GET
 		Response responseShowCitemKind = xubaoShowCitemKindPage.run(request);

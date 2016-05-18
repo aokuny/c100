@@ -23,7 +23,7 @@ public interface IService {
     /**
      * 通过车牌号获取车辆所有关联信息
      */
-    CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo);
+    CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo, int CityCode);
     /**
      * 通过车辆信息获取险种信息
      */

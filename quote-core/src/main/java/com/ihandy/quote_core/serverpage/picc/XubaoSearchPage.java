@@ -7,6 +7,8 @@ import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +19,7 @@ import java.util.Map;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoSearchPage extends BasePage {
-
+    private static Logger logger = LoggerFactory.getLogger(XubaoShowCitemCarPage.class);
     @Override
     public String doRequest(Request request) {
         String html= null;
@@ -57,31 +59,60 @@ public class XubaoSearchPage extends BasePage {
             Map map1 = (Map)jsonArray.get(0);
             JSONArray jsonArray2 = (JSONArray)map1.get("data");
             if(null!=jsonArray2 && jsonArray2.size()>0){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-                Date date = new Date();
-                int thisYear = Integer.parseInt( sdf.format(date));
-                for(int i=0;i<jsonArray2.size();i++){
-                    Map map2 = (Map)jsonArray2.get(i);
-                    String riskCode = map2.get("riskCode").toString();
-                    String policyNo = map2.get("policyNo").toString();
-                    int year = Integer.parseInt(policyNo.substring(4,8));
-                    if(riskCode.equals("DAT") && year+1 == thisYear){
-                        nextParamsMap.put("bizNo",policyNo);//上年商业险保单号
+                int maxSyYear = 0;
+                int maxJqYear = 0;
+                try {
+                    for (int i = 0; i < jsonArray2.size(); i++) {
+                        Map map2 = (Map) jsonArray2.get(i);
+                        String policyNo = map2.get("policyNo").toString();
+                        String riskCode = map2.get("riskCode").toString();
+                        Map expireDate = (Map) map2.get("endDate");
+                        int year = Integer.parseInt(policyNo.substring(4, 8));
+                        String year1 = "" + Integer.parseInt(expireDate.get("year").toString()) + 1900;
+                        String month1 = "";
+                        String day1 = "";
+                        int month = Integer.parseInt(expireDate.get("month").toString()) + 1;
+                        if (month < 10) {
+                            month1 = "0" + month;
+                        } else {
+                            month1 = month + "";
+                        }
+                        int day = Integer.parseInt(expireDate.get("date").toString());
+                        if (day < 10) {
+                            day1 = "0" + day;
+                        } else {
+                            day1 = day + "";
+                        }
+                        String expireDateStr = year1 + "-" + month1 + "-" + day1;
+                        if (riskCode.equals("DAT") || riskCode.equals("DAA")) {
+                            if (year > maxSyYear) {
+                                nextParamsMap.put("bizNo", policyNo);//上次商业险保单号
+                                lastResultMap.put("BusinessExpireDate", expireDateStr);//商业险到期日期
+                                maxSyYear = year;
+                            }
+                        } else if (riskCode.equals("DZA")) {
+                            if (year > maxJqYear) {
+                                nextParamsMap.put("DZA", policyNo);//上次交强险保单号
+                                lastResultMap.put("ForceExpireDate", expireDateStr);//交强险到期日期
+                                maxJqYear = year;
+                            }
+                        }
                     }
-                    else if(riskCode.equals("DZA") && year+1 == thisYear){
-                        nextParamsMap.put("DZA",policyNo);//上年交强险保单号
-                    }else{}
-                    // System.out.println("policyNo = "+policyNo+" riskCode = "+riskCode+"\n");
+                }
+                catch(Exception e){
+                    logger.info("抓取机器人，【 PICC 在查询保单表中解析保单号/商业险到期日期/交强险到期日期失败】");
                 }
                 //返回最终需要的车辆基本信息
-                Map map3 = (Map)jsonArray2.get(0);
-
-                lastResultMap.put("LicenseNo",map3.get("licenseNo"));//车牌号
-                lastResultMap.put("EngineNo",map3.get("engineNo"));//发动机号
-                lastResultMap.put("CarVin",map3.get("frameNo"));//车架号
+                try {
+                    Map map3 = (Map) jsonArray2.get(0);
+                    lastResultMap.put("LicenseNo", map3.get("licenseNo"));//车牌号
+                    lastResultMap.put("EngineNo", map3.get("engineNo"));//发动机号
+                    lastResultMap.put("CarVin", map3.get("frameNo"));//车架号
+                }
+                catch (Exception e){
+                    logger.info("抓取机器人，【 PICC 在查询保单表中解析车辆车牌号/发动机号/车架号失败】");
+                }
             }
-
-
             returnMap.put("nextParams",nextParamsMap);
             returnMap.put("lastResult",lastResultMap);
             response.setResponseMap(returnMap);

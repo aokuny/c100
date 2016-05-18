@@ -12,6 +12,7 @@ public class SaveQuoteResponse {
     private double DaoQiang;//盗抢
     private double SiJi;//司机
     private double ChengKe;//乘客
+
     private double Boli;//玻璃
     private double HuaHen;//划痕
 

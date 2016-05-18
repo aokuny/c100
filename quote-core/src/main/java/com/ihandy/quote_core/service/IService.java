@@ -1,9 +1,6 @@
 package com.ihandy.quote_core.service;
 
-import com.ihandy.quote_core.bean.other.CarInfoResponse;
-import com.ihandy.quote_core.bean.other.ClaimResponse;
-import com.ihandy.quote_core.bean.other.RelaPeopleResponse;
-import com.ihandy.quote_core.bean.other.SaveQuoteResponse;
+import com.ihandy.quote_core.bean.other.*;
 
 import java.util.List;
 
@@ -12,23 +9,25 @@ import java.util.List;
  */
 public interface IService {
     /**
-     * 通过车牌号获取车辆信息
+     * 通过车牌号获取车辆基本信息
      */
-    CarInfoResponse getCarInfoByLicenseNo(String licenseNo,String licenseType);
+    BaseCarInfoResponse getBaseCarInfoByLicenseNo(String licenseNo, int CityCode);
+    /**
+     * 通过车牌号获取车辆所有关联信息
+     */
+    CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo);
     /**
      * 通过车辆信息获取险种信息
      */
-    SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo , String licenseType);
+    SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo );
     /**
      * 通过车辆信息获取关系人信息
      */
-     RelaPeopleResponse getRelaPeopleInfoByCarInfo(String licenseNo , String licenseType);
-
-
+     List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo);
     /**
      * 通过车辆信息获取出险信息list
      */
-    List<ClaimResponse> getClaimInfoList(String licenseNo ,String licenseType);
+     List<ClaimResponse> getClaimInfoList(String licenseNo);
 
 
 }

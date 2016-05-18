@@ -41,25 +41,15 @@ public class XubaoClaimsMsgPage extends BasePage {
             // EndCaseTime;//结案时间
             // LossTime;//出险时间
             Document doc = Jsoup.parse(html);
-            Elements trs = doc.getElementById("insertUndwrtRow").select("tr");
+            Elements trs = doc.getElementById("BIDemandClaim").select("tr");
             for(int i = 1;i<trs.size();i++){
                 Elements tds = trs.get(i).select("td");
                 Map lastResult1 = new HashMap<>();
-                  /*0---->报案号---->RDAT201511000000094684
-                    1---->立案号---->ADAT201511010761001142
-                    2---->出险日期---->2015-06-14
-                    3---->报案日期---->2015-06-14
-                    4---->报案注销标志---->0
-                    5---->立案日期---->2015-06-14
-                    6---->立案注销标志---->0
-                    7---->结案标志---->2015-06-14
-                    8---->责任赔款---->2000.00
-                    9---->总赔付金额---->2000.00
-                    10---->地址---->石景山区西山奥园*/
-                lastResult1.put("PayCompanyName",SysConfigInfo.PICC_NAME);
-                lastResult1.put("PayAmount", tds.get(9).select("input").val());
-                lastResult1.put("EndCaseTime", tds.get(7).select("input").val());
-                lastResult1.put("LossTime", tds.get(2).select("input").val());
+
+                lastResult1.put("EndCaseTime", tds.get(5).select("input").val());
+                lastResult1.put("PayCompanyName", SysConfigInfo.PICC_NAME);
+                lastResult1.put("PayAmount", tds.get(8).select("input").val());
+                lastResult1.put("LossTime", tds.get(4).select("input").val());
                 lastResult.put(i,lastResult1);
             }
             returnMap.put("lastResult",lastResult);

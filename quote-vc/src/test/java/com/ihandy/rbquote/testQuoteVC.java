@@ -20,19 +20,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.security.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.zip.Inflater;
 
 /**
  * Created by fengwen on 2016/5/9.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/spring-config.xml")
-public class testQuoteVC   {
+public class TestQuoteVC {
 
-    private static Logger logger = LoggerFactory.getLogger(testQuoteVC.class);
+    private static Logger logger = LoggerFactory.getLogger(TestQuoteVC.class);
     @Resource(name="RBServiceImpl")
     private IService irbService;
 

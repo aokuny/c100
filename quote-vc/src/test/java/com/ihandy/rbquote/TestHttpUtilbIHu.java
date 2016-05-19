@@ -24,7 +24,7 @@ package com.ihandy.rbquote;
     import net.sf.json.JSONObject;
 
 
-public class testHttpUtil {
+public class TestHttpUtilbIHu {
         /**
          * 向指定URL发送GET方法的请求
          *

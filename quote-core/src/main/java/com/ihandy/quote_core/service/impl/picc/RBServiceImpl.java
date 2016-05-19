@@ -140,43 +140,78 @@ public class RBServiceImpl implements IService {
     @Override
     public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo ) {
 		SaveQuoteResponse saveQuoteResponse = new SaveQuoteResponse();
+		// 需要根据实际应用来进行参数传递与配置，若缓存中有完整参数信息且session未过期,直接使用续保单号去查询险种信息；
+		// 若参数信息不完整或session已过期，调用获取这些信息的接口后，才开始查询险种信息
 		Response response = new Response();
-		//TODO 需要根据实际应用来进行参数传递与配置，若缓存中有sessionId
-		Response responseCitemKind = xubaoGetCitemKind(response);
-		Map returnCitemKindMap = responseCitemKind.getResponseMap();
-		Map lastResultCitemKindMap = (Map) returnCitemKindMap.get("lastResult");
-		saveQuoteResponse.setCheSun(Double.parseDouble(lastResultCitemKindMap.get("CheSun").toString()));//CheSun
-		saveQuoteResponse.setDaoQiang(Double.parseDouble(lastResultCitemKindMap.get("DaoQiang").toString()));//DaoQiang
-		saveQuoteResponse.setSanZhe(Double.parseDouble(lastResultCitemKindMap.get("SanZhe").toString()));//SanZhe
-		saveQuoteResponse.setSiJi(Double.parseDouble(lastResultCitemKindMap.get("SiJi").toString()));//SiJi
-		saveQuoteResponse.setChengKe(Double.parseDouble(lastResultCitemKindMap.get("ChengKe").toString()));//ChengKe
-		saveQuoteResponse.setBoli(Double.parseDouble(lastResultCitemKindMap.get("Boli").toString()));//boli
-		saveQuoteResponse.setZiRan(Double.parseDouble(lastResultCitemKindMap.get("ZiRan").toString()));//ZiRan
-		saveQuoteResponse.setHuaHen(Double.parseDouble(lastResultCitemKindMap.get("HuaHen").toString()));//HuaHen
-		saveQuoteResponse.setSheShui(Double.parseDouble(lastResultCitemKindMap.get("SheShui").toString()));//SheShui
-		saveQuoteResponse.setCheDeng(Double.parseDouble(lastResultCitemKindMap.get("CheDeng").toString()));//CheDeng
-		saveQuoteResponse.setBuJiMianCheSun(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianCheSun").toString()));//BuJiMianCheSun
-		saveQuoteResponse.setBuJiMianSanZhe(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianSanZhe").toString()));//BuJiMianSanZhe
-		saveQuoteResponse.setBuJiMianDaoQiang(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianDaoQiang").toString()));//BuJiMianDaoQiang
-		saveQuoteResponse.setBuJiMianRenYuan(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianRenYuan").toString()));//BuJiMianRenYuan
-		saveQuoteResponse.setBuJiMianFuJia(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianFuJia").toString()));//BuJiMianFuJia
-		saveQuoteResponse.setSource(1);//PICC
+		response = getBeforeXubao();
+		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
+			//成功返回
+			Response responseCitemKind = xubaoGetCitemKind(response);
+			Map returnCitemKindMap = responseCitemKind.getResponseMap();
+			Map lastResultCitemKindMap = (Map) returnCitemKindMap.get("lastResult");
+			saveQuoteResponse.setCheSun(Double.parseDouble(lastResultCitemKindMap.get("CheSun").toString()));//CheSun
+			saveQuoteResponse.setDaoQiang(Double.parseDouble(lastResultCitemKindMap.get("DaoQiang").toString()));//DaoQiang
+			saveQuoteResponse.setSanZhe(Double.parseDouble(lastResultCitemKindMap.get("SanZhe").toString()));//SanZhe
+			saveQuoteResponse.setSiJi(Double.parseDouble(lastResultCitemKindMap.get("SiJi").toString()));//SiJi
+			saveQuoteResponse.setChengKe(Double.parseDouble(lastResultCitemKindMap.get("ChengKe").toString()));//ChengKe
+			saveQuoteResponse.setBoli(Double.parseDouble(lastResultCitemKindMap.get("Boli").toString()));//boli
+			saveQuoteResponse.setZiRan(Double.parseDouble(lastResultCitemKindMap.get("ZiRan").toString()));//ZiRan
+			saveQuoteResponse.setHuaHen(Double.parseDouble(lastResultCitemKindMap.get("HuaHen").toString()));//HuaHen
+			saveQuoteResponse.setSheShui(Double.parseDouble(lastResultCitemKindMap.get("SheShui").toString()));//SheShui
+			saveQuoteResponse.setCheDeng(Double.parseDouble(lastResultCitemKindMap.get("CheDeng").toString()));//CheDeng
+			saveQuoteResponse.setBuJiMianCheSun(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianCheSun").toString()));//BuJiMianCheSun
+			saveQuoteResponse.setBuJiMianSanZhe(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianSanZhe").toString()));//BuJiMianSanZhe
+			saveQuoteResponse.setBuJiMianDaoQiang(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianDaoQiang").toString()));//BuJiMianDaoQiang
+			saveQuoteResponse.setBuJiMianRenYuan(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianRenYuan").toString()));//BuJiMianRenYuan
+			saveQuoteResponse.setBuJiMianFuJia(Double.parseDouble(lastResultCitemKindMap.get("BuJiMianFuJia").toString()));//BuJiMianFuJia
+			saveQuoteResponse.setSource(1);//PICC
+		}
+		else{
+			logger.info("抓取机器人，【 PICC  查看续保险种信息页面信息时的参数信息错误】");
+		}
         return saveQuoteResponse;
     }
 
     @Override
     public List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo) {
-        return null;
+		List<RelaPeopleResponse> relaPeopleResponseList = new ArrayList<>();
+		Response response = new Response();
+		response = getBeforeXubao();
+		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
+			Response responseCinsure = xubaoGetCinsure(response);
+			Map returnCinsureMap = responseCinsure.getResponseMap();
+			Map lastResultCinsureMap = (Map) returnCinsureMap.get("lastResult");
+			Iterator it = lastResultCinsureMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry entry = (Map.Entry) it.next();
+				RelaPeopleResponse relaPeopleResponse = new RelaPeopleResponse();
+				Map value = (Map) entry.getValue();
+				relaPeopleResponse.setRole(value.get("role").toString());
+				relaPeopleResponse.setType(value.get("type").toString());
+				relaPeopleResponse.setName(value.get("name").toString());
+				relaPeopleResponse.setCompanyType(value.get("companyType").toString());
+				relaPeopleResponse.setIdType(value.get("IdCardType").toString());
+				relaPeopleResponse.setCredentislasNum(value.get("CredentislasNum").toString());
+				relaPeopleResponse.setAddress(value.get("address").toString());
+				relaPeopleResponse.setEmail(value.get("email").toString());
+				relaPeopleResponse.setTelNum(value.get("telNum").toString());
+				relaPeopleResponse.setMobilePhone(value.get("mobilePhone").toString());
+				relaPeopleResponseList.add(relaPeopleResponse);
+			}
+		}
+		else{
+			logger.info("抓取机器人，【 PICC 查看续保投被保人页面信息时的参数信息错误】");
+		}
+		return relaPeopleResponseList;
     }
 
     @Override
     public List<ClaimResponse> getClaimInfoList(String licenseNo ) {
 		List<ClaimResponse> ClaimResponseList = new ArrayList<>();
-		Response responseIndex = goXubaoIndex();
-		if (responseIndex.getReturnCode() == SysConfigInfo.SUCCESS200) {
-			Response responseSearch = xubaoSearchByLicenseNo(responseIndex, licenseNo, licenseType);
-			if (responseSearch.getReturnCode() == SysConfigInfo.SUCCESS200) {
-				Response claimResponse1 = xubaoQueryClaimsMsg(responseSearch);
+		Response response = new Response();
+		response = getBeforeXubao();
+		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
+				Response claimResponse1 = xubaoQueryClaimsMsg(response);
 				Map lastResultMap = (Map) claimResponse1.getResponseMap().get("lastResult");
 				Iterator it = lastResultMap.entrySet().iterator();
 				while (it.hasNext()) {
@@ -189,13 +224,46 @@ public class RBServiceImpl implements IService {
 					claimResponse.setPayCompanyName(value.get("PayCompanyName").toString());
 					ClaimResponseList.add(claimResponse);
 				}
-
-			}
-
+		}
+		else{
+			logger.info("抓取机器人，【 PICC 查看续保投被保人页面信息时的参数信息错误】");
 		}
 		return ClaimResponseList;
 	}
+	/*******************************************************************************
+	 * 获取查询续保车辆基本信息页面、投被保人页面、车险页面、出险页面需要response
+	 *
+	 * @return response nextParams null lastResult null
+	 *******************************************************************************/
+	public Response getBeforeXubao(){
+		Response response = new Response();
+		Map  returnMap  = new HashMap<>();
+		try {
+			Map nextParamMap = new HashMap<>();
+			nextParamMap.put("bizNo",null );// 上年商业保单号
+			nextParamMap.put("bizType", "POLICY");
+			nextParamMap.put("comCode", null);
+			nextParamMap.put("contractNo", null);
+			nextParamMap.put("editType", "SHOW_POLICY");
+			nextParamMap.put("minusFlag", null);
+			nextParamMap.put("proposalNo", null);
+			nextParamMap.put("riskCode", "DAA");
+			nextParamMap.put("rnd704", null);
 
+			returnMap.put("nextParams", nextParamMap);
+			returnMap.put("lastResult", null);
+			response.setResponseMap(returnMap);
+			response.setReturnCode(SysConfigInfo.SUCCESS200);
+			response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
+		}catch (Exception e){
+			returnMap.put("nextParams", null);
+			returnMap.put("lastResult", null);
+			response.setResponseMap(returnMap);
+			response.setReturnCode(SysConfigInfo.ERROR404);
+			response.setErrMsg(SysConfigInfo.ERROR404MSG);
+		}
+		return response;
+	}
 	/*******************************************************************************
 	 * 跳转续保页面
 	 * 
@@ -272,13 +340,13 @@ public class RBServiceImpl implements IService {
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
 		map.put("bizType", "POLICY");
-		map.put("comCode", "11029204");
+		map.put("comCode", null);
 		map.put("contractNo", null);
 		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", "originQuery");
+		map.put("minusFlag", null);
 		map.put("proposalNo", null);
 		map.put("riskCode", "DAA");
-		map.put("rnd704", new Date().toString());
+		map.put("rnd704", null);
 		request.setRequestParam(map);
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CARTAB);// GET
 		Response responseShowCitemCar = xubaoShowCitemCarPage.run(request);
@@ -299,13 +367,13 @@ public class RBServiceImpl implements IService {
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
 		map.put("bizType", "POLICY");
-		map.put("comCode", "11029204");
+		map.put("comCode", null);
 		map.put("contractNo", null);
 		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", "originQuery");
+		map.put("minusFlag", null);
 		map.put("proposalNo", null);
 		map.put("riskCode", "DAA");
-		map.put("rnd704", new Date().toString());
+		map.put("rnd704", null);
 		request.setRequestParam(map);
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CARTAB);// GET
 		Response responseShowCinsured = xubaoShowCinsuredPage.run(request);
@@ -319,7 +387,6 @@ public class RBServiceImpl implements IService {
 	 * @return
 	 *******************************************************************************/
 	public Response xubaoGetCitemKind(Response response) {
-
 		XubaoShowCitemKindPage xubaoShowCitemKindPage = new XubaoShowCitemKindPage();
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
@@ -330,7 +397,7 @@ public class RBServiceImpl implements IService {
 		map.put("comCode", null);
 		map.put("contractNo", null);
 		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", "originQuery");
+		map.put("minusFlag", null);
 		map.put("proposalNo", null);
 		map.put("riskCode", "DAA");
 		map.put("rnd704", null);
@@ -348,7 +415,6 @@ public class RBServiceImpl implements IService {
 	 *         EndCaseTime;//结案时间 LossTime;//出险时间
 	 *******************************************************************************/
 	public Response xubaoQueryClaimsMsg(Response response) {
-
 		XubaoClaimsMsgPage xubaoClaimsMsgPage = new XubaoClaimsMsgPage();
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
@@ -356,8 +422,16 @@ public class RBServiceImpl implements IService {
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
 		map.put("bizType", "POLICY");
+		map.put("comCode", null);
+		map.put("contractNo", null);
+		map.put("editType", "SHOW_POLICY");
+		map.put("minusFlag", null);
+		map.put("proposalNo", null);
+		map.put("riskCode", "DAA");
+		map.put("rnd704", null);
 		request.setRequestParam(map);
-		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_QUERYCLAIMSMSG);// GET
+		//request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_QUERYCLAIMSMSG);// 查看理赔信息
+		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_KINDTAB);// 从险种信息中查看上一年出险信息
 		Response responseClaimMsg = xubaoClaimsMsgPage.run(request);
 		return responseClaimMsg;
 	}

@@ -6,6 +6,9 @@ import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +34,9 @@ public class XubaoBrowsePolicyPage extends BasePage {
         if(null!=html){
             Map  returnMap  = new HashMap<>();
             Map mapNextParam = new HashMap<>();
+            Document doc = Jsoup.parse(html);
+            String comCode = doc.getElementById("comCode").attributes().get("value");
+            mapNextParam.put("comCode",comCode);
             returnMap.put("nextParams",mapNextParam);
             returnMap.put("lastResult",null);
             response.setResponseMap(returnMap);

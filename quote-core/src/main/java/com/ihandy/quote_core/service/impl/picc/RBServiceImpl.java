@@ -273,7 +273,7 @@ public class RBServiceImpl implements IService {
 	 * @return response nextParams null lastResult null
 	 *******************************************************************************/
 	public Response goXubaoIndex() {
-		XubaoIndexPage xubaoIndexPage = new XubaoIndexPage();
+		XubaoIndexPage xubaoIndexPage = new XubaoIndexPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		request.setRequestParam(map);
@@ -291,7 +291,7 @@ public class RBServiceImpl implements IService {
 	 * @return response nextParams(上年 DAT,上年 DZA) lastResult(车牌号，发动机号，车架号)
 	 *******************************************************************************/
 	public Response xubaoSearchByLicenseNo(Response response, String licenseNo, String licenseType) {
-		XubaoSearchPage xubaoSearchPage = new XubaoSearchPage();
+		XubaoSearchPage xubaoSearchPage = new XubaoSearchPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		//map.put("prpCrenewalVo.engineNo", "");
@@ -325,7 +325,7 @@ public class RBServiceImpl implements IService {
 	 * @return
 	 *******************************************************************************/
 	public Response xubaoBrowsePolicyNo(Response response) {
-		XubaoBrowsePolicyPage xubaoBrowsePolicyPage = new XubaoBrowsePolicyPage();
+		XubaoBrowsePolicyPage xubaoBrowsePolicyPage = new XubaoBrowsePolicyPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		Map responseParam = response.getResponseMap();
@@ -345,7 +345,7 @@ public class RBServiceImpl implements IService {
 	 * @return
 	 *******************************************************************************/
 	public Response xubaoGetCitemCar(Response response) {
-		XubaoShowCitemCarPage xubaoShowCitemCarPage = new XubaoShowCitemCarPage();
+		XubaoShowCitemCarPage xubaoShowCitemCarPage = new XubaoShowCitemCarPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		Map responseParam = response.getResponseMap();
@@ -372,7 +372,7 @@ public class RBServiceImpl implements IService {
 	 * @return
 	 *******************************************************************************/
 	public Response xubaoGetCinsure(Response response) {
-		XubaoShowCinsuredPage xubaoShowCinsuredPage = new XubaoShowCinsuredPage();
+		XubaoShowCinsuredPage xubaoShowCinsuredPage = new XubaoShowCinsuredPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		Map responseParam = response.getResponseMap();
@@ -399,7 +399,7 @@ public class RBServiceImpl implements IService {
 	 * @return
 	 *******************************************************************************/
 	public Response xubaoGetCitemKind(Response response) {
-		XubaoShowCitemKindPage xubaoShowCitemKindPage = new XubaoShowCitemKindPage();
+		XubaoShowCitemKindPage xubaoShowCitemKindPage = new XubaoShowCitemKindPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		Map responseParam = response.getResponseMap();
@@ -427,7 +427,7 @@ public class RBServiceImpl implements IService {
 	 *         EndCaseTime;//结案时间 LossTime;//出险时间
 	 *******************************************************************************/
 	public Response xubaoQueryClaimsMsg(Response response) {
-		XubaoClaimsMsgPage xubaoClaimsMsgPage = new XubaoClaimsMsgPage();
+		XubaoClaimsMsgPage xubaoClaimsMsgPage = new XubaoClaimsMsgPage(1);
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		Map responseParam = response.getResponseMap();

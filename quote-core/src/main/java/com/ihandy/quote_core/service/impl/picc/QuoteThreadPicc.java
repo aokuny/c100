@@ -43,7 +43,7 @@ public class QuoteThreadPicc extends Thread{
 			//封装Item信息
 			JSONObject Item = new JSONObject();//报价结果的JSON对象
 			Item.put("Source", quoteMap.get("IntentionCompany"));
-			QuotePage quotePage = new QuotePage();
+			QuotePage quotePage = new QuotePage(1);
 			//TODO request 封装
 			Response quoteResponse = quotePage.run(null);
 			if(quoteResponse.getReturnCode() == SysConfigInfo.ERROR404){
@@ -64,7 +64,7 @@ public class QuoteThreadPicc extends Thread{
 			}
 			//查看是否报价交强险
 			if("1".equals(quoteMap.get("ForceTax"))){
-				QuoteJqxPage quoteJqxPage = new QuoteJqxPage();
+				QuoteJqxPage quoteJqxPage = new QuoteJqxPage(1);
 				//TODO request 封装
 				Response quoteJqxResponse = quoteJqxPage.run(null);
 				if(quoteJqxResponse.getReturnCode() == SysConfigInfo.ERROR404){

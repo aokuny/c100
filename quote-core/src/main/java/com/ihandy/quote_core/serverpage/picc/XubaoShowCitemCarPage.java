@@ -20,7 +20,12 @@ import java.util.Map;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoShowCitemCarPage extends BasePage{
-    private static Logger logger = LoggerFactory.getLogger(XubaoShowCitemCarPage.class);
+	
+    public XubaoShowCitemCarPage(int type) {
+		super(type);
+	}
+
+	private static Logger logger = LoggerFactory.getLogger(XubaoShowCitemCarPage.class);
     @Override
     public String doRequest(Request request) {
         String htmlCitemCar = null;

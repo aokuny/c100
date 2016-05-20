@@ -17,7 +17,12 @@ import java.util.Map;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoBrowsePolicyPage extends BasePage {
-    @Override
+	
+    public XubaoBrowsePolicyPage(int type) {
+		super(type);
+	}
+
+	@Override
     public String doRequest(Request request) {
         String html= "";
         String url = request.getUrl();

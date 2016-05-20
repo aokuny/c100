@@ -21,10 +21,16 @@ public abstract class BasePage {
     
     private Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
     
-    public BasePage(){
-    	logger.info("抓取机器人，【初始化PICC登录session开始】");
-    	//initPiccLogin();//初始化picc登录session
-    	logger.info("抓取机器人，【初始化PICC登录session完成】");
+    public BasePage(int type){
+    	switch (type) {
+		case 1://人保
+			logger.info("抓取机器人，【初始化PICC登录session开始】");
+	    	//initPiccLogin();//初始化picc登录session
+	    	logger.info("抓取机器人，【初始化PICC登录session完成】");
+			break;
+		default:
+			break;
+		}
     }
     
     /**

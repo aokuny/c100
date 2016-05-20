@@ -26,8 +26,8 @@ public class XubaoShowCinsuredPage extends BasePage {
         String htmlCinsured = null;
         String urlCinsured = request.getUrl();
         Map paraMap = request.getRequestParam();
-        urlCinsured = urlCinsured + StringBaseUtils.Map2GetParam(paraMap);
-        Map mapCinsured = HttpsUtil.sendGet(urlCinsured,super.piccSessionId);
+        urlCinsured = urlCinsured +"?"+ StringBaseUtils.Map2GetParam(paraMap);
+        Map mapCinsured = HttpsUtil.sendGet(urlCinsured,super.piccSessionId,"GB2312");
         htmlCinsured = mapCinsured.get("html").toString();
         return htmlCinsured;
     }
@@ -35,7 +35,7 @@ public class XubaoShowCinsuredPage extends BasePage {
     @Override
     public Response getResponse(String html) {
         Response response = new Response();
-        if(null!=html) {
+        if(!html.equals("")||null!=html) {
             Map returnMap = new HashMap<>();
             Map lastResult = new HashMap<>();
             html = html.replaceAll("\r|\n|\t", "");
@@ -51,8 +51,8 @@ public class XubaoShowCinsuredPage extends BasePage {
             String telNum="";//固定电话
             String mobilePhone="";//移动电话
 
-            Elements trs = doc.getElementById("insertInsuredRow").select("tr");
             try {
+                Elements trs = doc.getElementById("insertInsuredRow").select("tr");
                 for (int i = 0; i < trs.size(); i++) {
                     if (trs.get(i).attributes().hasKey("id")) {
                         Elements tds = trs.get(i).select("td");
@@ -81,6 +81,7 @@ public class XubaoShowCinsuredPage extends BasePage {
                                                 role = td.childNode(k).attributes().get("value");
                                                 role = role.replaceAll("\\s*", "");
                                                 if (null != role && !role.equals("")) {
+                                                    //role = new String(role.getBytes("iso-8859-1"),"utf-8");
                                                     returnResult.put("role", role);
                                                     break;
                                                 }
@@ -131,8 +132,8 @@ public class XubaoShowCinsuredPage extends BasePage {
                                         }
                                     }
                                 }  catch (Exception e){
-                                logger.info("抓取机器人，【 PICC 在浏览表单页面中解析车辆的投保人/被保人 name 字段失败】");
-                            }
+                                    logger.info("抓取机器人，【 PICC 在浏览表单页面中解析车辆的投保人/被保人 name 字段失败】");
+                                }
                             }
                             if (j == 3) {
                                 try {
@@ -178,21 +179,21 @@ public class XubaoShowCinsuredPage extends BasePage {
                             }
                             if (j == 5) {
                                 try{
-                                if (td.childNodeSize() == 1) {
-                                    CredentislasNum = td.childNode(0).attributes().get("value");
-                                    returnResult.put("CredentislasNum", CredentislasNum);
-                                } else {
-                                    for (int k = 0; k < td.childNodeSize(); k++) {
-                                        if (!td.childNode(k).attributes().hasKey("type")) {
-                                            CredentislasNum = td.childNode(k).attributes().get("value");
-                                            CredentislasNum = CredentislasNum.replaceAll("\\s*", "");
-                                            if (null != CredentislasNum && !CredentislasNum.equals("")) {
-                                                returnResult.put("CredentislasNum", CredentislasNum);
-                                                break;
+                                    if (td.childNodeSize() == 1) {
+                                        CredentislasNum = td.childNode(0).attributes().get("value");
+                                        returnResult.put("CredentislasNum", CredentislasNum);
+                                    } else {
+                                        for (int k = 0; k < td.childNodeSize(); k++) {
+                                            if (!td.childNode(k).attributes().hasKey("type")) {
+                                                CredentislasNum = td.childNode(k).attributes().get("value");
+                                                CredentislasNum = CredentislasNum.replaceAll("\\s*", "");
+                                                if (null != CredentislasNum && !CredentislasNum.equals("")) {
+                                                    returnResult.put("CredentislasNum", CredentislasNum);
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
-                                }
                                 }catch (Exception e){
                                     logger.info("抓取机器人，【 PICC 在浏览表单页面中解析车辆的投保人/被保人 CredentislasNum 字段失败】");
                                 }

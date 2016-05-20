@@ -3,7 +3,10 @@ package com.ihandy.rbquote;
 
 import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.other.BaseCarInfoResponse;
+import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.ClaimResponse;
+import com.ihandy.quote_core.bean.other.RelaPeopleResponse;
+import com.ihandy.quote_core.bean.other.SaveQuoteResponse;
 import com.ihandy.quote_core.service.IService;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
@@ -20,14 +23,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.zip.Inflater;
 
 /**
  * Created by fengwen on 2016/5/9.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/spring-config.xml")
-public class TestQuoteVC {
+public class TestQuoteVC   {
 
     private static Logger logger = LoggerFactory.getLogger(TestQuoteVC.class);
     @Resource(name="RBServiceImpl")
@@ -36,10 +42,59 @@ public class TestQuoteVC {
     @Test
     public void testGetCarInfoByLicenseNo() {
 
-       // irbService.getCarInfoByLicenseNo("123","02");
+        // irbService.getCarInfoByLicenseNo("123","02");
 
 
     }
+
+    //车辆的基本信息
+    @Test
+    public  void  testGetXuBaoCarBaseInfo(){
+        //测试index/search/browse/Citemcar/Cinsure
+        BaseCarInfoResponse baseCarInfoResponse = irbService.getBaseCarInfoByLicenseNo("京N3HU88",01);
+
+    }
+
+    //车辆的报价信息
+    @Test
+    public  void  testGetXuBaoQuoteInfo(){
+        //测试上年险种信息
+        SaveQuoteResponse saveQuoteResponse = irbService.getQuoteInfoByCarInfo("京P55M11" );
+
+    }
+
+    //车辆投被保人信息
+    @Test
+    public  void  testGetXuBaoInsureInfo(){
+        List<RelaPeopleResponse> list = new ArrayList<>();
+        list =  irbService.getRelaPeopleInfoByCarInfoList("京P55M11");
+
+    }
+
+    //车辆出险信息
+    @Test
+    public  void  testGetXuBaoClaimInfo(){
+        List<ClaimResponse> list = new ArrayList<>();
+        list =  irbService.getClaimInfoList("京P55M11");
+
+    }
+
+    //车辆所有信息
+    @Test
+    public  void  testGetXuBaoCarInfo(){
+
+        CarInfoResponse carInfo =  irbService.getAllCarInfoByLicenseNo("京P55M11",01);
+
+    }
+
+
+
+
+
+
+
+
+
 
     @Test
     public void testGetBaodanList() {
@@ -52,9 +107,9 @@ public class TestQuoteVC {
         Map map1 = (Map)jsonArray.get(0);
         JSONArray jsonArray2 = (JSONArray)map1.get("data");
 
-      //  SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-      //  Date date = new Date();
-      //  int thisYear = Integer.parseInt( sdf.format(date));
+        //  SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        //  Date date = new Date();
+        //  int thisYear = Integer.parseInt( sdf.format(date));
 
         int maxSyYear = 0;
         int maxJqYear = 0;
@@ -722,7 +777,7 @@ public class TestQuoteVC {
         Elements tdsCarUsedType = trs.get(4).select("td");
         Element elementCarUsedType =  tdsCarUsedType.get(3).getElementById("prpCitemCar.useNatureCode");
         if(elementCarUsedType.tagName().equals("select")){
-           Elements CarUsedTypeElements = elementCarUsedType.getAllElements();
+            Elements CarUsedTypeElements = elementCarUsedType.getAllElements();
             for(int i=0;i<CarUsedTypeElements.size();i++){
                 if(CarUsedTypeElements.get(i).attributes().hasKey("selected")){
                     CarUsedType =  CarUsedTypeElements.get(9).text();
@@ -1668,7 +1723,7 @@ public class TestQuoteVC {
         while (entries.hasNext()) {
             Map.Entry entry = (Map.Entry) entries.next();
             Integer key = (Integer)entry.getKey();
-             Map value = (Map)entry.getValue();
+            Map value = (Map)entry.getValue();
             if (value.get("role").toString().equals("投保人")) {
                 carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
             }else if(value.get("role").toString().equals("车主")){
@@ -1710,7 +1765,7 @@ public class TestQuoteVC {
         File file=new File("d:/3.html");
         Document doc=null;
         try{
-             doc = Jsoup.parse(file, "GB2312");
+            doc = Jsoup.parse(file, "GB2312");
         }catch (Exception e){}
 
 
@@ -1726,7 +1781,7 @@ public class TestQuoteVC {
         for(int i = 0;i<itemKindMaintrs.size();i++) {
             Elements tds = itemKindMaintrs.get(i).select("td");
             if(tds.size()==32){//主险种以上保险的数据
-               String insureName = tds.get(1).child(1).attributes().get("value");
+                String insureName = tds.get(1).child(1).attributes().get("value");
                 Double insureCost = Double.parseDouble(tds.get(4).childNode(1).childNode(1).attributes().get("value").toString());
                 if(insureName.equals("机动车损失保险")){
                     System.out.println("insureName =" +insureName +" insureCost = "+insureCost+"\n");

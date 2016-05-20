@@ -186,6 +186,6 @@ public class SysConfigInfo {
         }
     }
 
-
+    public static Map  SysXubaoParamsMap;
 
 }

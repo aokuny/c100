@@ -24,10 +24,13 @@ public class XubaoShowCitemCarPage extends BasePage{
     @Override
     public String doRequest(Request request) {
         String htmlCitemCar = null;
+        String html = null;
         String urlCitemCar = request.getUrl();
         Map paraMap = request.getRequestParam();
-        urlCitemCar = urlCitemCar + StringBaseUtils.Map2GetParam(paraMap);
-        Map mapClaimsMsg = HttpsUtil.sendGet(urlCitemCar,super.piccSessionId);
+        urlCitemCar = urlCitemCar +"?"+ StringBaseUtils.Map2GetParam(paraMap);
+        //  urlCitemCar =   urlCitemCar+"?editType=SHOW_POLICY&bizType=POLICY&bizNo=PDAT20151102T000182528&riskCode=DAA&minusFlag=&contractNo=%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20&comCode=11029204&originQuery=&proposalNo=TDAT20151102T000210983&rnd554=Fri%20May%2020%2009:14:49%20UTC+0800%202016";
+        // urlCitemCar = "http://10.134.136.48:8000/prpall/business/showCitemCar.do?editType=SHOW_POLICY&bizType=POLICY&bizNo=PDAT20151102T000182528&riskCode=DAA&minusFlag=&contractNo=                      &comCode=11029204&originQuery=&proposalNo=TDAT20151102T000210983&rnd554=Fri May 20 09:14:49 UTC+0800 2016";
+        Map mapClaimsMsg = HttpsUtil.sendGet(urlCitemCar,super.piccSessionId,"GB2312");
         htmlCitemCar = mapClaimsMsg.get("html").toString();
         return htmlCitemCar;
     }
@@ -41,7 +44,7 @@ public class XubaoShowCitemCarPage extends BasePage{
         String CarRegisterDate="";//车辆注册日期
         int CarSeated=0;//座位数量
 
-        if(null!=html) {
+        if(!html.equals("")||null!=html) {
             Map returnMap = new HashMap<>();
             Map lastResult = new HashMap<>();
             returnMap.put("nextParams", null);

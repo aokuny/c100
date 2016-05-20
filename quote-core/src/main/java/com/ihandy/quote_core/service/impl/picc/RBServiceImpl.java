@@ -31,99 +31,101 @@ import java.util.*;
 @Service
 public class RBServiceImpl implements IService {
 
-    private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
 	private static Map<String, Map<String, Object>> uploadInsurInfo = new HashMap<>();
-    private static String licenseType="02";//车牌类型小型汽车
-    @Override
-    public BaseCarInfoResponse getBaseCarInfoByLicenseNo(String licenseNo,int CityCode) {
-        BaseCarInfoResponse carBaseInfoResponse = new BaseCarInfoResponse();
-        Response responseIndex = goXubaoIndex();
-        if(responseIndex.getReturnCode() == SysConfigInfo.SUCCESS200){
-            Response responseSearch = xubaoSearchByLicenseNo(responseIndex,licenseNo,licenseType);
-            if(responseSearch.getReturnCode() == SysConfigInfo.SUCCESS200){
-                Response responseBrowse = xubaoBrowsePolicyNo(responseSearch);
-                if(responseBrowse.getReturnCode() == SysConfigInfo.SUCCESS200){
-                    //获取车辆基本信息
-                    Response responseCitemCar = xubaoGetCitemCar(responseBrowse);
-                    if(responseCitemCar.getReturnCode() == SysConfigInfo.SUCCESS200) {
-                        //获取车辆关系人信息
-                        Response responseCinsure = xubaoGetCinsure(responseBrowse);
-                        if(responseCinsure.getReturnCode() == SysConfigInfo.SUCCESS200) {
-                            // TODO: 2016/5/17 将返回数据填充到carInfoResponse中
-                            // 1 ) 从search中返回的保单list中获取
-                            Map returnSearchMap = responseSearch.getResponseMap();
-                            Map lastResultSearchMap = (Map) returnSearchMap.get("lastResult");
-                            carBaseInfoResponse.setCarVin(lastResultSearchMap.get("CarVin").toString());//车架号
-                            carBaseInfoResponse.setLicenseNo(lastResultSearchMap.get("LicenseNo").toString());//车牌号
-                            carBaseInfoResponse.setEngineNo(lastResultSearchMap.get("EngineNo").toString());//发动机号
-                            carBaseInfoResponse.setBusinessExpireDate(lastResultSearchMap.get("BusinessExpireDate").toString());//商业险到期日期
-                            carBaseInfoResponse.setForceExpireDate(lastResultSearchMap.get("ForceExpireDate").toString());//交强险到期日期
-                            // 2 ) 从浏览保单基本车辆信息中获取
-                            Map returnCitemCarMap = responseCitemCar.getResponseMap();
-                            Map lastResultCitemCarMap = (Map) returnCitemCarMap.get("lastResult");
-                            carBaseInfoResponse.setCarSeated(Integer.parseInt(lastResultCitemCarMap.get("CarSeated").toString()));//核定座位数
-                            carBaseInfoResponse.setMoldName(lastResultCitemCarMap.get("MoldName").toString());//车型
-                            carBaseInfoResponse.setPurchasePrice(Double.parseDouble(lastResultCitemCarMap.get("PurchasePrice").toString()));//新车购买价格
-                            carBaseInfoResponse.setCarRegisterDate(lastResultCitemCarMap.get("CarRegisterDate").toString());//车辆首次登记日期
-                            carBaseInfoResponse.setCarUsedType(lastResultCitemCarMap.get("CarUsedType").toString());//车辆使用性质
-                            // 3 ) 从浏览保单保险关系人信息中获取
-                            Map returnCinsureMap = responseCinsure.getResponseMap();
-                            Map lastResultCinsureMap = (Map) returnCinsureMap.get("lastResult");
-                            Iterator entries = lastResultCinsureMap.entrySet().iterator();
-                            while (entries.hasNext()) {
-                                Map.Entry entry = (Map.Entry) entries.next();
-                                Map value = (Map) entry.getValue();
-                                if (value.get("role").toString().equals("投保人")) {
-                                    carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
-                                }else if(value.get("role").toString().equals("车主")){
-                                    carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
-                                    carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
-                                    carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
-                                }else if(value.get("role").toString().equals("被保险人")){
-                                    carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人
-                                }else if (value.get("role").toString().equals("被保险人/车主")) {
-                                    carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
-                                    carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人
-                                    carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
-                                    carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
-                                }
-                                else if (value.get("role").toString().equals("投保人/车主")) {
-                                    carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
-                                    carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
-                                    carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
-                                    carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
-                                }
-                                else if(value.get("role").toString().equals("投保人/被保险人")){
-                                    carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
-                                    carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人/车主
-                                }
-                            }
-                            // 4 ) 从参数中获取
-                            carBaseInfoResponse.setCityCode(CityCode);
-                        }else{
-                            logger.info("抓取机器人，【 PICC 获取保单中车辆相关保险人信息错误】");
-                        }
-                    }else{
-                        logger.info("抓取机器人，【 PICC 获取保单中车辆基本信息错误】");
-                    }
-                }else{
-                    logger.info("抓取机器人，【 PICC 按保单号查看保单错误】");
-                }
-            }else{
-                logger.info("抓取机器人，【 PICC 按车牌号和类型查询保单错误】");
-            }
-        }else{
-            logger.info("抓取机器人，【 PICC 跳转续保页面错误】");
-        }
-        return carBaseInfoResponse;
-    }
+	private static String licenseType="02";//车牌类型小型汽车
+	@Override
+	public BaseCarInfoResponse getBaseCarInfoByLicenseNo(String licenseNo,int CityCode) {
+		BaseCarInfoResponse carBaseInfoResponse = new BaseCarInfoResponse();
+		//  Response responseIndex = goXubaoIndex();
+		//  if(responseIndex.getReturnCode() == SysConfigInfo.SUCCESS200){
+		Response responseIndex =new Response();
 
-    @Override
-    public CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo,int CityCode) {
+		Response responseSearch = xubaoSearchByLicenseNo(responseIndex,licenseNo,licenseType);
+		if(responseSearch.getReturnCode() == SysConfigInfo.SUCCESS200){
+			Response responseBrowse = xubaoBrowsePolicyNo(responseSearch);
+			if(responseBrowse.getReturnCode() == SysConfigInfo.SUCCESS200){
+				//获取车辆基本信息
+				Response responseCitemCar = xubaoGetCitemCar(responseBrowse);
+				if(responseCitemCar.getReturnCode() == SysConfigInfo.SUCCESS200) {
+					//获取车辆关系人信息
+					Response responseCinsure = xubaoGetCinsure(responseBrowse);
+					if(responseCinsure.getReturnCode() == SysConfigInfo.SUCCESS200) {
+						// TODO: 2016/5/17 将返回数据填充到carInfoResponse中
+						// 1 ) 从search中返回的保单list中获取
+						Map returnSearchMap = responseSearch.getResponseMap();
+						Map lastResultSearchMap = (Map) returnSearchMap.get("lastResult");
+						carBaseInfoResponse.setCarVin(lastResultSearchMap.get("CarVin").toString());//车架号
+						carBaseInfoResponse.setLicenseNo(lastResultSearchMap.get("LicenseNo").toString());//车牌号
+						carBaseInfoResponse.setEngineNo(lastResultSearchMap.get("EngineNo").toString());//发动机号
+						carBaseInfoResponse.setBusinessExpireDate(lastResultSearchMap.get("BusinessExpireDate").toString());//商业险到期日期
+						carBaseInfoResponse.setForceExpireDate(lastResultSearchMap.get("ForceExpireDate").toString());//交强险到期日期
+						// 2 ) 从浏览保单基本车辆信息中获取
+						Map returnCitemCarMap = responseCitemCar.getResponseMap();
+						Map lastResultCitemCarMap = (Map) returnCitemCarMap.get("lastResult");
+						carBaseInfoResponse.setCarSeated(Integer.parseInt(lastResultCitemCarMap.get("CarSeated").toString()));//核定座位数
+						carBaseInfoResponse.setMoldName(lastResultCitemCarMap.get("MoldName").toString());//车型
+						carBaseInfoResponse.setPurchasePrice(Double.parseDouble(lastResultCitemCarMap.get("PurchasePrice").toString()));//新车购买价格
+						carBaseInfoResponse.setCarRegisterDate(lastResultCitemCarMap.get("CarRegisterDate").toString());//车辆首次登记日期
+						carBaseInfoResponse.setCarUsedType(lastResultCitemCarMap.get("CarUsedType").toString());//车辆使用性质
+						// 3 ) 从浏览保单保险关系人信息中获取
+						Map returnCinsureMap = responseCinsure.getResponseMap();
+						Map lastResultCinsureMap = (Map) returnCinsureMap.get("lastResult");
+						Iterator entries = lastResultCinsureMap.entrySet().iterator();
+						while (entries.hasNext()) {
+							Map.Entry entry = (Map.Entry) entries.next();
+							Map value = (Map) entry.getValue();
+							if (value.get("role").toString().equals("投保人")) {
+								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
+							}else if(value.get("role").toString().equals("车主")){
+								carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
+								carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
+								carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
+							}else if(value.get("role").toString().equals("被保险人")){
+								carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人
+							}else if (value.get("role").toString().equals("被保险人/车主")) {
+								carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
+								carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人
+								carBaseInfoResponse.setCredentislasNum(value.get("CredentislasNum").toString());//证件号码
+								carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
+							}
+							else if (value.get("role").toString().equals("投保人/车主")) {
+								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
+								carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
+								carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
+								carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
+							}
+							else if(value.get("role").toString().equals("投保人/被保险人")){
+								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
+								carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人/车主
+							}
+						}
+						// 4 ) 从参数中获取
+						carBaseInfoResponse.setCityCode(CityCode);
+					}else{
+						logger.info("抓取机器人，【 PICC 获取保单中车辆相关保险人信息错误】");
+					}
+				}else{
+					logger.info("抓取机器人，【 PICC 获取保单中车辆基本信息错误】");
+				}
+			}else{
+				logger.info("抓取机器人，【 PICC 按保单号查看保单错误】");
+			}
+		}else{
+			logger.info("抓取机器人，【 PICC 按车牌号和类型查询保单错误】");
+		}
+		//  }else{
+		//   logger.info("抓取机器人，【 PICC 跳转续保页面错误】");
+		// }
+		return carBaseInfoResponse;
+	}
+
+	@Override
+	public CarInfoResponse getAllCarInfoByLicenseNo(String licenseNo,int CityCode) {
 		CarInfoResponse carInfoResponse = new CarInfoResponse();
 		//1）获取车辆基本信息
 		BaseCarInfoResponse carBaseInfoResponse  = getBaseCarInfoByLicenseNo(licenseNo,CityCode);
-        //2) 获取投被保人信息
+		//2) 获取投被保人信息
 		List<RelaPeopleResponse> relaPeopleResponseList = getRelaPeopleInfoByCarInfoList(licenseNo);
 		//3) 获取险种信息
 		SaveQuoteResponse saveQuoteResponse = getQuoteInfoByCarInfo(licenseNo);
@@ -134,16 +136,16 @@ public class RBServiceImpl implements IService {
 		carInfoResponse.setClaimResponseList(claimResponseList);
 		carInfoResponse.setRelaPeopleResponseList(relaPeopleResponseList);
 		carInfoResponse.setSaveQuoteResponse(saveQuoteResponse);
-        return carInfoResponse;
-    }
+		return carInfoResponse;
+	}
 
-    @Override
-    public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo ) {
+	@Override
+	public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo ) {
 		SaveQuoteResponse saveQuoteResponse = new SaveQuoteResponse();
 		// 需要根据实际应用来进行参数传递与配置，若缓存中有完整参数信息且session未过期,直接使用续保单号去查询险种信息；
 		// 若参数信息不完整或session已过期，调用获取这些信息的接口后，才开始查询险种信息
 		Response response = new Response();
-		response = getBeforeXubao();
+		response = getBeforeXubao(SysConfigInfo.SysXubaoParamsMap);
 		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
 			//成功返回
 			Response responseCitemKind = xubaoGetCitemKind(response);
@@ -169,14 +171,14 @@ public class RBServiceImpl implements IService {
 		else{
 			logger.info("抓取机器人，【 PICC  查看续保险种信息页面信息时的参数信息错误】");
 		}
-        return saveQuoteResponse;
-    }
+		return saveQuoteResponse;
+	}
 
-    @Override
-    public List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo) {
+	@Override
+	public List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo) {
 		List<RelaPeopleResponse> relaPeopleResponseList = new ArrayList<>();
 		Response response = new Response();
-		response = getBeforeXubao();
+		response = getBeforeXubao(SysConfigInfo.SysXubaoParamsMap);
 		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
 			Response responseCinsure = xubaoGetCinsure(response);
 			Map returnCinsureMap = responseCinsure.getResponseMap();
@@ -203,27 +205,27 @@ public class RBServiceImpl implements IService {
 			logger.info("抓取机器人，【 PICC 查看续保投被保人页面信息时的参数信息错误】");
 		}
 		return relaPeopleResponseList;
-    }
+	}
 
-    @Override
-    public List<ClaimResponse> getClaimInfoList(String licenseNo ) {
+	@Override
+	public List<ClaimResponse> getClaimInfoList(String licenseNo ) {
 		List<ClaimResponse> ClaimResponseList = new ArrayList<>();
 		Response response = new Response();
-		response = getBeforeXubao();
+		response = getBeforeXubao(SysConfigInfo.SysXubaoParamsMap);
 		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
-				Response claimResponse1 = xubaoQueryClaimsMsg(response);
-				Map lastResultMap = (Map) claimResponse1.getResponseMap().get("lastResult");
-				Iterator it = lastResultMap.entrySet().iterator();
-				while (it.hasNext()) {
-					Map.Entry entry = (Map.Entry) it.next();
-					ClaimResponse claimResponse = new ClaimResponse();
-					Map value = (Map) entry.getValue();
-					claimResponse.setEndCaseTime(value.get("EndCaseTime").toString());
-					claimResponse.setLossTime(value.get("LossTime").toString());
-					claimResponse.setPayAmount(Double.parseDouble(value.get("PayAmount").toString()));
-					claimResponse.setPayCompanyName(value.get("PayCompanyName").toString());
-					ClaimResponseList.add(claimResponse);
-				}
+			Response claimResponse1 = xubaoQueryClaimsMsg(response);
+			Map lastResultMap = (Map) claimResponse1.getResponseMap().get("lastResult");
+			Iterator it = lastResultMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry entry = (Map.Entry) it.next();
+				ClaimResponse claimResponse = new ClaimResponse();
+				Map value = (Map) entry.getValue();
+				claimResponse.setEndCaseTime(value.get("EndCaseTime").toString());
+				claimResponse.setLossTime(value.get("LossTime").toString());
+				claimResponse.setPayAmount(Double.parseDouble(value.get("PayAmount").toString()));
+				claimResponse.setPayCompanyName(value.get("PayCompanyName").toString());
+				ClaimResponseList.add(claimResponse);
+			}
 		}
 		else{
 			logger.info("抓取机器人，【 PICC 查看续保投被保人页面信息时的参数信息错误】");
@@ -235,20 +237,21 @@ public class RBServiceImpl implements IService {
 	 *
 	 * @return response nextParams null lastResult null
 	 *******************************************************************************/
-	public Response getBeforeXubao(){
+	public Response getBeforeXubao(Map SysXubaoParamsMap ){
 		Response response = new Response();
 		Map  returnMap  = new HashMap<>();
 		try {
 			Map nextParamMap = new HashMap<>();
-			nextParamMap.put("bizNo",null );// 上年商业保单号
-			nextParamMap.put("bizType", "POLICY");
-			nextParamMap.put("comCode", null);
-			nextParamMap.put("contractNo", null);
-			nextParamMap.put("editType", "SHOW_POLICY");
-			nextParamMap.put("minusFlag", null);
-			nextParamMap.put("proposalNo", null);
-			nextParamMap.put("riskCode", "DAA");
-			nextParamMap.put("rnd704", null);
+
+			nextParamMap.put("bizNo", SysXubaoParamsMap.get("bizNo").toString());// 上年商业保单号
+			nextParamMap.put("bizType", SysXubaoParamsMap.get("bizType").toString());
+			nextParamMap.put("comCode", SysXubaoParamsMap.get("comCode").toString());
+			nextParamMap.put("contractNo", SysXubaoParamsMap.get("contractNo").toString());
+			nextParamMap.put("editType", SysXubaoParamsMap.get("editType").toString());
+			nextParamMap.put("minusFlag", "");
+			nextParamMap.put("proposalNo", SysXubaoParamsMap.get("proposalNo").toString());
+			nextParamMap.put("riskCode", SysXubaoParamsMap.get("riskCode").toString());
+			nextParamMap.put("rnd704", "");
 
 			returnMap.put("nextParams", nextParamMap);
 			returnMap.put("lastResult", null);
@@ -266,7 +269,7 @@ public class RBServiceImpl implements IService {
 	}
 	/*******************************************************************************
 	 * 跳转续保页面
-	 * 
+	 *
 	 * @return response nextParams null lastResult null
 	 *******************************************************************************/
 	public Response goXubaoIndex() {
@@ -281,7 +284,7 @@ public class RBServiceImpl implements IService {
 
 	/*******************************************************************************
 	 * 按车牌号查询续保单
-	 * 
+	 *
 	 * @param response
 	 * @param licenseNo
 	 * @param licenseType
@@ -291,14 +294,23 @@ public class RBServiceImpl implements IService {
 		XubaoSearchPage xubaoSearchPage = new XubaoSearchPage();
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("prpCrenewalVo.engineNo", null);
-		map.put("prpCrenewalVo.frameNo", null);
-		map.put("prpCrenewalVo.licenseColorCode", null);
+		//map.put("prpCrenewalVo.engineNo", "");
+		//map.put("prpCrenewalVo.frameNo",  "");
+		//map.put("prpCrenewalVo.licenseColorCode",  "");
 		map.put("prpCrenewalVo.licenseNo", licenseNo);
 		map.put("prpCrenewalVo.licenseType", licenseType);
-		map.put("prpCrenewalVo.othFlag", null);
-		map.put("prpCrenewalVo.policyNo", null);
-		map.put("prpCrenewalVo.vinNo", null);
+		map.put("pageNo","1");
+		map.put("pageSize","10");
+		//map.put("prpCrenewalVo.othFlag",  "");
+		//map.put("prpCrenewalVo.policyNo",  "");
+		//map.put("prpCrenewalVo.vinNo",  "");
+
+		//test add
+		//map.put("jumpToPage","1");
+		//map.put("ipolicyNo", "PDAT20141102T000135272");
+		//map.put("ipolicyNo", "PDAT20151102T000182528");
+		//map.put("ipolicyNo", "PDZA20151102T000186793");
+		//map.put("ipolicyNo", "PDZA20141102T000140848");
 		request.setRequestParam(map);
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_SELECTRENEWAL);// POST
 		Response responseSearch = xubaoSearchPage.run(request);
@@ -308,7 +320,7 @@ public class RBServiceImpl implements IService {
 
 	/*******************************************************************************
 	 * 按保单号浏览保单
-	 * 
+	 *
 	 * @param response
 	 * @return
 	 *******************************************************************************/
@@ -328,7 +340,7 @@ public class RBServiceImpl implements IService {
 
 	/*******************************************************************************
 	 * 查询车辆基本信息
-	 * 
+	 *
 	 * @param response
 	 * @return
 	 *******************************************************************************/
@@ -339,14 +351,14 @@ public class RBServiceImpl implements IService {
 		Map responseParam = response.getResponseMap();
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
-		map.put("bizType", "POLICY");
-		map.put("comCode", null);
-		map.put("contractNo", null);
-		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", null);
-		map.put("proposalNo", null);
-		map.put("riskCode", "DAA");
-		map.put("rnd704", null);
+		map.put("bizType", nextParamsMap.get("bizType").toString());
+		map.put("comCode", nextParamsMap.get("comCode").toString());
+		map.put("contractNo", nextParamsMap.get("contractNo").toString());
+		map.put("editType", nextParamsMap.get("editType").toString());
+		map.put("minusFlag", "");
+		map.put("proposalNo", nextParamsMap.get("proposalNo").toString());
+		map.put("riskCode", nextParamsMap.get("riskCode").toString());
+		map.put("rnd704", "");
 		request.setRequestParam(map);
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CARTAB);// GET
 		Response responseShowCitemCar = xubaoShowCitemCarPage.run(request);
@@ -355,7 +367,7 @@ public class RBServiceImpl implements IService {
 
 	/*******************************************************************************
 	 * 查询车辆人员关系信息
-	 * 
+	 *
 	 * @param response
 	 * @return
 	 *******************************************************************************/
@@ -366,23 +378,23 @@ public class RBServiceImpl implements IService {
 		Map responseParam = response.getResponseMap();
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
-		map.put("bizType", "POLICY");
-		map.put("comCode", null);
-		map.put("contractNo", null);
-		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", null);
-		map.put("proposalNo", null);
-		map.put("riskCode", "DAA");
-		map.put("rnd704", null);
+		map.put("bizType", nextParamsMap.get("bizType").toString());
+		map.put("comCode", nextParamsMap.get("comCode").toString());
+		map.put("contractNo", nextParamsMap.get("contractNo").toString());
+		map.put("editType", nextParamsMap.get("editType").toString());
+		map.put("minusFlag", "");
+		map.put("proposalNo", nextParamsMap.get("proposalNo").toString());
+		map.put("riskCode", nextParamsMap.get("riskCode").toString());
+		map.put("rnd704", "");
 		request.setRequestParam(map);
-		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CARTAB);// GET
+		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_INSUREDTAB);// GET
 		Response responseShowCinsured = xubaoShowCinsuredPage.run(request);
 		return responseShowCinsured;
 	}
 
 	/*******************************************************************************
 	 * 获取车辆保险责任
-	 * 
+	 *
 	 * @param response
 	 * @return
 	 *******************************************************************************/
@@ -393,23 +405,23 @@ public class RBServiceImpl implements IService {
 		Map responseParam = response.getResponseMap();
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
-		map.put("bizType", "POLICY");
-		map.put("comCode", null);
-		map.put("contractNo", null);
-		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", null);
-		map.put("proposalNo", null);
-		map.put("riskCode", "DAA");
-		map.put("rnd704", null);
+		map.put("bizType", nextParamsMap.get("bizType").toString());
+		map.put("comCode", nextParamsMap.get("comCode").toString());
+		map.put("contractNo", nextParamsMap.get("contractNo").toString());
+		map.put("editType", nextParamsMap.get("editType").toString());
+		map.put("minusFlag", "");
+		map.put("proposalNo", nextParamsMap.get("proposalNo").toString());
+		map.put("riskCode", nextParamsMap.get("riskCode").toString());
+		map.put("rnd704", "");
 		request.setRequestParam(map);
-		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CARTAB);// GET
+		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_KINDTAB);// GET
 		Response responseShowCitemKind = xubaoShowCitemKindPage.run(request);
 		return responseShowCitemKind;
 	}
 
 	/*******************************************************************************
 	 * 查询出险理赔信息
-	 * 
+	 *
 	 * @param response
 	 * @return response PayCompanyName;//保险公司 PayAmount;//出险金额
 	 *         EndCaseTime;//结案时间 LossTime;//出险时间
@@ -421,14 +433,14 @@ public class RBServiceImpl implements IService {
 		Map responseParam = response.getResponseMap();
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
-		map.put("bizType", "POLICY");
-		map.put("comCode", null);
-		map.put("contractNo", null);
-		map.put("editType", "SHOW_POLICY");
-		map.put("minusFlag", null);
-		map.put("proposalNo", null);
-		map.put("riskCode", "DAA");
-		map.put("rnd704", null);
+		map.put("bizType", nextParamsMap.get("bizType").toString());
+		map.put("comCode", nextParamsMap.get("comCode").toString());
+		map.put("contractNo", nextParamsMap.get("contractNo").toString());
+		map.put("editType", nextParamsMap.get("editType").toString());
+		map.put("minusFlag", "");
+		map.put("proposalNo", nextParamsMap.get("proposalNo").toString());
+		map.put("riskCode", nextParamsMap.get("riskCode").toString());
+		map.put("rnd704", "");
 		request.setRequestParam(map);
 		//request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_QUERYCLAIMSMSG);// 查看理赔信息
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_KINDTAB);// 从险种信息中查看上一年出险信息
@@ -438,17 +450,17 @@ public class RBServiceImpl implements IService {
 
 	@Override
 	public PostPrecisePricerResponse postPrecisePrice(String LicenseNo, String CarOwnersName, String IdCard,
-			String IsSingleSubmit, String IntentionCompany, String InsuredName, String InsuredIdCard,
-			String InsuredIdType, String InsuredMobile, String IsNewCar, String CarType, String CarUsedType,
-			String CityCode, String EngineNo, String CarVin, String RegisterDate, String MoldName, String ForceTax,
-			String BizStartDate, String BoLi, String BuJiMianCheSun, String BuJiMianDaoQiang, String BuJiMianFuJia,
-			String BuJiMianRenYuan, String BuJiMianSanZhe, String CheDeng, String SheShui, String HuaHen, String SiJi,
-			String ChengKe, String CheSun, String DaoQiang, String SanZhe, String ZiRan, String SeatCount,
-			String TonCount, String HcSheBeiSunshi, String HcHuoWuZeRen, String HcFeiYongBuChang,
-			String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
-			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
-			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
+													  String IsSingleSubmit, String IntentionCompany, String InsuredName, String InsuredIdCard,
+													  String InsuredIdType, String InsuredMobile, String IsNewCar, String CarType, String CarUsedType,
+													  String CityCode, String EngineNo, String CarVin, String RegisterDate, String MoldName, String ForceTax,
+													  String BizStartDate, String BoLi, String BuJiMianCheSun, String BuJiMianDaoQiang, String BuJiMianFuJia,
+													  String BuJiMianRenYuan, String BuJiMianSanZhe, String CheDeng, String SheShui, String HuaHen, String SiJi,
+													  String ChengKe, String CheSun, String DaoQiang, String SanZhe, String ZiRan, String SeatCount,
+													  String TonCount, String HcSheBeiSunshi, String HcHuoWuZeRen, String HcFeiYongBuChang,
+													  String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
+													  String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
+													  String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
+													  String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
 		PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
 		// 验证参数
 		postPrecisePricerResponse = this.verifyPostPrecisePriceParam(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit,
@@ -469,26 +481,26 @@ public class RBServiceImpl implements IService {
 		uploadInsurInfo.put(LicenseNo, paramMap);
 		//开启线程进行查询
 		switch (IntentionCompany) {
-		case "0"://平安
-			QuoteThreadPingan t1=new QuoteThreadPingan(LicenseNo, param);
-			t1.start();
-			break;
-		case "1"://太平洋
-			QuoteThreadCpic t2=new QuoteThreadCpic(LicenseNo, param);
-			t2.start();
-			break;
-		case "2"://人保
-			QuoteThreadPicc t3=new QuoteThreadPicc(LicenseNo, param);
-			t3.start();
-			break;
-		case "-1"://全部
-			QuoteThreadPingan t4=new QuoteThreadPingan(LicenseNo, param);
-			t4.start();
-			QuoteThreadCpic t5=new QuoteThreadCpic(LicenseNo, param);
-			t5.start();
-			QuoteThreadPicc t6=new QuoteThreadPicc(LicenseNo, param);
-			t6.start();
-			break;
+			case "0"://平安
+				QuoteThreadPingan t1=new QuoteThreadPingan(LicenseNo, param);
+				t1.start();
+				break;
+			case "1"://太平洋
+				QuoteThreadCpic t2=new QuoteThreadCpic(LicenseNo, param);
+				t2.start();
+				break;
+			case "2"://人保
+				QuoteThreadPicc t3=new QuoteThreadPicc(LicenseNo, param);
+				t3.start();
+				break;
+			case "-1"://全部
+				QuoteThreadPingan t4=new QuoteThreadPingan(LicenseNo, param);
+				t4.start();
+				QuoteThreadCpic t5=new QuoteThreadCpic(LicenseNo, param);
+				t5.start();
+				QuoteThreadPicc t6=new QuoteThreadPicc(LicenseNo, param);
+				t6.start();
+				break;
 		}
 		postPrecisePricerResponse.setStatusMessage("险种信息上传成功");
 		return postPrecisePricerResponse;
@@ -496,21 +508,21 @@ public class RBServiceImpl implements IService {
 
 	/**
 	 * 对必要参数进行验证
-	 * 
+	 *
 	 * @return
 	 */
 	private PostPrecisePricerResponse verifyPostPrecisePriceParam(String LicenseNo, String CarOwnersName, String IdCard,
-			String IsSingleSubmit, String IntentionCompany, String InsuredName, String InsuredIdCard,
-			String InsuredIdType, String InsuredMobile, String IsNewCar, String CarType, String CarUsedType,
-			String CityCode, String EngineNo, String CarVin, String RegisterDate, String MoldName, String ForceTax,
-			String BizStartDate, String BoLi, String BuJiMianCheSun, String BuJiMianDaoQiang, String BuJiMianFuJia,
-			String BuJiMianRenYuan, String BuJiMianSanZhe, String CheDeng, String SheShui, String HuaHen, String SiJi,
-			String ChengKe, String CheSun, String DaoQiang, String SanZhe, String ZiRan, String SeatCount,
-			String TonCount, String HcSheBeiSunshi, String HcHuoWuZeRen, String HcFeiYongBuChang,
-			String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
-			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
-			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
+																  String IsSingleSubmit, String IntentionCompany, String InsuredName, String InsuredIdCard,
+																  String InsuredIdType, String InsuredMobile, String IsNewCar, String CarType, String CarUsedType,
+																  String CityCode, String EngineNo, String CarVin, String RegisterDate, String MoldName, String ForceTax,
+																  String BizStartDate, String BoLi, String BuJiMianCheSun, String BuJiMianDaoQiang, String BuJiMianFuJia,
+																  String BuJiMianRenYuan, String BuJiMianSanZhe, String CheDeng, String SheShui, String HuaHen, String SiJi,
+																  String ChengKe, String CheSun, String DaoQiang, String SanZhe, String ZiRan, String SeatCount,
+																  String TonCount, String HcSheBeiSunshi, String HcHuoWuZeRen, String HcFeiYongBuChang,
+																  String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
+																  String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
+																  String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
+																  String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
 		PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
 		// 验证LicenseNo
 		if (StringUtils.isBlank(LicenseNo)) {
@@ -676,7 +688,7 @@ public class RBServiceImpl implements IService {
 			postPrecisePricerResponse.setStatusMessage("SanZhe 参数值错误");
 			return postPrecisePricerResponse;
 		}
-		
+
 		if(StringUtils.isBlank(CustKey)){
 			postPrecisePricerResponse.setBusinessStatus("-1");
 			postPrecisePricerResponse.setStatusMessage("CustKey 不能为空");
@@ -697,23 +709,23 @@ public class RBServiceImpl implements IService {
 		logger.info("PICC API，【上传险种信息参数验证成功】");
 		return postPrecisePricerResponse;
 	}
-	
+
 	/**
 	 * 参数变为Map
 	 * @return
 	 */
 	private Map<String, String> takeParamToMap(String LicenseNo, String CarOwnersName, String IdCard,
-			String IsSingleSubmit, String IntentionCompany, String InsuredName, String InsuredIdCard,
-			String InsuredIdType, String InsuredMobile, String IsNewCar, String CarType, String CarUsedType,
-			String CityCode, String EngineNo, String CarVin, String RegisterDate, String MoldName, String ForceTax,
-			String BizStartDate, String BoLi, String BuJiMianCheSun, String BuJiMianDaoQiang, String BuJiMianFuJia,
-			String BuJiMianRenYuan, String BuJiMianSanZhe, String CheDeng, String SheShui, String HuaHen, String SiJi,
-			String ChengKe, String CheSun, String DaoQiang, String SanZhe, String ZiRan, String SeatCount,
-			String TonCount, String HcSheBeiSunshi, String HcHuoWuZeRen, String HcFeiYongBuChang,
-			String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
-			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
-			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode){
+											   String IsSingleSubmit, String IntentionCompany, String InsuredName, String InsuredIdCard,
+											   String InsuredIdType, String InsuredMobile, String IsNewCar, String CarType, String CarUsedType,
+											   String CityCode, String EngineNo, String CarVin, String RegisterDate, String MoldName, String ForceTax,
+											   String BizStartDate, String BoLi, String BuJiMianCheSun, String BuJiMianDaoQiang, String BuJiMianFuJia,
+											   String BuJiMianRenYuan, String BuJiMianSanZhe, String CheDeng, String SheShui, String HuaHen, String SiJi,
+											   String ChengKe, String CheSun, String DaoQiang, String SanZhe, String ZiRan, String SeatCount,
+											   String TonCount, String HcSheBeiSunshi, String HcHuoWuZeRen, String HcFeiYongBuChang,
+											   String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
+											   String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
+											   String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
+											   String DAmount3, String PDate3, String CustKey, String Agent, String SecCode){
 		Map<String, String> map = new HashMap<>();
 		map.put("LicenseNo", LicenseNo);
 		map.put("CarOwnersName", CarOwnersName);

@@ -24,4 +24,6 @@
         <version>${chexian-quote.version}</version>
     </dependency>
     </dependencies>
+
+
 </project>

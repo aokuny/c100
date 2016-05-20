@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 	
 	<!-- jedis连接池 高版本，连接的是pool2的连接池-->
-	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+	<!--<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 	    <property name="maxIdle" value="${redis.maxIdle}" />
 	    <property name="maxTotal" value="${redis.maxActive}" /> 
 	    <property name="maxWaitMillis" value="${redis.maxWait}" />
@@ -28,5 +28,5 @@
 		<constructor-arg value="${redis.timeout}" type="int"/>
 		<constructor-arg value="${redis.maxRedirections}" type="int"/>
 		<constructor-arg ref="jedisPoolConfig"/>
-	</bean>
+	</bean>-->
 </beans>

@@ -18,15 +18,8 @@ public class SysConfigInfo {
     private static Properties properties;
 
     /** ====================================================人保begin====================*/
-    /** 人保域名*/
+     /** 人保域名*/
      public static String PICC_DOMIAN ;
-
-    /**首页面*/
-     public  static String  PICC_INDEX;
-    /**承保页面 */
-     public static String  PICC_CALOGIN;
-     /**车商渠道专用出单页面 */
-     public static String PICC_QUICKPROPOSAL ;
      /**续保对话框 */
      public static String  PICC_EDITRENEWALSEARCH ;
      /**查看保单数据源 */
@@ -90,12 +83,6 @@ public class SysConfigInfo {
             properties.load(is);
 
             PICC_DOMIAN = getString("picc_domain", "");
-
-            PICC_INDEX = getString("picc_index", "");
-
-            PICC_CALOGIN = getString("picc_calogin", "");
-
-            PICC_QUICKPROPOSAL = getString("picc_quickProposal", "");
 
             PICC_EDITRENEWALSEARCH = getString("picc_editRenewalSearch", "");
 

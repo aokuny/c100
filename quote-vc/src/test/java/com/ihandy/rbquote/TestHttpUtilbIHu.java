@@ -309,12 +309,12 @@ public class TestHttpUtilbIHu {
             //"ForceTotal":627.56,"TaxTotal":400
 
             //String carNO = "京PT3G98";
-           // String carNO = "京N3HU88";
+            String carNO = "京N3HU88";
             //String carNO = "翼A723KG";
             //String carNO = "京QA5M75";
             //String carNO = "京KT3495";
             //String carNO = "京KV5909";
-            String carNO = "京QWZ015";
+          // String carNO = "京QWZ015";
             //String carNO = "京Q8D075";
             // String carNO = "京KV5909";
             //String carNO="冀F03E65";

@@ -44,8 +44,6 @@ public class SysConfigInfo {
 
     
     /**----------------------------- 人保URL ----------------------------------*/
-    /** PICC登录URL */
-    public static String PICC_LOGIN1_URL;
     /** PICC人保业务登录 */
     public static String PICC_MAIN_URL;
     /** PICC用户名 */
@@ -54,10 +52,6 @@ public class SysConfigInfo {
     public static String PICC_PWD1;
     /** PICC密码2 */
     public static String PICC_PWD2;
-    public static String PICC_LOGIN2_URL;
-    public static String PICC_LOGIN3_URL;
-    /** PICC报价URL */
-    public static String PICC_QUOTE_URL;
 
     /**----------------------------- 返回错误信息 ----------------------------------*/
     public static Integer ERROR404;
@@ -111,15 +105,10 @@ public class SysConfigInfo {
 
             PICC_QUERYCLAIMSMSG = getString("picc_queryClaimsMsg", "");
 
-
-            PICC_LOGIN1_URL = getString("picc_login1_url", "");
             PICC_USERNAME = getString("picc_username", "");
             PICC_PWD1 = getString("picc_pwd1", "");
             PICC_PWD2 = getString("picc_pwd2", "");
-            PICC_LOGIN2_URL = getString("picc_login2_url","");
-            PICC_LOGIN3_URL = getString("picc_login3_url","");
             PICC_MAIN_URL = getString("picc_main_url","");
-            PICC_QUOTE_URL = getString("picc_quote_url","");
 
             //错误信息获取
             ERROR404 = getInt("picc_error404",404);

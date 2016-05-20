@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ihandy.quote_core.bean.Request;
+import com.ihandy.quote_core.bean.Response;
 import org.apache.log4j.Logger;
 
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
@@ -12,7 +13,7 @@ import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 /**
  * Created by fengwen on 2016/5/11.
  */
-public abstract class BasePage  implements  IPage{
+public abstract class BasePage {
 	
 	private static Logger logger = Logger.getLogger(BasePage.class);
 	
@@ -40,9 +41,9 @@ public abstract class BasePage  implements  IPage{
     	if(f){
     	}else{//不可用的时候，重新获取保持会话sessionid
     		String ticket = this.getTicket(SysConfigInfo.PICC_LOGIN1_URL, SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
-        	Map<String, String> map1 = HttpsUtil.sendGet(ticket, null);
-        	Map<String, String> map2 = HttpsUtil.sendGet(SysConfigInfo.PICC_MAIN_URL + SysConfigInfo.PICC_LOGIN2_URL + SysConfigInfo.PICC_USERNAME, map1.get("cookieValue"));
-        	Map<String, String> map3 = HttpsUtil.sendGet(SysConfigInfo.PICC_MAIN_URL + SysConfigInfo.PICC_LOGIN3_URL, map2.get("cookieValue"));
+        	Map<String, String> map1 = HttpsUtil.sendGet(ticket, null,"utf-8");
+        	Map<String, String> map2 = HttpsUtil.sendGet(SysConfigInfo.PICC_MAIN_URL + SysConfigInfo.PICC_LOGIN2_URL + SysConfigInfo.PICC_USERNAME, map1.get("cookieValue"),"utf-8");
+        	Map<String, String> map3 = HttpsUtil.sendGet(SysConfigInfo.PICC_MAIN_URL + SysConfigInfo.PICC_LOGIN3_URL, map2.get("cookieValue"),"utf-8");
         	piccSessionId = map3.get("cookieValue");
         	piccTicket = ticket;
         	piccSessionIdMap.put("picc_sessionId", piccSessionId);
@@ -104,5 +105,26 @@ public abstract class BasePage  implements  IPage{
 		logger.info("抓取机器人，【PICC获取ticket成功，使用密码：" + password + "，ticket：" + ticket + "】");
 		return ticket;
     }
+
+	/**
+	 * 发送请求，返回html页面
+	 * @param request
+	 * @return
+	 */
+	protected abstract String doRequest(Request request);
+
+	/**
+	 * 解析html页面，返回需要的数据
+	 * @param html
+	 * @return
+	 */
+	protected abstract Response getResponse(String html);
+
+	/**
+	 * 结合doRequest、getResponse完成整体HTTP发送到解析流程
+	 * @param request
+	 * @return
+	 */
+	public  abstract Response run(Request request);
 
 }

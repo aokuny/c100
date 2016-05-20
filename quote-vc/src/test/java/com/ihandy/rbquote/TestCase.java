@@ -1,5 +1,6 @@
 package com.ihandy.rbquote;
 
+import com.ihandy.quote_core.bean.other.BaseCarInfoResponse;
 import com.ihandy.quote_core.service.IService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,11 @@ public class TestCase {
     public IService iService;
     @Test
     public  void  testXuBaoIndex(){
-        iService.getBaseCarInfoByLicenseNo("京P55M11",01);
+
     }
     @Test
     public  void  testGetXuBaoCarBaseInfo(){
-        iService.getBaseCarInfoByLicenseNo("京P55M11",01);
+        //测试index/search/browse/Citemcar/Cinsure
+       BaseCarInfoResponse baseCarInfoResponse = iService.getBaseCarInfoByLicenseNo("京P55M11",01);
     }
 }

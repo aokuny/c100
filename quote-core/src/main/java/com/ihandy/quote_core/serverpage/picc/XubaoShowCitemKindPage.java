@@ -26,8 +26,8 @@ public class XubaoShowCitemKindPage extends BasePage {
         String htmlCitemKind = null;
         String urlCitemKind = request.getUrl();
         Map paraMap = request.getRequestParam();
-        urlCitemKind = urlCitemKind + StringBaseUtils.Map2GetParam(paraMap);
-        Map mapClaimsMsg = HttpsUtil.sendGet(urlCitemKind,super.piccSessionId);
+        urlCitemKind = urlCitemKind +"?"+ StringBaseUtils.Map2GetParam(paraMap);
+        Map mapClaimsMsg = HttpsUtil.sendGet(urlCitemKind,super.piccSessionId,"GB2312");
         htmlCitemKind = mapClaimsMsg.get("html").toString();
         return htmlCitemKind;
     }
@@ -35,7 +35,7 @@ public class XubaoShowCitemKindPage extends BasePage {
     @Override
     public Response getResponse(String html) {
         Response response = new Response();
-        if(null!=html) {
+        if(!html.equals("")||null!=html) {
             Map returnMap = new HashMap<>();
             Map lastResult = new HashMap<>();
             returnMap.put("nextParams", null);
@@ -63,19 +63,19 @@ public class XubaoShowCitemKindPage extends BasePage {
                         String insureName = tds.get(1).child(1).attributes().get("value");
                         Double insureCost = Double.parseDouble(tds.get(4).childNode(1).childNode(1).attributes().get("value").toString());
                         if (insureName.equals("机动车损失保险")) {
-                           // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
+                            // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
                             lastResult.put("CheSun", insureCost);
                         }
                         if (insureName.equals("盗抢险")) {
-                           // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
+                            // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
                             lastResult.put("DaoQiang", insureCost);
                         }
                         if (insureName.equals("第三者责任保险")) {
-                           // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
+                            // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
                             lastResult.put("SanZhe", insureCost);
                         }
                         if (insureName.equals("车上人员责任险（司机）")) {
-                           // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
+                            // System.out.println("insureName =" + insureName + " insureCost = " + insureCost + "\n");
                             lastResult.put("SiJi", insureCost);
                         }
                         if (insureName.equals("车上人员责任险（乘客）")) {
@@ -109,10 +109,10 @@ public class XubaoShowCitemKindPage extends BasePage {
                                             String boliValue = BoliElements.get(k).attributes().get("value");
                                             if (boliValue.equals("10") || boliValue.equals("11")) {//国产玻璃
                                                 lastResult.put("Boli", 1);
-                                               // System.out.println("insureName =" + insureName + " insureCost = " + 1 + "\n");
+                                                // System.out.println("insureName =" + insureName + " insureCost = " + 1 + "\n");
                                             } else if (boliValue.equals("20") || boliValue.equals("21")) {
                                                 lastResult.put("Boli", 2);
-                                               // System.out.println("insureName =" + insureName + " insureCost = " + 2 + "\n");
+                                                // System.out.println("insureName =" + insureName + " insureCost = " + 2 + "\n");
                                             }
                                         }
                                     }
@@ -124,7 +124,7 @@ public class XubaoShowCitemKindPage extends BasePage {
                             //Element elementBoliSelect = tds.get(3).child(0);//tds.get(3).child(0).attributes().get("value")
                             lastResult.put("ZiRan", 1);
                         }else if(insureName.equals("车身划痕损失险")){
-                           // Element elementBoliSelect = tds.get(3).child(0);//tds.get(3).child(0).attributes().get("value")
+                            // Element elementBoliSelect = tds.get(3).child(0);//tds.get(3).child(0).attributes().get("value")
                             lastResult.put("HuaHen",1);
                         }else if(insureName.equals("发动机特别损失险")){
                             //Element elementBoliSelect = tds.get(3).child(0);//tds.get(3).child(0).attributes().get("value")
@@ -150,19 +150,19 @@ public class XubaoShowCitemKindPage extends BasePage {
                         String insureName = tds.get(1).child(0).attributes().get("value");
                         if(insureName.equals("不计免赔率（车辆损失险）")){
                             lastResult.put("BuJiMianCheSun",1);
-                           // System.out.println("insureName =" +insureName +" insureCost = "+1+"\n");
+                            // System.out.println("insureName =" +insureName +" insureCost = "+1+"\n");
                         }else if(insureName.equals("不计免赔率（三者险）")){
                             lastResult.put("BuJiMianSanZhe",1);
-                           // System.out.println("insureName =" +insureName +" insureCost = "+1+"\n");
+                            // System.out.println("insureName =" +insureName +" insureCost = "+1+"\n");
                         }else if(insureName.equals("不计免赔率（机动车盗抢险）")){
                             lastResult.put("BuJiMianDaoQiang",1);
-                           // System.out.println("insureName =" +insureName +" insureCost = "+1+"\n");
+                            // System.out.println("insureName =" +insureName +" insureCost = "+1+"\n");
                         }else if(insureName.contains("不计免赔率（车上人员责任险")){
                             lastResult.put("BuJiMianRenYuan",1);
-                           // System.out.println(" BuJiMianRenYuan insureName =" +insureName +" insureCost = "+1+"\n");
+                            // System.out.println(" BuJiMianRenYuan insureName =" +insureName +" insureCost = "+1+"\n");
                         }else{
                             lastResult.put("BuJiMianFuJia",1);
-                           // System.out.println(" BuJiMianFuJia insureName =" +insureName +" insureCost = "+1+"\n");
+                            // System.out.println(" BuJiMianFuJia insureName =" +insureName +" insureCost = "+1+"\n");
                         }
                     }
                 }

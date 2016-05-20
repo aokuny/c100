@@ -22,8 +22,8 @@ public class XubaoBrowsePolicyPage extends BasePage {
         String html= "";
         String url = request.getUrl();
         Map paraMap = request.getRequestParam();
-        url = url+ StringBaseUtils.Map2GetParam(paraMap);
-        Map map = HttpsUtil.sendGet(url,super.piccSessionId);
+        url = url+"?"+ StringBaseUtils.Map2GetParam(paraMap);
+        Map map = HttpsUtil.sendGet(url,super.piccSessionId,"GB2312");
         html = map.get("html").toString();
         return html;
     }
@@ -31,12 +31,31 @@ public class XubaoBrowsePolicyPage extends BasePage {
     @Override
     public Response getResponse(String html) {
         Response response = new Response();
-        if(null!=html){
+        if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();
             Map mapNextParam = new HashMap<>();
             Document doc = Jsoup.parse(html);
             String comCode = doc.getElementById("comCode").attributes().get("value");
+            String proposalNo = doc.getElementById("prpCmain.proposalNo").attributes().get("value");
+            String riskCode = doc.getElementById("riskCode").attributes().get("value");
+            String editType = doc.getElementById("editType").attributes().get("value");
+            String bizType = doc.getElementById("bizType").attributes().get("value");
+            String contractNo = doc.getElementById("prpCmain.contractNo").attributes().get("value");
+           /* comCode = comCode.trim();
+            proposalNo = proposalNo.trim();
+            riskCode = riskCode.trim();
+            editType = editType.trim();
+            bizType = bizType.trim();
+            contractNo = contractNo.trim();*/
+
+            mapNextParam.put("contractNo", contractNo);
             mapNextParam.put("comCode",comCode);
+            mapNextParam.put("proposalNo", proposalNo);
+            mapNextParam.put("riskCode", riskCode);
+            mapNextParam.put("editType",editType);
+            mapNextParam.put("bizType", bizType);
+
+
             returnMap.put("nextParams",mapNextParam);
             returnMap.put("lastResult",null);
             response.setResponseMap(returnMap);
@@ -56,7 +75,8 @@ public class XubaoBrowsePolicyPage extends BasePage {
         Response response = getResponse(html);
         Map map =(Map) response.getResponseMap().get("nextParams");
         map.put("bizNo",request.getRequestParam().get("bizNo")); //将保单号传到下一个请求页面参数中
-
+        Map map1 =(Map) response.getResponseMap().get("nextParams");
+        SysConfigInfo.SysXubaoParamsMap = map1;
         return response;
     }
 }

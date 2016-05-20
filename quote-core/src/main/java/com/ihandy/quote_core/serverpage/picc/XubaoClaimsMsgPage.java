@@ -22,8 +22,8 @@ public class XubaoClaimsMsgPage extends BasePage {
         String htmlClaimsMsg = null;
         String url = request.getUrl();
         Map paraMap = request.getRequestParam();
-        url = url+ StringBaseUtils.Map2GetParam(paraMap);
-        Map mapClaimsMsg = HttpsUtil.sendGet(url,super.piccSessionId);
+        url = url+ "?"+StringBaseUtils.Map2GetParam(paraMap);
+        Map mapClaimsMsg = HttpsUtil.sendGet(url,super.piccSessionId,"GB2312");
         htmlClaimsMsg = mapClaimsMsg.get("html").toString();
         return htmlClaimsMsg;
     }

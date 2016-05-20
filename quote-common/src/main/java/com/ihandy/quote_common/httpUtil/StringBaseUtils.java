@@ -25,17 +25,23 @@ public class StringBaseUtils {
 	}
 
 	public  static String  Map2GetParam(Map map){
-		String param = null;
+		String param = "";
 		if(null!= map){
 			Set<String> key = map.keySet();
 			for (Iterator it = key.iterator(); it.hasNext();) {
 				String keyName = (String) it.next();
-				param = param + keyName + " = "+ map.get(keyName)+"&";
+				String keyValue = map.get(keyName).toString();
+
+				param = param + keyName + "="+keyValue+"&";
 			}
-			param =  param.substring(0,param.length()-1);//删除最后一个&符号
+			if(!param.equals("")){
+				param =  param.substring(0,param.length()-1);//删除最后一个&符号
+			}
+
 		}else{
 			logger.info("Get请求参数为 null，【HTTPGET PARAM IS NULL】");
 		}
+
 
 		return param;
 	}

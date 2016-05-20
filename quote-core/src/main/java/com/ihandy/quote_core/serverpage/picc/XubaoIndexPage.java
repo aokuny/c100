@@ -18,19 +18,19 @@ public class XubaoIndexPage extends BasePage {
 	private static Logger logger = Logger.getLogger(XubaoIndexPage.class);
 	@Override
 	public String doRequest(Request request) {
-		 String html= null;
-		 String url = request.getUrl();
-		 Map paraMap = request.getRequestParam();
-		 url = url+ StringBaseUtils.Map2GetParam(paraMap);
-	     Map map = HttpsUtil.sendGet(url,super.piccSessionId);
-         html = map.get("html").toString();
-		 return html;
+		String html= null;
+		String url = request.getUrl();
+		Map paraMap = request.getRequestParam();
+		url = url+ StringBaseUtils.Map2GetParam(paraMap);
+		Map map = HttpsUtil.sendGet(url,super.piccSessionId,"GB2312");
+		html = map.get("html").toString();
+		return html;
 	}
 
 	@Override
 	public Response getResponse(String html) {
 		Response response = new Response();
-	    if(null!=html){
+		if(!html.equals("")||null!=html){
 			Map  returnMap  = new HashMap<>();
 			returnMap.put("nextParams",null);
 			returnMap.put("lastResult",null);

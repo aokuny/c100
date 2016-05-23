@@ -19,14 +19,12 @@ public abstract class BasePage {
 	
     public String piccSessionId;//picc登录session
     
-    private Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
+    private static Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
     
     public BasePage(int type){
     	switch (type) {
 		case 1://人保
-			logger.info("抓取机器人，【初始化PICC登录session开始】");
-	    	//initPiccLogin();//初始化picc登录session
-	    	logger.info("抓取机器人，【初始化PICC登录session完成】");
+	    	initPiccLogin();//初始化picc登录session
 			break;
 		default:
 			break;
@@ -39,7 +37,7 @@ public abstract class BasePage {
     public void initPiccLogin(){
     	piccSessionId = piccSessionIdMap.get("picc_sessionId");
     	//尝试sessionId是否可用
-    	String urlString1 = SysConfigInfo.PICC_MAIN_URL + ":8000/prpall/bindvalid/bjptBindValid.do";
+    	String urlString1 = "http://" + SysConfigInfo.PICC_MAIN_URL + ":8000/prpall/bindvalid/bjptBindValid.do";
 		String param1="operatorCode=" + SysConfigInfo.PICC_USERNAME + "&checkOperaType=BJ_PT";
 		String html = HttpsUtil.sendPost(urlString1, param1, piccSessionId).get("html");
 		boolean f = false;
@@ -50,17 +48,17 @@ public abstract class BasePage {
     		logger.info("抓取机器人，【Picc sessionId有效】");
     	}else{//不可用的时候，重新获取保持会话sessionid
     		logger.info("抓取机器人，【Picc sessionId失效】");
-    		Map<String, String> ticketMap = this.getTicket(SysConfigInfo.PICC_MAIN_URL + ":8888/casserver/login?service=http%3A%2F%2F10.134.136.48%3A80%2Fportal%2Findex.jsp", SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
+    		Map<String, String> ticketMap = this.getTicket("https://" + SysConfigInfo.PICC_MAIN_URL + ":8888/casserver/login?service=http%3A%2F%2F10.134.136.48%3A80%2Fportal%2Findex.jsp", SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
     		//访问解析出来的页面
     		Map<String, String> result1 = HttpsUtil.sendGet(ticketMap.get("ticket"), ticketMap.get("cookieValue"), null);
-    		String url2 = SysConfigInfo.PICC_MAIN_URL + ":8000/prpall/?calogin";
+    		String url2 = "http://" + SysConfigInfo.PICC_MAIN_URL + ":8000/prpall/?calogin";
     		Map<String, String> result2 = HttpsUtil.sendGet(url2,  result1.get("cookieValue"), null);
     		String prpall = "prpall=" + SysConfigInfo.PICC_USERNAME;
     		String CASTGC = ticketMap.get("CASTGC");
     		String JSESSIONID = result1.get("cookieValue").replace("; path=/", "");
     		String BOCINS_prpall_Cookie = result2.get("cookieValue").replace("; path=/", "");
     		String a = prpall + "; " + CASTGC + "; " + JSESSIONID + "; " + BOCINS_prpall_Cookie;
-    		String reUrl1 = SysConfigInfo.PICC_MAIN_URL + ":8888/casserver/login?service=http%3A%2F%2F10.134.136.48%3A8000%2Fprpall%2Findex.jsp%3Fcalogin";
+    		String reUrl1 = "https://" + SysConfigInfo.PICC_MAIN_URL + ":8888/casserver/login?service=http%3A%2F%2F10.134.136.48%3A8000%2Fprpall%2Findex.jsp%3Fcalogin";
     		Map<String, String> result3 = HttpsUtil.sendGetHttps(reUrl1,  a);
     		String ex = "<a href=\".*\">";
     		String reUrl2 = StringBaseUtils.getTextForMatcher(result3.get("html"), ex);

@@ -276,6 +276,9 @@ public class HttpsUtil {
 	 * @return
 	 */
 	public static Map<String, String> sendGet(String urlString, String sessionId,String enCode){
+		if(StringUtils.isBlank(enCode)){
+			enCode = "gbk";
+		}
 		InputStream inputStream = null;
 		InputStreamReader inputStreamReader = null;
 		BufferedReader reader = null;

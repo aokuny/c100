@@ -142,6 +142,7 @@ public class XubaoSearchPage extends BasePage {
                 try {
                     Map map3 = (Map) jsonArray2.get(0);
                     lastResultMap.put("LicenseNo", map3.get("licenseNo"));//车牌号
+                    nextParamsMap.put("LicenseNo", map3.get("licenseNo"));
                     lastResultMap.put("EngineNo", map3.get("engineNo"));//发动机号
                     lastResultMap.put("CarVin", map3.get("frameNo"));//车架号
                 }

@@ -34,6 +34,7 @@ public class RBServiceImpl implements IService {
 	private static Logger logger = LoggerFactory.getLogger(RBServiceImpl.class);
 	private static Map<String, Map<String, Object>> uploadInsurInfo = new HashMap<>();
 	private static String licenseType="02";//车牌类型小型汽车
+	private static Map  SysXubaoParamsMap =new HashMap();
 	@Override
 	public BaseCarInfoResponse getBaseCarInfoByLicenseNo(String licenseNo,int CityCode) {
 		BaseCarInfoResponse carBaseInfoResponse = new BaseCarInfoResponse();
@@ -78,7 +79,7 @@ public class RBServiceImpl implements IService {
 							if (value.get("role").toString().equals("投保人")) {
 								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
 							}else if(value.get("role").toString().equals("车主")){
-								carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
+								carBaseInfoResponse.setCredentislasNum(value.get("CredentislasNum").toString());//证件号码
 								carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
 								carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
 							}else if(value.get("role").toString().equals("被保险人")){
@@ -92,7 +93,7 @@ public class RBServiceImpl implements IService {
 							else if (value.get("role").toString().equals("投保人/车主")) {
 								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
 								carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
-								carBaseInfoResponse.setCredentislasNum(value.get("IdCardNo").toString());//证件号码
+								carBaseInfoResponse.setCredentislasNum(value.get("CredentislasNum").toString());//证件号码
 								carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
 							}
 							else if(value.get("role").toString().equals("投保人/被保险人")){
@@ -145,7 +146,7 @@ public class RBServiceImpl implements IService {
 		// 需要根据实际应用来进行参数传递与配置，若缓存中有完整参数信息且session未过期,直接使用续保单号去查询险种信息；
 		// 若参数信息不完整或session已过期，调用获取这些信息的接口后，才开始查询险种信息
 		Response response = new Response();
-		response = getBeforeXubao(SysConfigInfo.SysXubaoParamsMap);
+		response = getBeforeXubao(licenseNo);
 		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
 			//成功返回
 			Response responseCitemKind = xubaoGetCitemKind(response);
@@ -178,7 +179,7 @@ public class RBServiceImpl implements IService {
 	public List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo) {
 		List<RelaPeopleResponse> relaPeopleResponseList = new ArrayList<>();
 		Response response = new Response();
-		response = getBeforeXubao(SysConfigInfo.SysXubaoParamsMap);
+		response = getBeforeXubao(licenseNo);
 		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
 			Response responseCinsure = xubaoGetCinsure(response);
 			Map returnCinsureMap = responseCinsure.getResponseMap();
@@ -211,7 +212,7 @@ public class RBServiceImpl implements IService {
 	public List<ClaimResponse> getClaimInfoList(String licenseNo ) {
 		List<ClaimResponse> ClaimResponseList = new ArrayList<>();
 		Response response = new Response();
-		response = getBeforeXubao(SysConfigInfo.SysXubaoParamsMap);
+		response = getBeforeXubao(licenseNo);
 		if(response.getReturnCode()==SysConfigInfo.SUCCESS200){
 			Response claimResponse1 = xubaoQueryClaimsMsg(response);
 			Map lastResultMap = (Map) claimResponse1.getResponseMap().get("lastResult");
@@ -237,33 +238,84 @@ public class RBServiceImpl implements IService {
 	 *
 	 * @return response nextParams null lastResult null
 	 *******************************************************************************/
-	public Response getBeforeXubao(Map SysXubaoParamsMap ){
+	public Response getBeforeXubao(String licenseNo ){
 		Response response = new Response();
 		Map  returnMap  = new HashMap<>();
-		try {
-			Map nextParamMap = new HashMap<>();
+		Map SysXubaoParamsMapItem =null;
+		Map nextParamMap = new HashMap<>();
+		try{
+			SysXubaoParamsMapItem = (Map)SysXubaoParamsMap.get(licenseNo);//从内存中读取是否已存在该车牌号的续保信息
+		}catch(Exception e){
+		}
+		if(SysXubaoParamsMapItem==null){
+			// 重新生成
+			try{
+				Response responseIndex =new Response();
+				Response responseSearch = xubaoSearchByLicenseNo(responseIndex,licenseNo,licenseType);
+				if(responseSearch.getReturnCode() == SysConfigInfo.SUCCESS200){
+					Response responseBrowse = xubaoBrowsePolicyNo(responseSearch);
+					Map browseMap = (Map) responseBrowse.getResponseMap().get("nextParams");
 
-			nextParamMap.put("bizNo", SysXubaoParamsMap.get("bizNo").toString());// 上年商业保单号
-			nextParamMap.put("bizType", SysXubaoParamsMap.get("bizType").toString());
-			nextParamMap.put("comCode", SysXubaoParamsMap.get("comCode").toString());
-			nextParamMap.put("contractNo", SysXubaoParamsMap.get("contractNo").toString());
-			nextParamMap.put("editType", SysXubaoParamsMap.get("editType").toString());
-			nextParamMap.put("minusFlag", "");
-			nextParamMap.put("proposalNo", SysXubaoParamsMap.get("proposalNo").toString());
-			nextParamMap.put("riskCode", SysXubaoParamsMap.get("riskCode").toString());
-			nextParamMap.put("rnd704", "");
+					nextParamMap.put("bizNo", browseMap.get("bizNo").toString());// 上年商业保单号
+					nextParamMap.put("bizType", browseMap.get("bizType").toString());
+					nextParamMap.put("comCode", browseMap.get("comCode").toString());
+					nextParamMap.put("contractNo", browseMap.get("contractNo").toString());
+					nextParamMap.put("editType", browseMap.get("editType").toString());
+					nextParamMap.put("minusFlag", "");
+					nextParamMap.put("proposalNo", browseMap.get("proposalNo").toString());
+					nextParamMap.put("riskCode", browseMap.get("riskCode").toString());
+					nextParamMap.put("rnd704", "");
 
-			returnMap.put("nextParams", nextParamMap);
-			returnMap.put("lastResult", null);
-			response.setResponseMap(returnMap);
-			response.setReturnCode(SysConfigInfo.SUCCESS200);
-			response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
-		}catch (Exception e){
-			returnMap.put("nextParams", null);
-			returnMap.put("lastResult", null);
-			response.setResponseMap(returnMap);
-			response.setReturnCode(SysConfigInfo.ERROR404);
-			response.setErrMsg(SysConfigInfo.ERROR404MSG);
+					//将续保信息写入系统内存中
+					SysXubaoParamsMap.put(licenseNo, nextParamMap);
+
+
+					returnMap.put("nextParams", nextParamMap);
+					returnMap.put("lastResult", null);
+					response.setResponseMap(returnMap);
+					response.setReturnCode(SysConfigInfo.SUCCESS200);
+					response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
+				}else{
+					returnMap.put("nextParams", null);
+					returnMap.put("lastResult", null);
+					response.setResponseMap(returnMap);
+					response.setReturnCode(SysConfigInfo.ERROR404);
+					response.setErrMsg(SysConfigInfo.ERROR404MSG);
+				}
+
+			}catch(Exception e){
+				logger.info(" 机器人抓取，获取续保的参数失败");
+				returnMap.put("nextParams", null);
+				returnMap.put("lastResult", null);
+				response.setResponseMap(returnMap);
+				response.setReturnCode(SysConfigInfo.ERROR404);
+				response.setErrMsg(SysConfigInfo.ERROR404MSG);
+			}
+		}else{
+			try {
+
+				nextParamMap.put("bizNo", SysXubaoParamsMapItem.get("bizNo").toString());// 上年商业保单号
+				nextParamMap.put("bizType", SysXubaoParamsMapItem.get("bizType").toString());
+				nextParamMap.put("comCode", SysXubaoParamsMapItem.get("comCode").toString());
+				nextParamMap.put("contractNo", SysXubaoParamsMapItem.get("contractNo").toString());
+				nextParamMap.put("editType", SysXubaoParamsMapItem.get("editType").toString());
+				nextParamMap.put("minusFlag", "");
+				nextParamMap.put("proposalNo", SysXubaoParamsMapItem.get("proposalNo").toString());
+				nextParamMap.put("riskCode", SysXubaoParamsMapItem.get("riskCode").toString());
+				nextParamMap.put("rnd704", "");
+
+				returnMap.put("nextParams", nextParamMap);
+				returnMap.put("lastResult", null);
+				response.setResponseMap(returnMap);
+				response.setReturnCode(SysConfigInfo.SUCCESS200);
+				response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
+			}catch (Exception e){
+				returnMap.put("nextParams", null);
+				returnMap.put("lastResult", null);
+				response.setResponseMap(returnMap);
+				response.setReturnCode(SysConfigInfo.ERROR404);
+				response.setErrMsg(SysConfigInfo.ERROR404MSG);
+			}
 		}
 		return response;
 	}
@@ -329,12 +381,34 @@ public class RBServiceImpl implements IService {
 		Request request = new Request();
 		Map<String, String> map = new HashMap<String, String>();
 		Map responseParam = response.getResponseMap();
+
 		Map nextParamsMap = (Map) responseParam.get("nextParams");
+		Map lastResultMap = (Map) responseParam.get("lastResult");
+		String licenseNo = lastResultMap.get("LicenseNo").toString() ;
 		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
 
 		request.setRequestParam(map);
 		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_BROWSEPOLICYNO);// GET
 		Response responseBrowse = xubaoBrowsePolicyPage.run(request);
+		//将续保信息写入系统内存中
+		Map<String, String> sysMap = new HashMap<String, String>();
+		Map responseSysParam = responseBrowse.getResponseMap();
+		Map nextSysParamsMap = (Map) responseSysParam.get("nextParams");
+		sysMap.put("bizNo", nextSysParamsMap.get("bizNo").toString());// 上年商业保单号
+		sysMap.put("bizType", nextSysParamsMap.get("bizType").toString());
+		sysMap.put("comCode", nextSysParamsMap.get("comCode").toString());
+		sysMap.put("contractNo", nextSysParamsMap.get("contractNo").toString());
+		sysMap.put("editType", nextSysParamsMap.get("editType").toString());
+		sysMap.put("minusFlag", "");
+		sysMap.put("proposalNo", nextSysParamsMap.get("proposalNo").toString());
+		sysMap.put("riskCode", nextSysParamsMap.get("riskCode").toString());
+		sysMap.put("rnd704", "");
+
+
+		SysXubaoParamsMap.put(licenseNo, sysMap);
+
+
+
 		return responseBrowse;
 	}
 
@@ -771,7 +845,7 @@ public class RBServiceImpl implements IService {
 		map.put("PDate3", PDate3);
 		map.put("PDate1", PDate1);
 		map.put("DName2", DName2);
-		map.put("DQuantity2", DQuantity2);
+	    map.put("DQuantity2", DQuantity2);
 		map.put("PDate2", PDate2);
 		map.put("DAmount2", DAmount2);
 		map.put("DName3", DName3);

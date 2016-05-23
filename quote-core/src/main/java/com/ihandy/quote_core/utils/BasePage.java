@@ -55,7 +55,8 @@ public abstract class BasePage {
     		Map<String, String> result2 = HttpsUtil.sendGet(url2,  result1.get("cookieValue"), null);
     		String prpall = "prpall=" + SysConfigInfo.PICC_USERNAME;
     		String CASTGC = ticketMap.get("CASTGC");
-    		String JSESSIONID = result1.get("cookieValue").replace("; path=/", "");
+    		//String JSESSIONID = result1.get("cookieValue").replace("; path=/", "");
+    		String JSESSIONID = ticketMap.get("cookieValue");
     		String BOCINS_prpall_Cookie = result2.get("cookieValue").replace("; path=/", "");
     		String a = prpall + "; " + CASTGC + "; " + JSESSIONID + "; " + BOCINS_prpall_Cookie;
     		String reUrl1 = "https://" + SysConfigInfo.PICC_MAIN_URL + ":8888/casserver/login?service=http%3A%2F%2F10.134.136.48%3A8000%2Fprpall%2Findex.jsp%3Fcalogin";
@@ -65,7 +66,8 @@ public abstract class BasePage {
     		reUrl2 = reUrl2.replace("<a href=\"", "");
     		reUrl2 = reUrl2.replace("\">", "");
     		reUrl2 = reUrl2.replace("amp;", "");
-    		String sessionId = result3.get("cookieValue").replace("; path=/", "") + "; " + BOCINS_prpall_Cookie;
+    		//String sessionId = result3.get("cookieValue").replace("; path=/", "") + "; " + BOCINS_prpall_Cookie;
+    		String sessionId = ticketMap.get("cookieValue") + "; " + BOCINS_prpall_Cookie;
     		HttpsUtil.sendGet(reUrl2, sessionId, null);
     		piccSessionId = sessionId;
         	piccSessionIdMap.put("picc_sessionId", piccSessionId);

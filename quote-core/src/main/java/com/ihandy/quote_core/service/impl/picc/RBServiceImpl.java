@@ -100,6 +100,13 @@ public class RBServiceImpl implements IService {
 								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
 								carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人/车主
 							}
+							else if (value.get("role").toString().equals("投保人/被保险人/车主")) {
+								carBaseInfoResponse.setLicenseOwner(value.get("name").toString());//车主姓名
+								carBaseInfoResponse.setPostedName(value.get("name").toString());//投保人
+								carBaseInfoResponse.setInsuredName(value.get("name").toString());//被保险人
+								carBaseInfoResponse.setCredentislasNum(value.get("CredentislasNum").toString());//证件号码
+								carBaseInfoResponse.setIdType(value.get("IdCardType").toString());//证件类型
+							}
 						}
 						// 4 ) 从参数中获取
 						carBaseInfoResponse.setCityCode(CityCode);
@@ -856,4 +863,27 @@ public class RBServiceImpl implements IService {
 		return map;
 	}
 
+	@Override
+	public String commitHeBaoInfo() {
+		Response response = new Response();
+		HebaoCalAnciInfoPage hebaoCalAnciInfoPage = new HebaoCalAnciInfoPage(1);
+		Request request = new Request();
+		Map<String, String> map = new HashMap<String, String>();
+		Map responseParam = response.getResponseMap();
+		Map nextParamsMap = (Map) responseParam.get("nextParams");
+		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
+		map.put("bizType", nextParamsMap.get("bizType").toString());
+		map.put("comCode", nextParamsMap.get("comCode").toString());
+		map.put("contractNo", nextParamsMap.get("contractNo").toString());
+		map.put("editType", nextParamsMap.get("editType").toString());
+		map.put("minusFlag", "");
+		map.put("proposalNo", nextParamsMap.get("proposalNo").toString());
+		map.put("riskCode", nextParamsMap.get("riskCode").toString());
+		map.put("rnd704", "");
+		request.setRequestParam(map);
+		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_KINDTAB);// GET
+		Response responseHebaoCalAnciInfo = hebaoCalAnciInfoPage.run(request);
+
+		return null;
+	}
 }

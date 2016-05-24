@@ -177,4 +177,5 @@ public interface IService {
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
 			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode);
 
+	String commitHeBaoInfo();
 }

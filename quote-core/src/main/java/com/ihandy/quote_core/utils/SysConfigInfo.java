@@ -35,6 +35,28 @@ public class SysConfigInfo {
      /**查询理赔信息 */
      public static String  PICC_QUERYCLAIMSMSG;
 
+
+    /**计算辅助核保 */
+    public static String PICC_CALANCIINFO;
+    /**保存核保1  */
+    public static String  PICC_HEBAOSAVE1;
+     /**保存核保2  */
+    public static String  PICC_HEBAOSAVE2;
+     /**保存核保3   */
+    public static String  PICC_HEBAOSAVE3;
+     /** 保存核保4  */
+    public static String  PICC_HEBAOSAVE4;
+     /** 保存核保5  */
+    public static String  PICC_HEBAOSAVE5;
+     /** 保存核保6   */
+    public static String  PICC_HEBAOSAVE6;
+     /**提交核保1   */
+    public static String PICC_HEBAOCOMMIT1;
+     /**提交核保2   */
+    public static String PICC_HEBAOCOMMIT2;
+     /** 查询核保   */
+    public static String PICC_HEBAOSEARCH;
+
     
     /**----------------------------- 人保URL ----------------------------------*/
     /** PICC人保业务登录 */
@@ -96,6 +118,19 @@ public class SysConfigInfo {
             PICC_PWD1 = getString("picc_pwd1", "");
             PICC_PWD2 = getString("picc_pwd2", "");
             PICC_MAIN_URL = getString("picc_main_url","");
+
+            PICC_CALANCIINFO = getString("picc_calAnciInfo","");
+            PICC_HEBAOSAVE1 = getString("picc_hebaosave1","");
+            PICC_HEBAOSAVE2 = getString("picc_hebaosave2","");
+            PICC_HEBAOSAVE3 = getString("picc_hebaosave3","");
+            PICC_HEBAOSAVE4  = getString("picc_hebaosave4","");
+            PICC_HEBAOSAVE5 = getString("picc_hebaosave5","");
+            PICC_HEBAOSAVE6 = getString("picc_hebaosave6","");
+            PICC_HEBAOCOMMIT1 = getString("picc_hebaocommit1","");
+            PICC_HEBAOCOMMIT2 = getString("picc_hebaocommit2","");
+            PICC_HEBAOSEARCH = getString("picc_hebaosearch","");
+
+
 
             //错误信息获取
             ERROR404 = getInt("picc_error404",404);

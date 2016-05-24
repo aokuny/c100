@@ -864,26 +864,37 @@ public class RBServiceImpl implements IService {
 	}
 
 	@Override
-	public String commitHeBaoInfo() {
+	public String commitHeBaoInfo(Map preMap) {
+		String code="";
 		Response response = new Response();
 		HebaoCalAnciInfoPage hebaoCalAnciInfoPage = new HebaoCalAnciInfoPage(1);
 		Request request = new Request();
-		Map<String, String> map = new HashMap<String, String>();
-		Map responseParam = response.getResponseMap();
-		Map nextParamsMap = (Map) responseParam.get("nextParams");
-		map.put("bizNo", nextParamsMap.get("bizNo").toString());// 上年商业保单号
-		map.put("bizType", nextParamsMap.get("bizType").toString());
-		map.put("comCode", nextParamsMap.get("comCode").toString());
-		map.put("contractNo", nextParamsMap.get("contractNo").toString());
-		map.put("editType", nextParamsMap.get("editType").toString());
-		map.put("minusFlag", "");
-		map.put("proposalNo", nextParamsMap.get("proposalNo").toString());
-		map.put("riskCode", nextParamsMap.get("riskCode").toString());
-		map.put("rnd704", "");
-		request.setRequestParam(map);
-		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_KINDTAB);// GET
+		request.setRequestParam(preMap);//
+		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CALANCIINFO);// GET
 		Response responseHebaoCalAnciInfo = hebaoCalAnciInfoPage.run(request);
-
-		return null;
+	    if(responseHebaoCalAnciInfo.getReturnCode()==SysConfigInfo.SUCCESS200){
+			Map nextParamsMap = (Map)responseHebaoCalAnciInfo.getResponseMap().get("nextParams");
+	        //保存1操作
+			HebaoSaveCheckEngageTimePage hebaoSaveCheckEngageTimePage = new HebaoSaveCheckEngageTimePage(1);
+			Request request1 =new Request();
+			request1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE1);
+			request1.setRequestParam(nextParamsMap);
+			Response response1 = hebaoSaveCheckEngageTimePage.run(request1);
+			//保存2操作
+			HeBaoSaveCheckAgentTypePage heBaoSaveCheckAgentTypePage = new HeBaoSaveCheckAgentTypePage(1);
+			Request request2 =new Request();
+			request2.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE2);
+			request2.setRequestParam(nextParamsMap);
+			Response response2 = heBaoSaveCheckAgentTypePage.run(request2);
+			//保存3操作
+			HebaoSaveQueryPayForPage hebaoSaveQueryPayForPage = new HebaoSaveQueryPayForPage(1);
+			Request request3 =new Request();
+			request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE3);
+			request3.setRequestParam(nextParamsMap);
+			Response response3 = hebaoSaveQueryPayForPage.run(request3);
+	    }else{
+		   logger.info("机器人抓取，获取辅助计算核保参数失败");
+	    }
+		return code;
 	}
 }

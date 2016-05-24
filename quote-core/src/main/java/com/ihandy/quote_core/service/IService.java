@@ -11,6 +11,7 @@ import com.ihandy.quote_core.bean.other.SaveQuoteResponse;
 
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fengwen on 2016/4/29.
@@ -177,5 +178,5 @@ public interface IService {
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
 			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode);
 
-	String commitHeBaoInfo();
+	String commitHeBaoInfo(Map preMap);
 }

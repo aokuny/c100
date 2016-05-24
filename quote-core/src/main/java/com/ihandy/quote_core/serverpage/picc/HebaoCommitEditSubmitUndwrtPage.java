@@ -8,11 +8,11 @@ import org.apache.log4j.Logger;
 /**
  * Created by fengwen on 2016/5/24.
  */
-public class HeBaoSaveCheckAgentType extends BasePage {
+public class HebaoCommitEditSubmitUndwrtPage extends BasePage {
 
-    private static Logger logger = Logger.getLogger(HeBaoSaveCheckAgentType.class);
+    private static Logger logger = Logger.getLogger(HebaoCommitEditSubmitUndwrtPage.class);
 
-    public HeBaoSaveCheckAgentType(int type) {
+    public HebaoCommitEditSubmitUndwrtPage(int type) {
         super(type);
     }
 

@@ -39,7 +39,7 @@ public class HebaoCalAnciInfoPage extends BasePage {
         html = map.get("html").toString();
         return html;
     }
-    /**************** 解析json 字符串（找出上年的保单）
+    /**************** 解析json 字符串
      * {
      "totalRecords": 1,
      "data": [
@@ -120,7 +120,6 @@ public class HebaoCalAnciInfoPage extends BasePage {
         if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();
             Map nextParamsMap = new HashMap<>();
-            Map lastResultMap = new HashMap<>();
             try{
                 Map map = new HashMap<>();
                 map = StringBaseUtils.parseJSON2Map(html);
@@ -129,13 +128,18 @@ public class HebaoCalAnciInfoPage extends BasePage {
                 Map map1 = (Map) jsonArray.get(0);
                 JSONArray jsonArray2 = (JSONArray) map1.get("data");
                 Map dataMap = (Map) jsonArray2.get(0);
-                nextParamsMap.put("prpAnciInfo",dataMap);
+                Set<String> key2 = dataMap.keySet();
+                for (Iterator it2 = key2.iterator(); it2.hasNext();) {
+                    String keyName2 = (String) it2.next();
+                    String keyValue2 = dataMap.get(keyName2).toString();
+                    String keyName3 = "prpAnciInfo."+keyName2;
+                    nextParamsMap.put(keyName3,keyValue2);
+                }
             }
             catch (Exception e){
                 logger.info("抓取机器人，【 PICC 核保计算辅助核保失败】");
             }
             returnMap.put("nextParams",nextParamsMap);
-            returnMap.put("lastResult",lastResultMap);
             response.setResponseMap(returnMap);
             response.setReturnCode(SysConfigInfo.SUCCESS200);
             response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
@@ -151,6 +155,18 @@ public class HebaoCalAnciInfoPage extends BasePage {
     public Response run(Request request) {
         String html = doRequest(request);
         Response response = getResponse(html);
+        //上个请求返回的参数继续传递下去
+        Map returnMap =  response.getResponseMap();
+        Map requestMap = request.getRequestParam();
+        Map nextMap =(Map) requestMap.get("nextParams");
+        Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
+        for (Iterator it2 = key.iterator(); it2.hasNext();) {
+            String keyName = (String) it2.next();
+            String keyValue = nextMap.get(keyName).toString();
+            requestMap.put(keyName,keyValue);
+        }
+        returnMap.put("nextParams",requestMap);
+        response.setResponseMap(returnMap);
         return response;
     }
 }

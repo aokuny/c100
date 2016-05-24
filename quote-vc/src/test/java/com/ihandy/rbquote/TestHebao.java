@@ -1,6 +1,7 @@
 package com.ihandy.rbquote;
 
 import com.ihandy.quote_common.httpUtil.StringBaseUtils;
+import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,5 +119,32 @@ public class TestHebao {
         nextParamsMap.put("prpAnciInfo.operatePayRate",dataMap.get("operatePayRate"));
         nextParamsMap.put("prpAnciInfo.operCommRateBIUp",dataMap.get("operCommRateBIUp"));*/
 
+    }
+
+    @Test
+    public void testSave1(){
+        String html = "{\"msg\":\"0\",\"totalRecords\":0,\"data\":[]}";
+        Map returnPolicyNoMap = new HashMap<>();
+        Map map = new HashMap<>();
+        map = StringBaseUtils.parseJSON2Map(html);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray = JSONArray.fromObject(map);
+        Map map1 = (Map) jsonArray.get(0);
+        String msg =  map1.get("msg").toString();
+        System.out.println("msg = "+msg);
+    }
+
+    @Test
+    public void testSave2(){
+        String html = "{\"msg\":\"SINGLE,,66692393-6,\",\"totalRecords\":0,\"data\":[]}";
+        Map returnPolicyNoMap = new HashMap<>();
+        Map map = new HashMap<>();
+        map = StringBaseUtils.parseJSON2Map(html);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray = JSONArray.fromObject(map);
+        Map map1 = (Map) jsonArray.get(0);
+        String msg =  map1.get("msg").toString();
+        String[] msgArr = msg.split(",");
+        System.out.println("msgArr = "+msgArr);
     }
 }

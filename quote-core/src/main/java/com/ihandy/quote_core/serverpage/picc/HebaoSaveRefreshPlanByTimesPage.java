@@ -60,7 +60,7 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                     nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
                     nextParamsMap.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
                     nextParamsMap.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].planDate",mapPrpCplanTemps.get("planDate"));
+                    nextParamsMap.put("prpCplanTemps["+i+"].planDate",mapPrpCplanTemps.get("planDate").toString());
                     nextParamsMap.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
                     nextParamsMap.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
                     nextParamsMap.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
@@ -74,7 +74,7 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         nextParamsMap.put("prpCplanTemps_["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
                         nextParamsMap.put("prpCplanTemps_["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
                         nextParamsMap.put("prpCplanTemps_["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
-                        nextParamsMap.put("prpCplanTemps_["+i+"].planDate",mapPrpCplanTemps.get("planDate"));
+                        nextParamsMap.put("prpCplanTemps_["+i+"].planDate",mapPrpCplanTemps.get("planDate").toString());
                         nextParamsMap.put("prpCplanTemps_["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
                         nextParamsMap.put("prpCplanTemps_["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
                         nextParamsMap.put("prpCplanTemps_["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));

@@ -298,4 +298,27 @@ public class TestHebao {
 
         System.out.println("data = "+nextParamsMap);
     }
+
+    @Test
+    public void testSearchHebao(){
+        String html="{\"totalRecords\":2,\"data\":[{\"dmFlag\":\"0\",\"policyNo\":\"                      \",\"contractNo\":\"                      \",\"specialflag\":\"初始值\",\"underWriteEndDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"licenseNo\":\"京P55M11\",\"checkStatus\":\"初始状态\",\"operateDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"comCode\":\"11010286\",\"checkFlag\":\"初始值\",\"proposalNo\":\"TDAA201611010000955201\",\"underWriteFlag\":\"见费出单待缴费\",\"insuredName\":\"朱佳佳\",\"operatorCode\":\"020083    \",\"startDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0}},{\"dmFlag\":\"0\",\"policyNo\":\"                      \",\"contractNo\":\"                      \",\"specialflag\":\"初始值\",\"underWriteEndDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"licenseNo\":\"京P55M11\",\"checkStatus\":\"初始状态\",\"operateDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"comCode\":\"11010286\",\"checkFlag\":\"初始值\",\"proposalNo\":\"TDZA201611010000977639\",\"underWriteFlag\":\"见费出单待缴费\",\"insuredName\":\"朱佳佳\",\"operatorCode\":\"020083    \",\"startDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0}}],\"startIndex\":1,\"recordsReturned\":10}";
+        Map  returnMap  = new HashMap<>();
+        Map lastResultMap = new HashMap<>();
+
+            Map map = new HashMap<>();
+            map = StringBaseUtils.parseJSON2Map(html);
+            JSONArray jsonArray = JSONArray.fromObject(map);
+            Map map1 = (Map) jsonArray.get(0);
+            JSONArray  jsonArrayData = (JSONArray) map1.get("data");
+            for(int i=0;i<jsonArrayData.size();i++){
+                   Map mapHebao = (Map)jsonArrayData.get(i);
+                   String underWriteFlag =  mapHebao.get("underWriteFlag").toString();
+                   String proposalNo = mapHebao.get("proposalNo").toString();
+                    Map mapResult = new HashMap<>();
+                    mapResult.put("underWriteFlag",underWriteFlag);
+                    mapResult.put("proposalNo",proposalNo);
+                    lastResultMap.put(i,mapResult);
+            }
+            returnMap.put("lastResult",lastResultMap);
+    }
 }

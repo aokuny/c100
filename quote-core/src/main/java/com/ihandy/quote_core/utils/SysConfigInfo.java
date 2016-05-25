@@ -18,15 +18,8 @@ public class SysConfigInfo {
     private static Properties properties;
 
     /** ====================================================人保begin====================*/
-    /** 人保域名*/
+     /** 人保域名*/
      public static String PICC_DOMIAN ;
-
-    /**首页面*/
-     public  static String  PICC_INDEX;
-    /**承保页面 */
-     public static String  PICC_CALOGIN;
-     /**车商渠道专用出单页面 */
-     public static String PICC_QUICKPROPOSAL ;
      /**续保对话框 */
      public static String  PICC_EDITRENEWALSEARCH ;
      /**查看保单数据源 */
@@ -42,10 +35,30 @@ public class SysConfigInfo {
      /**查询理赔信息 */
      public static String  PICC_QUERYCLAIMSMSG;
 
+
+    /**计算辅助核保 */
+    public static String PICC_CALANCIINFO;
+    /**保存核保1  */
+    public static String  PICC_HEBAOSAVE1;
+     /**保存核保2  */
+    public static String  PICC_HEBAOSAVE2;
+     /**保存核保3   */
+    public static String  PICC_HEBAOSAVE3;
+     /** 保存核保4  */
+    public static String  PICC_HEBAOSAVE4;
+     /** 保存核保5  */
+    public static String  PICC_HEBAOSAVE5;
+     /** 保存核保6   */
+    public static String  PICC_HEBAOSAVE6;
+     /**提交核保1   */
+    public static String PICC_HEBAOCOMMIT1;
+     /**提交核保2   */
+    public static String PICC_HEBAOCOMMIT2;
+     /** 查询核保   */
+    public static String PICC_HEBAOSEARCH;
+
     
     /**----------------------------- 人保URL ----------------------------------*/
-    /** PICC登录URL */
-    public static String PICC_LOGIN1_URL;
     /** PICC人保业务登录 */
     public static String PICC_MAIN_URL;
     /** PICC用户名 */
@@ -54,10 +67,6 @@ public class SysConfigInfo {
     public static String PICC_PWD1;
     /** PICC密码2 */
     public static String PICC_PWD2;
-    public static String PICC_LOGIN2_URL;
-    public static String PICC_LOGIN3_URL;
-    /** PICC报价URL */
-    public static String PICC_QUOTE_URL;
 
     /**----------------------------- 返回错误信息 ----------------------------------*/
     public static Integer ERROR404;
@@ -91,12 +100,6 @@ public class SysConfigInfo {
 
             PICC_DOMIAN = getString("picc_domain", "");
 
-            PICC_INDEX = getString("picc_index", "");
-
-            PICC_CALOGIN = getString("picc_calogin", "");
-
-            PICC_QUICKPROPOSAL = getString("picc_quickProposal", "");
-
             PICC_EDITRENEWALSEARCH = getString("picc_editRenewalSearch", "");
 
             PICC_SELECTRENEWAL = getString("picc_selectRenewal", "");
@@ -111,15 +114,23 @@ public class SysConfigInfo {
 
             PICC_QUERYCLAIMSMSG = getString("picc_queryClaimsMsg", "");
 
-
-            PICC_LOGIN1_URL = getString("picc_login1_url", "");
             PICC_USERNAME = getString("picc_username", "");
             PICC_PWD1 = getString("picc_pwd1", "");
             PICC_PWD2 = getString("picc_pwd2", "");
-            PICC_LOGIN2_URL = getString("picc_login2_url","");
-            PICC_LOGIN3_URL = getString("picc_login3_url","");
             PICC_MAIN_URL = getString("picc_main_url","");
-            PICC_QUOTE_URL = getString("picc_quote_url","");
+
+            PICC_CALANCIINFO = getString("picc_calAnciInfo","");
+            PICC_HEBAOSAVE1 = getString("picc_hebaosave1","");
+            PICC_HEBAOSAVE2 = getString("picc_hebaosave2","");
+            PICC_HEBAOSAVE3 = getString("picc_hebaosave3","");
+            PICC_HEBAOSAVE4  = getString("picc_hebaosave4","");
+            PICC_HEBAOSAVE5 = getString("picc_hebaosave5","");
+            PICC_HEBAOSAVE6 = getString("picc_hebaosave6","");
+            PICC_HEBAOCOMMIT1 = getString("picc_hebaocommit1","");
+            PICC_HEBAOCOMMIT2 = getString("picc_hebaocommit2","");
+            PICC_HEBAOSEARCH = getString("picc_hebaosearch","");
+
+
 
             //错误信息获取
             ERROR404 = getInt("picc_error404",404);
@@ -197,6 +208,5 @@ public class SysConfigInfo {
         }
     }
 
-    public static Map  SysXubaoParamsMap;
 
 }

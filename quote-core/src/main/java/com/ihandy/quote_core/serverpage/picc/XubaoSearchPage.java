@@ -26,7 +26,12 @@ import java.util.Set;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoSearchPage extends BasePage {
-    private static Logger logger = LoggerFactory.getLogger(XubaoShowCitemCarPage.class);
+	
+    public XubaoSearchPage(int type) {
+		super(type);
+	}
+
+	private static Logger logger = LoggerFactory.getLogger(XubaoShowCitemCarPage.class);
     @Override
     public String doRequest(Request request) {
         String html= null;
@@ -137,6 +142,7 @@ public class XubaoSearchPage extends BasePage {
                 try {
                     Map map3 = (Map) jsonArray2.get(0);
                     lastResultMap.put("LicenseNo", map3.get("licenseNo"));//车牌号
+                    nextParamsMap.put("LicenseNo", map3.get("licenseNo"));
                     lastResultMap.put("EngineNo", map3.get("engineNo"));//发动机号
                     lastResultMap.put("CarVin", map3.get("frameNo"));//车架号
                 }

@@ -30,9 +30,20 @@ public class StringBaseUtils {
 			Set<String> key = map.keySet();
 			for (Iterator it = key.iterator(); it.hasNext();) {
 				String keyName = (String) it.next();
-				String keyValue = map.get(keyName).toString();
+				Object keyValue = map.get(keyName);
+				if(keyValue instanceof Map){
+					Map map2 = (Map) keyValue;
+					Set<String> key2 = map2.keySet();
+					for (Iterator it2 = key2.iterator(); it2.hasNext();) {
+						String keyName2 = (String) it2.next();
+						String keyValue2 = map2.get(keyName2).toString();
+						param = param +(keyName+"."+keyName2) + "="+keyValue2+"&";
+					}
+				}else{
+					keyValue = keyValue.toString();
+					param = param + keyName + "="+keyValue+"&";
+				}
 
-				param = param + keyName + "="+keyValue+"&";
 			}
 			if(!param.equals("")){
 				param =  param.substring(0,param.length()-1);//删除最后一个&符号

@@ -17,7 +17,12 @@ import java.util.Map;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoClaimsMsgPage extends BasePage {
-    @Override
+	
+    public XubaoClaimsMsgPage(int type) {
+		super(type);
+	}
+
+	@Override
     public String doRequest(Request request) {
         String htmlClaimsMsg = null;
         String url = request.getUrl();

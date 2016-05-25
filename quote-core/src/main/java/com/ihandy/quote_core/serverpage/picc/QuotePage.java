@@ -24,6 +24,10 @@ import com.ihandy.quote_core.utils.SysConfigInfo;
 public class QuotePage extends BasePage{
 	
 	private static Logger logger = Logger.getLogger(QuotePage.class);
+	
+	public QuotePage(int type) {
+		super(type);
+	}
 
 	@Override
 	public String doRequest(Request request) {

@@ -22,6 +22,10 @@ import com.ihandy.quote_core.utils.SysConfigInfo;
 public class QuoteJqxPage extends BasePage{
 	
 	private static Logger logger = Logger.getLogger(QuoteJqxPage.class);
+	
+	public QuoteJqxPage(int type) {
+		super(type);
+	}
 
 	@Override
 	public String doRequest(Request request) {

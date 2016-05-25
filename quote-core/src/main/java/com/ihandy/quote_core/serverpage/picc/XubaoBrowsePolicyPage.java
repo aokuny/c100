@@ -17,7 +17,12 @@ import java.util.Map;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoBrowsePolicyPage extends BasePage {
-    @Override
+	
+    public XubaoBrowsePolicyPage(int type) {
+		super(type);
+	}
+
+	@Override
     public String doRequest(Request request) {
         String html= "";
         String url = request.getUrl();
@@ -75,8 +80,8 @@ public class XubaoBrowsePolicyPage extends BasePage {
         Response response = getResponse(html);
         Map map =(Map) response.getResponseMap().get("nextParams");
         map.put("bizNo",request.getRequestParam().get("bizNo")); //将保单号传到下一个请求页面参数中
-        Map map1 =(Map) response.getResponseMap().get("nextParams");
-        SysConfigInfo.SysXubaoParamsMap = map1;
+        //  Map map1 =(Map) response.getResponseMap().get("nextParams");
+        //  SysConfigInfo.SysXubaoParamsMap = map1;
         return response;
     }
 }

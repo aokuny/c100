@@ -20,7 +20,12 @@ import java.util.Map;
  * Created by fengwen on 2016/5/13.
  */
 public class XubaoShowCitemKindPage extends BasePage {
-    private static Logger logger = Logger.getLogger(XubaoShowCitemKindPage.class);
+	
+    public XubaoShowCitemKindPage(int type) {
+		super(type);
+	}
+
+	private static Logger logger = Logger.getLogger(XubaoShowCitemKindPage.class);
     @Override
     public String doRequest(Request request) {
         String htmlCitemKind = null;

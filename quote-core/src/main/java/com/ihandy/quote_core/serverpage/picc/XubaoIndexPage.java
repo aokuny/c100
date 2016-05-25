@@ -15,6 +15,11 @@ import java.util.Map;
  * Created by fengwen on 2016/5/11.
  */
 public class XubaoIndexPage extends BasePage {
+	
+	public XubaoIndexPage(int type) {
+		super(type);
+	}
+
 	private static Logger logger = Logger.getLogger(XubaoIndexPage.class);
 	@Override
 	public String doRequest(Request request) {

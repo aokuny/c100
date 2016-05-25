@@ -17,6 +17,7 @@ import com.ihandy.quote_core.service.IService;
 
 import com.ihandy.quote_core.utils.SysConfigInfo;
 
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -936,7 +937,18 @@ public class RBServiceImpl implements IService {
 	@Override
 	public HebaoResponse getHebaoResponse(String licenseNo) {
 		HebaoResponse response = new HebaoResponse();
-
+		HebaoSearchQueryCodePage hebaoSearchQueryCodePage =new HebaoSearchQueryCodePage(1);
+		Request request =new Request();
+		Map paramMap = new HashMap<>();
+		paramMap.put("licenseNo",licenseNo);
+		request.setRequestParam(paramMap);
+		Response response1 = hebaoSearchQueryCodePage.run(request);
+		JSONArray jsonArray = (JSONArray) response1.getResponseMap().get("lastResult");
+		for(int i=0;i<jsonArray.size();i++){
+			Map map = (Map)jsonArray.get(i);
+			response.setSubmitResult(map.get("underWriteFlag").toString());
+			response.setBizNo(map.get("proposalNo").toString());
+		}//应该返回一个list
 		return response;
 	}
 }

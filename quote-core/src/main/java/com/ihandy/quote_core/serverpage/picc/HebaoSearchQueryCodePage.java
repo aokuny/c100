@@ -29,12 +29,8 @@ public class HebaoSearchQueryCodePage extends BasePage {
         String url = request.getUrl();
         url = url+"?"+"pigeNo=1&pageSize=10";
         Map paraMap = request.getRequestParam();
-        String param ="";
-        try{
-            param = StringBaseUtils.Map2GetParam(paraMap);
-        }catch(Exception e) {
-            logger.info("抓取机器人，【 PICC 核保查询获取post参数失败】");
-        }
+        String param ="comCode=11010286&riskCode=DAA&prpCproposalVo.checkFlag=&prpCproposalVo.underWriteFlag=&prpCproposalVo.strStartDate=&prpCproposalVo.othFlag=&prpCproposalVo.checkUpCode=&prpCproposalVo.operatorCode1=&prpCproposalVo.businessNature=&noNcheckFlag=0&jfcdURL=http://10.134.136.48:8100/cbc&prpallURL=http://10.134.136.48:8000/prpall&bizNoZ=&pageNo_=1&pageSize_=10&scmIsOpen=1111100000&searchConditionSwitch=0&prpCproposalVo.proposalNo=&prpCproposalVo.policyNo=&prpCproposalVo.licenseNo=&prpCproposalVo.vinNo=&prpCproposalVo.insuredCode=&prpCproposalVo.insuredName=&prpCproposalVo.contractNo=&prpCproposalVo.operateDate=&prpCproposalVo.operateDate2=&prpCproposalVo.startDate=&prpCproposalVo.startDate2=&prpCproposalVo.dmFlag=all&prpCproposalVo.underWriteFlagC=&prpCproposalVo.brandName=&prpCproposalVo.engineNo=&prpCproposalVo.frameNo=&prpCproposalVo.riskCode=&prpCproposalVo.appliCode=&prpCproposalVo.apliName=&prpCproposalVo.makeCom=&makeComDes=&prpCproposalVo.operatorCode=&operatorCodeDes=&prpCproposalVo.comCode=&comCodeDes=&prpCproposalVo.handlerCode=&handlerCodeDes=&prpCproposalVo.handler1Code=&handler1CodeDes=&prpCproposalVo.endDate=&prpCproposalVo.endDate2=&prpCproposalVo.underWriteEndDate=&prpCproposalVo.underWriteEndDate2=";
+        param.replace("prpCproposalVo.licenseNo","prpCproposalVo.licenseNo="+paraMap.get("licenseNo").toString());
         Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
@@ -58,10 +54,12 @@ public class HebaoSearchQueryCodePage extends BasePage {
                     String underWriteFlag =  mapHebao.get("underWriteFlag").toString();
                     String proposalNo = mapHebao.get("proposalNo").toString();
                     Map mapResult = new HashMap<>();
-                    mapResult.put("underWriteFlag",underWriteFlag);
-                    mapResult.put("proposalNo",proposalNo);
+
+                    mapResult.put("underWriteFlag", underWriteFlag);
+                    mapResult.put("proposalNo", proposalNo);
                     mapResult.put("policyNo", mapHebao.get("policyNo").toString());
-                    lastResultMap.put(i,mapResult);
+                    lastResultMap.put(i, mapResult);
+
                 }
                 returnMap.put("lastResult",lastResultMap);
                 response.setResponseMap(returnMap);

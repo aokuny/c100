@@ -11,9 +11,7 @@ import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fengwen on 2016/5/24.
@@ -88,6 +86,18 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
     public Response run(Request request) {
         String html = doRequest(request);
         Response response = getResponse(html);
+        //上个请求返回的参数继续传递下去
+        Map requestMap = request.getRequestParam();
+        Map returnMap =  response.getResponseMap();
+        Map nextMap =(Map) requestMap.get("nextParams");
+        Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
+        for (Iterator it = key.iterator(); it.hasNext();) {
+            String keyName = (String) it.next();
+            String keyValue = nextMap.get(keyName).toString();
+            requestMap.put(keyName,keyValue);
+        }
+        returnMap.put("nextParams",requestMap);
+        response.setResponseMap(returnMap);
         return response;
     }
 }

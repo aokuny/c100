@@ -203,7 +203,10 @@ public class HttpsUtil {
 	 * @param sessionId
 	 * @return
 	 */
-	public static Map<String, String> sendPost(String urlString, String param, String sessionId){
+	public static Map<String, String> sendPost(String urlString, String param, String sessionId,String enCode){
+		if(StringUtils.isBlank(enCode)){
+			enCode = "gb2312";
+		}
 		InputStream inputStream = null;
 		InputStreamReader inputStreamReader = null;
 		BufferedReader reader = null;
@@ -238,7 +241,7 @@ public class HttpsUtil {
 			conn.getOutputStream().close();
 
 			inputStream = conn.getInputStream();
-			inputStreamReader = new InputStreamReader(inputStream,"gb2312");
+			inputStreamReader = new InputStreamReader(inputStream,enCode);
 			reader = new BufferedReader(inputStreamReader);
 			while ((tempLine = reader.readLine()) != null) {
 				resultBuffer.append(tempLine);

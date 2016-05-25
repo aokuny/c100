@@ -41,7 +41,7 @@ public abstract class BasePage {
 		//尝试sessionId是否可用
 		String urlString1 = "http://" + SysConfigInfo.PICC_MAIN_URL + ":8000/prpall/bindvalid/bjptBindValid.do";
 		String param1="operatorCode=" + SysConfigInfo.PICC_USERNAME + "&checkOperaType=BJ_PT";
-		String html = HttpsUtil.sendPost(urlString1, param1, piccSessionId).get("html");
+		String html = HttpsUtil.sendPost(urlString1, param1, piccSessionId,null).get("html");
 		boolean f = false;
 		if(!html.contains("302 Moved Temporarily")){//证明sessionId可用
 			f = true;

@@ -890,8 +890,14 @@ public class RBServiceImpl implements IService {
 			HebaoSaveQueryPayForPage hebaoSaveQueryPayForPage = new HebaoSaveQueryPayForPage(1);
 			Request request3 =new Request();
 			request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE3);
-			request3.setRequestParam(nextParamsMap);
+			request3.setRequestParam((Map)response2.getResponseMap().get("nextParams"));
 			Response response3 = hebaoSaveQueryPayForPage.run(request3);
+			//保存4操作
+			HebaoSaveRefreshPlanByTimesPage hebaoSaveRefreshPlanByTimesPage = new HebaoSaveRefreshPlanByTimesPage(1);
+			Request request4 =new Request();
+			request4.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE4);
+			request4.setRequestParam((Map)response3.getResponseMap().get("nextParams"));
+			Response response4 = hebaoSaveRefreshPlanByTimesPage.run(request4);
 	    }else{
 		   logger.info("机器人抓取，获取辅助计算核保参数失败");
 	    }

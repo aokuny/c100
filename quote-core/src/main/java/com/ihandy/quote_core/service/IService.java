@@ -179,4 +179,5 @@ public interface IService {
 			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode);
 
 	String commitHeBaoInfo(Map preMap);
+	HebaoResponse getHebaoResponse(String licenseNo);
 }

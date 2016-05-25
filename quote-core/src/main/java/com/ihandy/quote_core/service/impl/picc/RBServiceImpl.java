@@ -17,6 +17,7 @@ import com.ihandy.quote_core.service.IService;
 
 import com.ihandy.quote_core.utils.SysConfigInfo;
 
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -890,11 +891,64 @@ public class RBServiceImpl implements IService {
 			HebaoSaveQueryPayForPage hebaoSaveQueryPayForPage = new HebaoSaveQueryPayForPage(1);
 			Request request3 =new Request();
 			request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE3);
-			request3.setRequestParam(nextParamsMap);
+			request3.setRequestParam((Map)response2.getResponseMap().get("nextParams"));
 			Response response3 = hebaoSaveQueryPayForPage.run(request3);
+			//保存4操作
+			HebaoSaveRefreshPlanByTimesPage hebaoSaveRefreshPlanByTimesPage = new HebaoSaveRefreshPlanByTimesPage(1);
+			Request request4 =new Request();
+			request4.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE4);
+			request4.setRequestParam((Map)response3.getResponseMap().get("nextParams"));
+			Response response4 = hebaoSaveRefreshPlanByTimesPage.run(request4);
+			//保存5操作
+			HeBaoSaveCheckBeforeSavePage heBaoSaveCheckBeforeSavePage = new HeBaoSaveCheckBeforeSavePage(1);
+			Request request5 =new Request();
+			request5.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE5);
+			request5.setRequestParam((Map)response4.getResponseMap().get("nextParams"));
+			Response response5 = heBaoSaveCheckBeforeSavePage.run(request5);
+			//保存6操作
+			HebaoSaveInsertPage hebaoSaveInsertPage = new HebaoSaveInsertPage(1);
+			Request request6 =new Request();
+			request6.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE6);
+			request6.setRequestParam((Map)response4.getResponseMap().get("nextParams"));
+			Response response6 = hebaoSaveInsertPage.run(request6);
+
+			//提交核保1操作
+			HebaoCommitEditCheckFlagPage hebaoCommitEditCheckFlagPage = new HebaoCommitEditCheckFlagPage(1);
+			Request requestCommit1 =new Request();
+			requestCommit1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOCOMMIT1);
+			requestCommit1.setRequestParam((Map)response6.getResponseMap().get("nextParams"));
+			Response responseCommit1 = hebaoCommitEditCheckFlagPage.run(requestCommit1);
+
+			//提交核保1操作
+			HebaoCommitEditSubmitUndwrtPage hebaoCommitEditSubmitUndwrtPage = new HebaoCommitEditSubmitUndwrtPage(1);
+			Request requestCommit2 =new Request();
+			requestCommit2.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOCOMMIT2);
+			requestCommit2.setRequestParam((Map)response6.getResponseMap().get("nextParams"));
+			Response responseCommit2 = hebaoCommitEditSubmitUndwrtPage.run(requestCommit2);
+			//返回核保单号
+			Map mapTDAA = (Map) response6.getResponseMap().get("nextParams");
+			code = mapTDAA.get("TDAA").toString();
 	    }else{
 		   logger.info("机器人抓取，获取辅助计算核保参数失败");
 	    }
 		return code;
+	}
+
+	@Override
+	public HebaoResponse getHebaoResponse(String licenseNo) {
+		HebaoResponse response = new HebaoResponse();
+		HebaoSearchQueryCodePage hebaoSearchQueryCodePage =new HebaoSearchQueryCodePage(1);
+		Request request =new Request();
+		Map paramMap = new HashMap<>();
+		paramMap.put("licenseNo",licenseNo);
+		request.setRequestParam(paramMap);
+		Response response1 = hebaoSearchQueryCodePage.run(request);
+		JSONArray jsonArray = (JSONArray) response1.getResponseMap().get("lastResult");
+		for(int i=0;i<jsonArray.size();i++){
+			Map map = (Map)jsonArray.get(i);
+			response.setSubmitResult(map.get("underWriteFlag").toString());
+			response.setBizNo(map.get("proposalNo").toString());
+		}//应该返回一个list
+		return response;
 	}
 }

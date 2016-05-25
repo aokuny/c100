@@ -35,7 +35,7 @@ public class QuotePage extends BasePage{
 		Map<String, String> param = request.getRequestParam();
 		String paramStr = StringBaseUtils.Map2GetParam(param);
 		//发送http请求
-		Map<String, String> result = HttpsUtil.sendPost(url, paramStr, super.piccSessionId);
+		Map<String, String> result = HttpsUtil.sendPost(url, paramStr, super.piccSessionId,null);
 		return result.get("html");
 	}
 

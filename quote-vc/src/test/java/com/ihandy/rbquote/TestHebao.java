@@ -147,4 +147,178 @@ public class TestHebao {
         String[] msgArr = msg.split(",");
         System.out.println("msgArr = "+msgArr);
     }
+
+    @Test
+    public void testSave3(){
+        Map  returnMap  = new HashMap<>();
+        Map nextParamsMap = new HashMap<>();
+        String html = "{\"totalRecords\":1,\"data\":[{\"prpDdismantleDetails\":[{\"roleCode_uni\":\"\",\"flag\":\"DAA\",\"id\":{\"agreementNo\":\"RULE20130000000023071\",\"roleCode\":\"110021100065\",\"assignType\":\"1\",\"configCode\":\"PUB\"},\"prpDdismantle\":null,\"roleName\":\"北京众合四海保险代理有限公司\",\"costRate\":100,\"operateTimeForHis\":null,\"adjustFlag\":\"\",\"remark\":\"\",\"roleFlag\":\"1\",\"insertTimeForHis\":null,\"businessNature\":\"2\",\"roleAccount\":\"\"},{\"roleCode_uni\":\"\",\"flag\":\"DZA\",\"id\":{\"agreementNo\":\"RULE20130000000023072\",\"roleCode\":\"110021100065\",\"assignType\":\"1\",\"configCode\":\"PUB\"},\"prpDdismantle\":null,\"roleName\":\"北京众合四海保险代理有限公司\",\"costRate\":100,\"operateTimeForHis\":null,\"adjustFlag\":\"\",\"remark\":\"\",\"roleFlag\":\"1\",\"insertTimeForHis\":null,\"businessNature\":\"2\",\"roleAccount\":\"\"}],\"maxRateScm\":35,\"levelMaxRateCi\":null,\"levelMaxRate\":null,\"maxRateScmCi\":4,\"prpCsaless\":[{\"splitRate\":-2,\"agreementNo\":\"\",\"oriSplitNumber\":0,\"flag\":\"\",\"splitWay\":\"\",\"id\":{\"proposalNo\":\"\",\"salesCode\":\"01\",\"salesDetailCode\":\"11\"},\"upperRate\":0,\"totalRate\":0.23,\"operateTimeForHis\":null,\"totalRateMax\":0,\"riskCode\":\"DAA\",\"remark\":\"\",\"salesName\":\"销售费用\",\"splitFee\":0,\"insertTimeForHis\":null,\"prpCmain\":null,\"salesDetailName\":\"市公司费用率\",\"prpCsalesDatilss\":[]},{\"splitRate\":0,\"agreementNo\":\"\",\"oriSplitNumber\":0,\"flag\":\"\",\"splitWay\":\"\",\"id\":{\"proposalNo\":\"\",\"salesCode\":\"01\",\"salesDetailCode\":\"12\"},\"upperRate\":0,\"totalRate\":0.23,\"operateTimeForHis\":null,\"totalRateMax\":0,\"riskCode\":\"DAA\",\"remark\":\"\",\"salesName\":\"销售费用\",\"splitFee\":0,\"insertTimeForHis\":null,\"prpCmain\":null,\"salesDetailName\":\"县支公司费用率\",\"prpCsalesDatilss\":[]},{\"splitRate\":0,\"agreementNo\":\"\",\"oriSplitNumber\":0,\"flag\":\"\",\"splitWay\":\"\",\"id\":{\"proposalNo\":\"\",\"salesCode\":\"01\",\"salesDetailCode\":\"13\"},\"upperRate\":0,\"totalRate\":0.23,\"operateTimeForHis\":null,\"totalRateMax\":0,\"riskCode\":\"DAA\",\"remark\":\"\",\"salesName\":\"销售费用\",\"splitFee\":0,\"insertTimeForHis\":null,\"prpCmain\":null,\"salesDetailName\":\"团队费用率\",\"prpCsalesDatilss\":[]},{\"splitRate\":25,\"agreementNo\":\"\",\"oriSplitNumber\":108.7,\"flag\":\"\",\"splitWay\":\"\",\"id\":{\"proposalNo\":\"\",\"salesCode\":\"01\",\"salesDetailCode\":\"15\"},\"upperRate\":0,\"totalRate\":0.23,\"operateTimeForHis\":null,\"totalRateMax\":0,\"riskCode\":\"DAA\",\"remark\":\"\",\"salesName\":\"销售费用\",\"splitFee\":0,\"insertTimeForHis\":null,\"prpCmain\":null,\"salesDetailName\":\"渠道手续费率\",\"prpCsalesDatilss\":[]},{\"splitRate\":0,\"agreementNo\":\"\",\"oriSplitNumber\":0,\"flag\":\"\",\"splitWay\":\"\",\"id\":{\"proposalNo\":\"\",\"salesCode\":\"01\",\"salesDetailCode\":\"14\"},\"upperRate\":0,\"totalRate\":0.23,\"operateTimeForHis\":null,\"totalRateMax\":0,\"riskCode\":\"DAA\",\"remark\":\"\",\"salesName\":\"销售费用\",\"splitFee\":0,\"insertTimeForHis\":null,\"prpCmain\":null,\"salesDetailName\":\"销售端费用率\",\"prpCsalesDatilss\":[]},{\"splitRate\":0,\"agreementNo\":\"\",\"oriSplitNumber\":0,\"flag\":\"\",\"splitWay\":\"\",\"id\":{\"proposalNo\":\"\",\"salesCode\":\"01\",\"salesDetailCode\":\"16\"},\"upperRate\":0,\"totalRate\":0.23,\"operateTimeForHis\":null,\"totalRateMax\":0,\"riskCode\":\"DAA\",\"remark\":\"\",\"salesName\":\"销售费用\",\"splitFee\":0,\"insertTimeForHis\":null,\"prpCmain\":null,\"salesDetailName\":\"渠道维护费用率\",\"prpCsalesDatilss\":[]}],\"prpDpayForPolicies\":[{\"prpDagreement\":null,\"agentCode_uni\":\"\",\"customerGroupCode\":\"\",\"coinsDeduct\":\"\",\"auditFlag\":\"\",\"costType\":\"2\",\"flag\":\"\",\"id\":{\"agreementNo\":\"RULE20130000000023071\",\"seriseNo\":1,\"configCode\":\"PUB\"},\"kindFlag\":\"\",\"currency\":\"\",\"costRate\":25,\"costRateUpper\":35,\"operateTimeForHis\":null,\"adjustFlag\":\"0\",\"riskCode\":\"DAA\",\"costUpper\":0,\"remark\":\"\",\"upperFlag\":\"\",\"insertTimeForHis\":null},{\"prpDagreement\":null,\"agentCode_uni\":\"\",\"customerGroupCode\":\"\",\"coinsDeduct\":\"\",\"auditFlag\":\"\",\"costType\":\"2\",\"flag\":\"\",\"id\":{\"agreementNo\":\"RULE20130000000023072\",\"seriseNo\":2,\"configCode\":\"PUB\"},\"kindFlag\":\"\",\"currency\":\"\",\"costRate\":4,\"costRateUpper\":4,\"operateTimeForHis\":null,\"adjustFlag\":\"0\",\"riskCode\":\"DZA\",\"costUpper\":0,\"remark\":\"\",\"upperFlag\":\"\",\"insertTimeForHis\":null}]}]}";
+        Map returnPolicyNoMap = new HashMap<>();
+        Map map = new HashMap<>();
+        map = StringBaseUtils.parseJSON2Map(html);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray = JSONArray.fromObject(map);
+        Map map1 = (Map) jsonArray.get(0);
+        JSONArray data = (JSONArray) map1.get("data");
+        Map dataMap = (Map) data.get(0);
+        //1）组装prpDdismantleDetails
+        JSONArray jsonArrayPrpDdismantleDetails =JSONArray.fromObject(dataMap.get("prpDdismantleDetails"));
+        for(int i=0;i<jsonArrayPrpDdismantleDetails.size();i++){
+            Map mapPrpDdismantleDetails = (Map)jsonArrayPrpDdismantleDetails.get(i);
+            nextParamsMap.put("prpDdismantleDetails["+i+"].flag",mapPrpDdismantleDetails.get("flag"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].costRate",mapPrpDdismantleDetails.get("costRate"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].businessNature",mapPrpDdismantleDetails.get("businessNature"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].roleCode_uni",mapPrpDdismantleDetails.get("roleCode_uni"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].roleFlag",mapPrpDdismantleDetails.get("roleFlag"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].roleName",mapPrpDdismantleDetails.get("roleName"));
+            JSONArray jsonArrayPrpDdismantleDetailsId =JSONArray.fromObject(mapPrpDdismantleDetails.get("id"));
+            Map mapId = (Map)jsonArrayPrpDdismantleDetailsId.get(0);
+            nextParamsMap.put("prpDdismantleDetails["+i+"].id.agreementNo", mapId.get("agreementNo"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].id.roleCode", mapId.get("roleCode"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].id.configCode",mapId.get("configCode"));
+            nextParamsMap.put("prpDdismantleDetails["+i+"].id.assignType",mapId.get("assignType"));
+            if(mapPrpDdismantleDetails.get("flag").toString().equals("DZA")){
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].flag",mapPrpDdismantleDetails.get("flag"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].costRate",mapPrpDdismantleDetails.get("costRate"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].businessNature",mapPrpDdismantleDetails.get("businessNature"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].roleCode_uni",mapPrpDdismantleDetails.get("roleCode_uni"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].roleFlag",mapPrpDdismantleDetails.get("roleFlag"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].roleName",mapPrpDdismantleDetails.get("roleName"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].id.agreementNo", mapId.get("agreementNo"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].id.roleCode", mapId.get("roleCode"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].id.configCode",mapId.get("configCode"));
+                nextParamsMap.put("prpDdismantleDetails_["+i+"].id.assignType",mapId.get("assignType"));
+            }
+        }
+        //2）组装prpCsaless(6)
+        JSONArray jsonArrayPrpCsaless =JSONArray.fromObject(dataMap.get("prpCsaless"));
+        for(int i=0;i<jsonArrayPrpCsaless.size();i++){
+            Map mapPrpCsaless = (Map)jsonArrayPrpCsaless.get(i);
+            nextParamsMap.put("prpCsaless["+i+"].agreementNo",mapPrpCsaless.get("agreementNo"));
+            nextParamsMap.put("prpCsaless["+i+"].flag",mapPrpCsaless.get("flag"));
+            nextParamsMap.put("prpCsaless["+i+"].oriSplitNumber",mapPrpCsaless.get("oriSplitNumber"));
+            nextParamsMap.put("prpCsaless["+i+"].remark",mapPrpCsaless.get("remark"));
+            nextParamsMap.put("prpCsaless["+i+"].riskCode",mapPrpCsaless.get("riskCode"));
+            nextParamsMap.put("prpCsaless["+i+"].salesDetailName",mapPrpCsaless.get("salesDetailName"));
+            nextParamsMap.put("prpCsaless["+i+"].salesName",mapPrpCsaless.get("salesName"));
+            nextParamsMap.put("prpCsaless["+i+"].splitFee",mapPrpCsaless.get("splitFee"));
+            nextParamsMap.put("prpCsaless["+i+"].splitRate",mapPrpCsaless.get("splitRate"));
+            nextParamsMap.put("prpCsaless["+i+"].splitWay",mapPrpCsaless.get("splitWay"));
+            nextParamsMap.put("prpCsaless["+i+"].totalRate",mapPrpCsaless.get("totalRate"));
+            nextParamsMap.put("prpCsaless["+i+"].totalRateMax",mapPrpCsaless.get("totalRateMax"));
+            JSONArray jsonArrayPrpDdismantleDetailsId =JSONArray.fromObject(mapPrpCsaless.get("id"));
+            Map mapId = (Map)jsonArrayPrpDdismantleDetailsId.get(0);
+            nextParamsMap.put("prpCsaless["+i+"].id.proposalNo", mapId.get("proposalNo"));
+            nextParamsMap.put("prpCsaless["+i+"].id.salesCode", mapId.get("salesCode"));
+            nextParamsMap.put("prpCsaless["+i+"].id.salesDetailCode",mapId.get("salesDetailCode"));
+            if(i==0){
+                nextParamsMap.put("prpCsaless_["+i+"].agreementNo",mapPrpCsaless.get("agreementNo"));
+                nextParamsMap.put("prpCsaless_["+i+"].flag",mapPrpCsaless.get("flag"));
+                nextParamsMap.put("prpCsaless_["+i+"].oriSplitNumber",mapPrpCsaless.get("oriSplitNumber"));
+                nextParamsMap.put("prpCsaless_["+i+"].remark",mapPrpCsaless.get("remark"));
+                nextParamsMap.put("prpCsaless_["+i+"].riskCode",mapPrpCsaless.get("riskCode"));
+                nextParamsMap.put("prpCsaless_["+i+"].salesDetailName",mapPrpCsaless.get("salesDetailName"));
+                nextParamsMap.put("prpCsaless_["+i+"].salesName",mapPrpCsaless.get("salesName"));
+                nextParamsMap.put("prpCsaless_["+i+"].splitFee",mapPrpCsaless.get("splitFee"));
+                nextParamsMap.put("prpCsaless_["+i+"].splitRate",mapPrpCsaless.get("splitRate"));
+                nextParamsMap.put("prpCsaless_["+i+"].splitWay",mapPrpCsaless.get("splitWay"));
+                nextParamsMap.put("prpCsaless_["+i+"].totalRate",mapPrpCsaless.get("totalRate"));
+                nextParamsMap.put("prpCsaless_["+i+"].totalRateMax",mapPrpCsaless.get("totalRateMax"));
+                nextParamsMap.put("prpCsaless_["+i+"].id.proposalNo", mapId.get("proposalNo"));
+                nextParamsMap.put("prpCsaless_["+i+"].id.salesCode", mapId.get("salesCode"));
+                nextParamsMap.put("prpCsaless_["+i+"].id.salesDetailCode",mapId.get("salesDetailCode"));
+            }
+        }
+        //3)
+        nextParamsMap.put("maxRateScmCi",dataMap.get("maxRateScmCi"));
+        nextParamsMap.put("maxRateScm",dataMap.get("maxRateScm"));
+        nextParamsMap.put("levelMaxRateCi",dataMap.get("levelMaxRateCi"));
+        nextParamsMap.put("levelMaxRate",dataMap.get("levelMaxRate"));
+        //4)组装prpDpayForPolicies // TODO: 2016/5/25
+        System.out.println("data = "+nextParamsMap);
+    }
+
+    @Test
+    public void testSave4(){
+
+        Map nextParamsMap = new HashMap<>();
+        String html = "{\"totalRecords\":3,\"data\":[{\"jfFlag\":\"1\",\"payReason\":\"R29\",\"delinquentFee\":580.83,\"flag\":\"\",\"payNo\":1,\"subsidyRate\":0,\"serialNo\":0,\"currency\":\"CNY,人民币\",\"planFee\":580.83,\"endorseNo\":\"\",\"payReasonName\":\"(强制)收保费\",\"isBICI\":\"CI\",\"netPremium\":547.95,\"planDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0},\"taxPremium\":32.88},{\"jfFlag\":\"1\",\"payReason\":\"RM9\",\"delinquentFee\":350,\"flag\":\"\",\"payNo\":1,\"subsidyRate\":0,\"serialNo\":0,\"currency\":\"CNY,人民币\",\"planFee\":350,\"endorseNo\":\"\",\"payReasonName\":\"代收车船税\",\"isBICI\":\"CShip\",\"netPremium\":null,\"planDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0},\"taxPremium\":null},{\"jfFlag\":\"1\",\"payReason\":\"R21\",\"delinquentFee\":3011.82,\"flag\":\"\",\"payNo\":1,\"subsidyRate\":0,\"serialNo\":0,\"currency\":\"CNY,人民币\",\"planFee\":3011.82,\"endorseNo\":\"\",\"payReasonName\":\"收保费\",\"isBICI\":\"BI\",\"netPremium\":2841.33,\"planDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0},\"taxPremium\":170.49}]}";
+
+        Map map = new HashMap<>();
+        map = StringBaseUtils.parseJSON2Map(html);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray = JSONArray.fromObject(map);
+        Map map1 = (Map) jsonArray.get(0);
+        JSONArray data = (JSONArray) map1.get("data");
+        //1）组装 prpCplanTemps
+        for(int i=0;i<data.size();i++){
+           /* prpCplanTemps_[0].currency	CNY	34
+            prpCplanTemps_[0].delinquentFee	3011.82	43
+            prpCplanTemps_[0].endorseNo		32
+            prpCplanTemps_[0].flag		27
+            prpCplanTemps_[0].isBICI	BI	31
+            prpCplanTemps_[0].netPremium	2841.33	40
+            prpCplanTemps_[0].payNo	1	29
+            prpCplanTemps_[0].payReason	R21	35
+            prpCplanTemps_[0].planDate	2016-6-26	40
+            prpCplanTemps_[0].planFee	3011.82	37
+            prpCplanTemps_[0].serialNo	0	32
+            prpCplanTemps_[0].subsidyRate	0	35
+            prpCplanTemps_[0].taxPremium	170.49	39*/
+            Map mapPrpCplanTemps = (Map)data.get(i);
+            nextParamsMap.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency"));
+            nextParamsMap.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
+            nextParamsMap.put("prpCplanTemps["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
+            nextParamsMap.put("prpCplanTemps["+i+"].flag",mapPrpCplanTemps.get("flag"));
+            nextParamsMap.put("prpCplanTemps["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
+            nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+            nextParamsMap.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
+            nextParamsMap.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
+            nextParamsMap.put("prpCplanTemps["+i+"].planDate",mapPrpCplanTemps.get("planDate"));
+            nextParamsMap.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
+            nextParamsMap.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
+            nextParamsMap.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
+            nextParamsMap.put("prpCplanTemps["+i+"].taxPremium", mapPrpCplanTemps.get("taxPremium"));
+            if(mapPrpCplanTemps.get("isBICI").toString().equals("BI")){
+                nextParamsMap.put("prpCplanTemps_["+i+"].currency",mapPrpCplanTemps.get("currency"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].flag",mapPrpCplanTemps.get("flag"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].planDate",mapPrpCplanTemps.get("planDate"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
+                nextParamsMap.put("prpCplanTemps_["+i+"].taxPremium", mapPrpCplanTemps.get("taxPremium"));
+            }
+        }
+
+        System.out.println("data = "+nextParamsMap);
+    }
+
+    @Test
+    public void testSearchHebao(){
+        String html="{\"totalRecords\":2,\"data\":[{\"dmFlag\":\"0\",\"policyNo\":\"                      \",\"contractNo\":\"                      \",\"specialflag\":\"初始值\",\"underWriteEndDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"licenseNo\":\"京P55M11\",\"checkStatus\":\"初始状态\",\"operateDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"comCode\":\"11010286\",\"checkFlag\":\"初始值\",\"proposalNo\":\"TDAA201611010000955201\",\"underWriteFlag\":\"见费出单待缴费\",\"insuredName\":\"朱佳佳\",\"operatorCode\":\"020083    \",\"startDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0}},{\"dmFlag\":\"0\",\"policyNo\":\"                      \",\"contractNo\":\"                      \",\"specialflag\":\"初始值\",\"underWriteEndDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"licenseNo\":\"京P55M11\",\"checkStatus\":\"初始状态\",\"operateDate\":{\"date\":25,\"day\":3,\"timezoneOffset\":-480,\"year\":116,\"month\":4,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1464105600000,\"nanos\":0},\"comCode\":\"11010286\",\"checkFlag\":\"初始值\",\"proposalNo\":\"TDZA201611010000977639\",\"underWriteFlag\":\"见费出单待缴费\",\"insuredName\":\"朱佳佳\",\"operatorCode\":\"020083    \",\"startDate\":{\"date\":26,\"day\":0,\"timezoneOffset\":-480,\"year\":116,\"month\":5,\"hours\":0,\"seconds\":0,\"minutes\":0,\"time\":1466870400000,\"nanos\":0}}],\"startIndex\":1,\"recordsReturned\":10}";
+        Map  returnMap  = new HashMap<>();
+        Map lastResultMap = new HashMap<>();
+
+            Map map = new HashMap<>();
+            map = StringBaseUtils.parseJSON2Map(html);
+            JSONArray jsonArray = JSONArray.fromObject(map);
+            Map map1 = (Map) jsonArray.get(0);
+            JSONArray  jsonArrayData = (JSONArray) map1.get("data");
+            for(int i=0;i<jsonArrayData.size();i++){
+                   Map mapHebao = (Map)jsonArrayData.get(i);
+                   String underWriteFlag =  mapHebao.get("underWriteFlag").toString();
+                   String proposalNo = mapHebao.get("proposalNo").toString();
+                    Map mapResult = new HashMap<>();
+                    mapResult.put("underWriteFlag",underWriteFlag);
+                    mapResult.put("proposalNo",proposalNo);
+                    lastResultMap.put(i,mapResult);
+            }
+            returnMap.put("lastResult",lastResultMap);
+    }
 }

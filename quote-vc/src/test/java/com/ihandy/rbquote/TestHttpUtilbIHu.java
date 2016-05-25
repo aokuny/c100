@@ -300,16 +300,16 @@ public class TestHttpUtilbIHu {
 //		String MoldName = "东风雪铁龙DC7165DTA轿车";
 //		String IntentionCompany = "2";
 
-           // String carNO = "京P55M11";
+            String carNO = "京P55M11";
             String EngineNo = "4LA4D8297";
             String CarVin = "LGXC16DF4A0169664";
             String RegisterDate = "2006-10-01";
             String MoldName = "比亚迪F3";
-            String IntentionCompany = "1";
+            String IntentionCompany = "2";
             //"ForceTotal":627.56,"TaxTotal":400
 
             //String carNO = "京PT3G98";
-            String carNO = "京N3HU88";
+           // String carNO = "京N3HU88";
             //String carNO = "翼A723KG";
             //String carNO = "京QA5M75";
             //String carNO = "京KT3495";
@@ -340,83 +340,83 @@ public class TestHttpUtilbIHu {
             System.err.println("用时：" + String.valueOf(System.currentTimeMillis() - start));
 
             //上传
-//		String url = "http://i.91bihu.com/api/CarInsurance/PostPrecisePrice";
-//		//封装JSON参数
-//		Map<String, String> jsonObj = new HashMap<>();
-//		//报价信息
-//		jsonObj.put("IsSingleSubmit", "1");//IsSingleSubmit	是	Int	是否对单个保险公司核保，1=是，0=否
-//		jsonObj.put("IntentionCompany", IntentionCompany);//IntentionCompany	是	String	意向投保公司(-1:只报价不核保、0:平安、1:太平洋、2:人保)
-//		//车辆信息
-//		jsonObj.put("LicenseNo", carNO);//LicenseNo	是	String	车牌号
-//		jsonObj.put("EngineNo", EngineNo);//EngineNo	是	String	发动机号
-//		jsonObj.put("CarVin", CarVin);//CarVin	是	String	车架号
-//		jsonObj.put("RegisterDate", RegisterDate);//RegisterDate	是	string	注册日期
-//		jsonObj.put("MoldName", MoldName);//MoldName	是	String	品牌型号
-//		jsonObj.put("CarType", "0");//CarType	是	Int	车辆类型：0客车，1货车
-//		jsonObj.put("IsNewCar", "0");//IsNewCar	是	Int	是否新车（0：否；1：新车）
-//		jsonObj.put("CarUsedType", "0");//CarUsedType	是	string	使用性质（0营运、非营运）
-//		jsonObj.put("Citycode", "10");//Citycode	是	Int	城市Id（目前系统只支持北京地区）（北京:110000）
-//		//险种信息
-//		jsonObj.put("ForceTax", "1");//ForceTax	是	Int	交强险+车船税(1:报价交强车船，0：不报价交强车船)
-//		jsonObj.put("BoLi", "1");//BoLi	是	Double	玻璃单独破碎险，0-不投保，1国产，2进口
-//		jsonObj.put("CheDeng", "0");//CheDeng	是	Double	倒车镜、车灯单独损坏险，0-不投保，1-国产，2-进口
-//		jsonObj.put("SheShui", "1");//SheShui	是	Double	涉水行驶损失险，0-不投保，1投保
-//		jsonObj.put("HuaHen", "2000");//HuaHen	是	Double	车身划痕损失险，0-不投保，>0投保(具体金额)（2，000；5，000；10，000；20，000）
-//		jsonObj.put("SiJi", "10000");//SiJi	是	Double	车上人员责任险(司机) ，0-不投保，>0投保(具体金额）（10，000；20，000；30，000；40，000；50，000；100，000；200，000）
-//		jsonObj.put("ChengKe", "10000");//ChengKe	是	Double	车上人员责任险(乘客) ，0-不投保，>0投保(具体金额)（10，000；20，000；30，000；40，000；50，000；100，000；200，000）
-//		jsonObj.put("CheSun", "1");//CheSun	是	Double	机动车损失保险，0-不投保，>0投保
-//		jsonObj.put("DaoQiang", "1");//DaoQiang	是	Double	全车盗抢保险，0-不投保，>0投保
-//		jsonObj.put("SanZhe", "50000");//SanZhe	是	Double	第三者责任保险，0-不投保，>0投保(具体金额)（50，000；100，000；150，000；200，000；300，000；500，000；1，000，000；1，500，000）
-//		jsonObj.put("ZiRan", "1");//ZiRan	是	Double	自燃损失险，0-不投保，1投保
-//		jsonObj.put("BuJiMianCheSun", "1");//BuJiMianCheSun	是	Double	不计免赔险(车损) ，0-不投保，1投保
-//		jsonObj.put("BuJiMianDaoQiang", "1");//BuJiMianDaoQiang	是	Double	不计免赔险(盗抢) ，0-不投保，1投保
-//		jsonObj.put("BuJiMianFuJia", "1");//BuJiMianFuJia	是	Double	不计免赔险(附加险) ，0-不投保，1投保
-//		jsonObj.put("BuJiMianRenYuan", "1");//BuJiMianRenYuan	是	Double	不计免赔险(车上人员) ，0-不投保，1投保
-//		jsonObj.put("BuJiMianSanZhe", "1");//BuJiMianSanZhe	是	Double	不计免赔险(三者) ，0-不投保，1投保
-            //平台参数
-//
-//		jsonObj.put("CustKey", custKey);
-//		jsonObj.put("Agent", agent);//Agent	是	Int	调用平台标识
-//		StringBuffer paramSb = new StringBuffer();
-//		for(String mapKey : jsonObj.keySet()){
-//			String value = jsonObj.get(mapKey);
-//			paramSb.append(mapKey + "=" + value + "&");
-//		}
-//		String secCode = MD5(paramSb.toString() + key).toLowerCase();
-//		paramSb.append("secCode=" + secCode);
+		String url = "http://i.91bihu.com/api/CarInsurance/PostPrecisePrice";
+		//封装JSON参数
+		Map<String, String> jsonObj = new HashMap<>();
+		//报价信息
+		jsonObj.put("IsSingleSubmit", "1");//IsSingleSubmit	是	Int	是否对单个保险公司核保，1=是，0=否
+		jsonObj.put("IntentionCompany", IntentionCompany);//IntentionCompany	是	String	意向投保公司(-1:只报价不核保、0:平安、1:太平洋、2:人保)
+		//车辆信息
+		jsonObj.put("LicenseNo", carNO);//LicenseNo	是	String	车牌号
+		jsonObj.put("EngineNo", EngineNo);//EngineNo	是	String	发动机号
+		jsonObj.put("CarVin", CarVin);//CarVin	是	String	车架号
+		jsonObj.put("RegisterDate", RegisterDate);//RegisterDate	是	string	注册日期
+		jsonObj.put("MoldName", MoldName);//MoldName	是	String	品牌型号
+		jsonObj.put("CarType", "0");//CarType	是	Int	车辆类型：0客车，1货车
+		jsonObj.put("IsNewCar", "0");//IsNewCar	是	Int	是否新车（0：否；1：新车）
+		jsonObj.put("CarUsedType", "0");//CarUsedType	是	string	使用性质（0营运、非营运）
+		jsonObj.put("Citycode", "10");//Citycode	是	Int	城市Id（目前系统只支持北京地区）（北京:110000）
+		//险种信息
+		jsonObj.put("ForceTax", "1");//ForceTax	是	Int	交强险+车船税(1:报价交强车船，0：不报价交强车船)
+		jsonObj.put("BoLi", "1");//BoLi	是	Double	玻璃单独破碎险，0-不投保，1国产，2进口
+		jsonObj.put("CheDeng", "0");//CheDeng	是	Double	倒车镜、车灯单独损坏险，0-不投保，1-国产，2-进口
+		jsonObj.put("SheShui", "1");//SheShui	是	Double	涉水行驶损失险，0-不投保，1投保
+		jsonObj.put("HuaHen", "2000");//HuaHen	是	Double	车身划痕损失险，0-不投保，>0投保(具体金额)（2，000；5，000；10，000；20，000）
+		jsonObj.put("SiJi", "10000");//SiJi	是	Double	车上人员责任险(司机) ，0-不投保，>0投保(具体金额）（10，000；20，000；30，000；40，000；50，000；100，000；200，000）
+		jsonObj.put("ChengKe", "10000");//ChengKe	是	Double	车上人员责任险(乘客) ，0-不投保，>0投保(具体金额)（10，000；20，000；30，000；40，000；50，000；100，000；200，000）
+		jsonObj.put("CheSun", "1");//CheSun	是	Double	机动车损失保险，0-不投保，>0投保
+		jsonObj.put("DaoQiang", "1");//DaoQiang	是	Double	全车盗抢保险，0-不投保，>0投保
+		jsonObj.put("SanZhe", "50000");//SanZhe	是	Double	第三者责任保险，0-不投保，>0投保(具体金额)（50，000；100，000；150，000；200，000；300，000；500，000；1，000，000；1，500，000）
+		jsonObj.put("ZiRan", "1");//ZiRan	是	Double	自燃损失险，0-不投保，1投保
+		jsonObj.put("BuJiMianCheSun", "1");//BuJiMianCheSun	是	Double	不计免赔险(车损) ，0-不投保，1投保
+		jsonObj.put("BuJiMianDaoQiang", "1");//BuJiMianDaoQiang	是	Double	不计免赔险(盗抢) ，0-不投保，1投保
+		jsonObj.put("BuJiMianFuJia", "1");//BuJiMianFuJia	是	Double	不计免赔险(附加险) ，0-不投保，1投保
+		jsonObj.put("BuJiMianRenYuan", "1");//BuJiMianRenYuan	是	Double	不计免赔险(车上人员) ，0-不投保，1投保
+		jsonObj.put("BuJiMianSanZhe", "1");//BuJiMianSanZhe	是	Double	不计免赔险(三者) ，0-不投保，1投保
+           // 平台参数
+
+		jsonObj.put("CustKey", custKey);
+		jsonObj.put("Agent", agent);//Agent	是	Int	调用平台标识
+		StringBuffer paramSb = new StringBuffer();
+		for(String mapKey : jsonObj.keySet()){
+			String value = jsonObj.get(mapKey);
+			paramSb.append(mapKey + "=" + value + "&");
+		}
+		String secCode = MD5(paramSb.toString() + key).toLowerCase();
+		paramSb.append("secCode=" + secCode);
 
 
-//		String result2 = sendGet(url, paramSb.toString());
-//		System.err.println(result2);
+		String result2 = sendGet(url, paramSb.toString());
+		System.err.println(result2);
 
             //获取报价接口
-//		for(int i=0;i<40;i++){
-//			Thread.sleep(1000L);
-//			String param = "LicenseNo=" + carNO + "&IntentionCompany=" + IntentionCompany + "&Agent=" + agent + "&CustKey=" + custKey;
-//			String secCode2 = MD5(param + key);
-//			param = param + "&SecCode=" + secCode2.toLowerCase();
-//			String url2 = "http://i.91bihu.com/api/CarInsurance/GetPrecisePrice";
-//			String result1 = sendGet(url2, param);
-//			System.err.println(result1);
-//		}
+		for(int i=0;i<4;i++){
+			Thread.sleep(1000L);
+			String param = "LicenseNo=" + carNO + "&IntentionCompany=" + IntentionCompany + "&Agent=" + agent + "&CustKey=" + custKey;
+			String secCode2 = MD5(param + key);
+			param = param + "&SecCode=" + secCode2.toLowerCase();
+			String url2 = "http://i.91bihu.com/api/CarInsurance/GetPrecisePrice";
+			String result1 = sendGet(url2, param);
+			System.err.println(result1);
+		}
 
-//		//获取核保信息
-//		String param = "LicenseNo=" + carNO + "&IntentionCompany=" + IntentionCompany + "&Agent=" + agent;
-//		String secCode2 = MD5(param + key);
-//		param = param + "&SecCode=" + secCode2.toLowerCase();
-//		String url4 = "http://i.91bihu.com/api/CarInsurance/GetSubmitInfo";
-//		String result4 = sendGet(url4, param);
-//		System.err.println(result4);
+		//获取核保信息
+		String param = "LicenseNo=" + carNO + "&IntentionCompany=" + IntentionCompany + "&Agent=" + agent+"&CustKey=" + custKey;
+		String secCode2 = MD5(param + key);
+		param = param + "&SecCode=" + secCode2.toLowerCase();
+		String url4 = "http://i.91bihu.com/api/CarInsurance/GetSubmitInfo";
+		String result4 = sendGet(url4, param);
+		System.err.println(result4);
 
             //获取出险信息
-            String param5 = "LicenseNo=" + carNO + "&Agent=" + agent + "&CustKey=" + custKey;
+          /*  String param5 = "LicenseNo=" + carNO + "&Agent=" + agent + "&CustKey=" + custKey;
             String secCode5 = MD5(param5 + key);
             param5 = param5 + "&SecCode=" + secCode5.toLowerCase();
             String url5 = "http://i.91bihu.com/api/Claim/GetCreditInfo"; //出险信息
            // String url5 = "http://i.91bihu.com/api/CarInsurance/getreinfo"; //续保信息
 
             String result5 = sendGet(url5, param5);
-            System.err.println(result5);
+            System.err.println(result5);*/
 
             System.err.println("用时：" + String.valueOf(System.currentTimeMillis() - start));
         }

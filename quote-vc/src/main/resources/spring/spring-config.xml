@@ -22,7 +22,7 @@
             <value>UTF-8</value>
         </property>
     </bean>
-<context:component-scan base-package="com.ihandy.rbquote"/>
+<context:component-scan base-package="com.ihandy"/>
 <aop:aspectj-autoproxy expose-proxy="true"/>
 <aop:config>
     <aop:pointcut id="userServiceOperation1"

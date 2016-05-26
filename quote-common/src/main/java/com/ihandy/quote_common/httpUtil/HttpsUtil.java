@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
@@ -302,6 +303,7 @@ public class HttpsUtil {
 				resultBuffer.append(tempLine);
 			}
 			cookieValue = conn.getHeaderField("Set-Cookie");
+
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
@@ -323,5 +325,124 @@ public class HttpsUtil {
 		result.put("cookieValue", cookieValue);
 		result.put("html", resultBuffer.toString());
 		return result;
+	}
+
+
+	/**
+	 * 普通get请求
+	 * @param urlString
+	 * @param sessionId
+	 * @return
+	 */
+	public static Map<String, String> sendGetForAxatp(String urlString, String sessionId,String enCode){
+		if(StringUtils.isBlank(enCode)){
+			enCode = "gbk";
+		}
+		InputStream inputStream = null;
+		InputStreamReader inputStreamReader = null;
+		BufferedReader reader = null;
+		StringBuffer resultBuffer = new StringBuffer();
+		String tempLine = null;
+		URLConnection conn = null;
+		String cookieValue = "";
+		try {
+			URL url = new URL(urlString);
+			conn = url.openConnection();
+			if (StringUtils.isNoneBlank(sessionId)) {
+				conn.setRequestProperty("Cookie", sessionId);
+			}else{
+				Map <String,List<String>> headerFields = conn.getHeaderFields();
+				for(Map.Entry<String,List<String>> entry:headerFields.entrySet()){
+					if(("Set-Cookie").equals(entry.getKey())){
+						List list=entry.getValue();
+						for(int i=0;i<list.size();i++){
+							cookieValue+=list.get(i)+";";
+						}
+					}
+				}
+			}
+
+			inputStream = conn.getInputStream();
+			inputStreamReader = new InputStreamReader(inputStream,enCode);
+			reader = new BufferedReader(inputStreamReader);
+			while ((tempLine = reader.readLine()) != null) {
+				resultBuffer.append(tempLine);
+			}
+
+
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+				if (inputStreamReader != null) {
+					inputStreamReader.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		Map<String, String> result = new HashMap<>();
+		result.put("cookieValue", cookieValue);
+		result.put("html", resultBuffer.toString());
+		return result;
+	}
+
+
+	/**
+	 * 获取图片流
+	 * @param urlString
+	 * @param sessionId
+	 * @return
+	 */
+	public static Map getURLImgOutByte(String urlString, String sessionId,String enCode){
+
+		Map map =new HashMap();
+		byte [] img=null;
+		String type="";
+		if(StringUtils.isBlank(enCode)){
+			enCode = "gbk";
+		}
+		InputStream inputStream = null;
+		StringBuffer resultBuffer = new StringBuffer();
+		String tempLine = null;
+		URLConnection conn = null;
+		try {
+			URL url = new URL(urlString);
+			conn = url.openConnection();
+			if (StringUtils.isNoneBlank(sessionId)) {
+				conn.setRequestProperty("Cookie", sessionId);
+			}
+			type=conn.getHeaderField("Content-Type").split("/")[1];
+			inputStream = conn.getInputStream();
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			while( (len=inputStream.read(buffer)) != -1 ){
+				outStream.write(buffer, 0, len);
+			}
+			inputStream.close();
+			img = outStream.toByteArray();
+
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		map.put("byte",img);
+		map.put("type",type);
+		return map;
 	}
 }

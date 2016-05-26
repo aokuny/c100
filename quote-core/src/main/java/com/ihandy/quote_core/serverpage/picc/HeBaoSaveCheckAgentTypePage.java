@@ -6,7 +6,6 @@ import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
 import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 

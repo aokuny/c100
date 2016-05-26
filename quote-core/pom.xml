@@ -1,28 +1,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>quote</artifactId>
-        <groupId>chelenet.chexian-quote</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>chelequote.parent</artifactId>
+        <groupId>com.ihandy.chelequote</groupId>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>quote-core</artifactId>
+    <artifactId>chelequote.core</artifactId>
+    <groupId>com.ihandy.chelequote</groupId>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>quote-core</name>
-    <url>http://maven.apache.org</url>
+    <name>chelequote.core</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <chexian-quote.version>1.0-SNAPSHOT</chexian-quote.version>
-    </properties>
     <dependencies>
-    <dependency>
-        <groupId>chelenet.chexian-quote</groupId>
-        <artifactId>quote-common</artifactId>
-        <version>${chexian-quote.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>com.ihandy.chelequote</groupId>
+            <artifactId>chelequote.comm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
     </dependencies>
 
 

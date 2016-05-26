@@ -13,26 +13,26 @@
         </filter>
     </appender>
 
-    <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="encoding" value="GBK"/>
-        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-        <param name="Append" value="true"/>
-        <param name="file" value="${base.log.path}/quote.log"/>
+    <!--<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">-->
+        <!--<param name="encoding" value="GBK"/>-->
+        <!--<param name="DatePattern" value="'.'yyyy-MM-dd"/>-->
+        <!--<param name="Append" value="true"/>-->
+        <!--<param name="file" value="${base.log.path}/quote.log"/>-->
 
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%t %d [%7r] %6p - %30.30c - %m \n"/>
-        </layout>
-        <filter class="org.apache.log4j.varia.LevelRangeFilter">
-            <param name="LevelMax" value="ERROR" />
-            <param name="LevelMin" value="DEBUG" />
-        </filter>
-    </appender>
+        <!--<layout class="org.apache.log4j.PatternLayout">-->
+            <!--<param name="ConversionPattern" value="%t %d [%7r] %6p - %30.30c - %m \n"/>-->
+        <!--</layout>-->
+        <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+            <!--<param name="LevelMax" value="ERROR" />-->
+            <!--<param name="LevelMin" value="DEBUG" />-->
+        <!--</filter>-->
+    <!--</appender>-->
 
 
     <root>
         <priority value="debug" />
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
+        <!--<appender-ref ref="FILE" />-->
     </root>
 
 

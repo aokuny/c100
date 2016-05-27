@@ -321,4 +321,52 @@ public class TestHebao {
             }
             returnMap.put("lastResult",lastResultMap);
     }
+
+    @Test
+    public void testStringDifference(){
+        String   rightParam="";
+        String   param ="";
+        String[] paramArr1=rightParam.split("&");
+        String[] paramArr2=param.split("&");
+        for(int i=0;i<paramArr1.length;i++){
+            paramArr1[i].split("=");
+            if(param.contains(paramArr1[i].split("=")[0])){//包含
+        		for(int j=0;j<paramArr2.length;j++){
+	        			if(paramArr2[j].split("=")[0].equals(paramArr1[i].split("=")[0])){
+	        			}else{
+	        				String value1 ="";
+	        				String value2="";
+	        				try{
+	        			    	value1 = paramArr1[i].split("=")[1];
+    							try{
+    								 value2 = paramArr2[j].split("=")[1];
+    								 System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 =  "+value1+" value2 ="+value2);
+    								 break;
+    							}catch(Exception e2){
+    								 System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = "+value1+"  value2 =null");
+    								 break;
+    							}
+	        			    	//System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = "+value1+" value2 ="+paramArr2[j].split("=")[1]);
+	        				}catch(Exception e){
+	        					try{
+   								 value2 = paramArr2[j].split("=")[1];
+   								 System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 ="+value2);
+   								 break;
+   							   }catch(Exception e2){
+   								// System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 =null");
+   								 break;
+   						    	}
+	            			}
+	        			}
+        		}//for end
+            }else{
+                try{
+                    System.out.println("no  "+paramArr1[i].split("=")[0] +" value="+paramArr1[i].split("=")[1]);
+                }catch(Exception e){
+                    System.out.println("no  "+paramArr1[i].split("=")[0] +" value=null");
+                }
+
+            }
+        }
+    }
 }

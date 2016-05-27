@@ -5,5 +5,5 @@
 
 	<!-- 定义一个视图解析器  -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/" p:suffix=".jsp" />
-	
+
 </beans>

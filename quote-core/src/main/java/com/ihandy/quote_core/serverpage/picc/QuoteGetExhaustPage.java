@@ -26,7 +26,7 @@ public class QuoteGetExhaustPage extends BasePage {
 	public String doRequest(Request request) {
 		String url  = request.getUrl();
 		Map<String, String> paramMap = request.getRequestParam();
-		return HttpsUtil.sendPost(url, null, super.piccSessionId, "utf-8").get("html");
+		return HttpsUtil.sendGet(url, super.piccSessionId, null).get("html");
 	}
 
 	@Override

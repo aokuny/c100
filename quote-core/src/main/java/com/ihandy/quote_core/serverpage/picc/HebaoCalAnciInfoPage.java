@@ -11,10 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by fengwen on 2016/5/23.
@@ -31,11 +28,14 @@ public class HebaoCalAnciInfoPage extends BasePage {
     public String doRequest(Request request) {
         String html= null;
         String url = request.getUrl();
-        Map paraMap = request.getRequestParam();
-        String param = StringBaseUtils.Map2GetParam(paraMap);
-        url = url+"?"+param;
-        Map map = HttpsUtil.sendGet(url,super.piccSessionId,"UTF-8");
-
+        String param =  request.getRequestParam().get("nextParams").toString();
+    
+    	
+		
+    
+        // url = url+"?"+param;
+        // String param =request.getRequestParam().get("nextParams").toString();
+        Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
     }
@@ -156,17 +156,173 @@ public class HebaoCalAnciInfoPage extends BasePage {
         String html = doRequest(request);
         Response response = getResponse(html);
         //上个请求返回的参数继续传递下去
-        Map returnMap =  response.getResponseMap();
         Map requestMap = request.getRequestParam();
-        Map nextMap =(Map) requestMap.get("nextParams");
-        Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
+        Map returnMap =  response.getResponseMap();
+ 
+        String params = requestMap.get("nextParams").toString();
+        String right =params;
+        //compareStringDifference(right,params);
+        System.out.println("params1 = "+params);
+        Map nextMap =(Map) returnMap.get("nextParams");
+        Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数字符串中
+        int newParamcount = 0;
+        
+            
         for (Iterator it2 = key.iterator(); it2.hasNext();) {
-            String keyName = (String) it2.next();
+            String keyName = (String) it2.next();      
             String keyValue = nextMap.get(keyName).toString();
-            requestMap.put(keyName,keyValue);
+            if(params.contains(keyName+"=&")){
+            	if(keyName.equals("prpAnciInfo.discountRateBIUpAmount")){//discountRateBIUpAmountp
+            		params = params.replace(keyName+"=&", keyName+"p="+keyValue+"&");
+            	}
+            	else if(keyName.equals("prpAnciInfo.discountRateCIUpAmount")||keyName.equals("prpAnciInfo.baseActBusiType")||keyName.equals("prpAnciInfo.baseExpBusiType")||keyName.equals("prpAnciInfo.businessCode")){
+            		            //more  prpAnciInfo.discountRateCIUpAmount value=0   	          		 
+            	        		//more  prpAnciInfo.baseActBusiType value=null
+            	        		//more  prpAnciInfo.baseExpBusiType value=null
+            	        		//more  prpAnciInfo.businessCode value=null
+            	}else if(keyName.equals("prpAnciInfo.operCommRateBIUp")){
+            		if(keyValue=="null"||keyValue.equals("")){
+            			params = params.replace(keyName+"=&", keyName+"=0&");
+            		}          		
+            	}else if(keyName.equals("prpAnciInfo.actProCommRateUp")){
+            		if(keyValue=="null"||keyValue.equals("")){
+            			params = params.replace(keyName+"=&", keyName+"=&");
+            		}          
+            	}else if(keyName.equals("prpAnciInfo.standbyField1")){     
+            		String  expRiskNote ="";
+            		try {
+						expRiskNote = URLEncoder.encode(keyValue, "gb2312");
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+            		params = params.replace("expRiskNote=&", "expRiskNote="+expRiskNote+"&");     
+            		params =  params.replace(keyName+"=&", keyName+"=23.23,0,44.88,-5.12,,A%CF%D5L%CF%D5%CA%F4%D3%DA%B8%DF%C5%E2%B8%B6%CF%D5%D6%D6,050100 050500 050600 050701 050702 050231 050912 050921 050928 050929 ,,,,050200 050911 &");
+            	}
+            	else{
+            	   params = params.replace(keyName+"=&", keyName+"="+keyValue+"&");
+            	   System.out.println("重新赋值  keyName = "+keyName +" and keyValue = "+keyValue+"\n");
+            	}
+            }else{
+            	if(keyName.equals("prpAnciInfo.discountRateBIUpAmount")){//discountRateBIUpAmountp
+           		    params = params+"&"+ keyName+"p="+keyValue;
+             	}
+                  // params=params+"&"+keyName+"="+keyValue;
+                  //System.out.println("post data 中没有的参数  keyName = "+keyName +" and keyValue = "+keyValue+"\n");
+            
+                  newParamcount++;
+            }
+            
+            if(keyName.equals("prpAnciInfo.strKindBusiTypeE")){
+          	      params = params+"&kindBusiTypeE="+keyValue;
+            }else if(keyName.equals("prpAnciInfo.strKindBusiTypeA")){
+            	  params = params+"&kindBusiTypeA="+keyValue;
+            }
         }
-        returnMap.put("nextParams",requestMap);
+        System.out.println("newParamcount  count = "+newParamcount);
+        compareStringDifference(right,params);
+        // operCommRateCIUpAmount 赋值;
+        // double  f = Double.parseDouble( nextMap.get("prpAnciInfo.operSellExpensesAmountCI").toString());
+        String operCommRateCIUpAmount =nextMap.get("prpAnciInfo.operSellExpensesAmountCI").toString();
+        if(!operCommRateCIUpAmount.equals("0")){
+          String[] arr1 = operCommRateCIUpAmount.split("\\.");
+          operCommRateCIUpAmount =  arr1[0]+"."+arr1[1].substring(0, 2);
+        }
+        String operateCommRateBI=nextMap.get("prpAnciInfo.operateCommRateBI").toString();
+        if(!operateCommRateBI.equals("0")){
+        	 String[] arr2 = operateCommRateBI.split("\\.");
+        	 operateCommRateBI =  arr2[0]+"."+arr2[1].substring(0, 2);
+        }
+       
+        params=params.replace("operCommRateCIUpAmount=&", "operCommRateCIUpAmount="+operCommRateCIUpAmount+"&");
+        //operCommRateBIUpAmount 赋值;
+        params=params.replace("operCommRateBIUpAmount=&", "operCommRateBIUpAmount="+operateCommRateBI+"&");
+       
+        
+        returnMap.put("nextParams",params);
+        
+        System.out.println("new Params data = "+params);
         response.setResponseMap(returnMap);
         return response;
+    }
+    
+    public void compareStringDifference(String right,String error){
+        String[] paramArr1=right.split("&");
+        String[] paramArr2=error.split("&");
+        List<String> list = new LinkedList<String>();
+        List<String> list1 = new LinkedList<String>();
+        for(int j=0;j<paramArr2.length;j++){
+        	list.add(paramArr2[j].split("=")[0]);
+        	try{
+        	list1.add(paramArr2[j].split("=")[1]);
+        	}catch(Exception e){
+        	list1.add(null);
+        	}
+        	}
+    
+        for(int i=0;i<paramArr1.length;i++){
+            paramArr1[i].split("=");
+            String[] key = {};   //创建空数组
+            key = (String[]) list.toArray(key);
+            String[] value = {};   //创建空数组
+            value = (String[]) list1.toArray(value);
+            if(error.contains(paramArr1[i].split("=")[0])){//包含
+            	
+                for(int j=0;j<key.length;j++){
+               
+                    if(key[j].equals(paramArr1[i].split("=")[0])){
+                        String value1 ="";
+                        String value2="";
+                        try{
+                            value1 = paramArr1[i].split("=")[1];
+                            try{
+                                value2 = value[j];
+                                if(!value1.equals(value2)){                              
+                                        System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 =  "+value1+"       value2 =  "+value2);                                     
+                                }
+                                list.remove(key[j]); 
+                                list1.remove(value[j]);   
+                               break;
+                            }catch(Exception e2){
+                                System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = "+value1+"  value2 =null");
+                                list.remove(key[j]); 
+                                list1.remove(value[j]);  
+                                break;
+                            }
+                        
+                        }catch(Exception e){
+                            try{
+                                value2 = paramArr2[j].split("=")[1];
+                                System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 ="+value2);
+                                list.remove(key[j]); 
+                                list1.remove(value[j]);  
+                                break;
+                            }catch(Exception e2){
+                                list.remove(key[j]); 
+                                list1.remove(value[j]);  
+                                // System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 =null");
+                                break;
+                            }
+                        }
+                     
+                    }//if end
+                    
+                    
+
+                }//for end
+            }else{
+                try{
+                    System.out.println("no  "+paramArr1[i].split("=")[0] +" value="+paramArr1[i].split("=")[1]);
+                }catch(Exception e){
+                    System.out.println("no  "+paramArr1[i].split("=")[0] +" value=null");
+                }
+
+            }//else end
+            
+          
+        }//for end
+        System.out.println("key  list length = "+list.size());
+        System.out.println("value list length = "+list1.size());
+
     }
 }

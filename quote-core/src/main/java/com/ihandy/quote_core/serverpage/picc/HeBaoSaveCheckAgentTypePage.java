@@ -27,7 +27,7 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
     public String doRequest(Request request) {
         String html= "";
         String url = request.getUrl();
-        Map paraMap = request.getRequestParam();
+        Map paraMap = (Map)request.getRequestParam().get("Map");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String param ="businessNature="+paraMap.get("prpCmain.businessNature").toString() +
                 "validDate="+ sdf.format(new Date())+
@@ -87,14 +87,24 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
         Response response = getResponse(html);
         //上个请求返回的参数继续传递下去
         Map requestMap = request.getRequestParam();
+        String paramstr = requestMap.get("String").toString();
+        Map map = (Map)requestMap.get("Map");
+        
         Map returnMap =  response.getResponseMap();
-        Map nextMap =(Map) requestMap.get("nextParams");
+        Map nextMap =(Map) returnMap.get("nextParams");
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
         for (Iterator it = key.iterator(); it.hasNext();) {
             String keyName = (String) it.next();
             String keyValue = nextMap.get(keyName).toString();
-            requestMap.put(keyName,keyValue);
+         
+            map.put(keyName,keyValue);           
+            if(paramstr.contains(keyName+"=&")){
+            	paramstr = paramstr.replace(keyName+"=", keyName+"="+keyValue);
+            }        
         }
+        requestMap.put("String", paramstr);
+        System.out.println("paramsData = "+paramstr);
+        requestMap.put("Map",map);
         returnMap.put("nextParams",requestMap);
         response.setResponseMap(returnMap);
         return response;

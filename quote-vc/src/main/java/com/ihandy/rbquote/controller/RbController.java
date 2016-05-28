@@ -231,7 +231,7 @@ public class RbController {
 			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
 			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
-		// 判断是否是get请求
+		// 判断是否是get请求,chakan
 		if (request.getMethod().equals("GET")) {
 			try {
 				if (StringUtils.isNotBlank(LicenseNo)) {

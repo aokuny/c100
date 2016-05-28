@@ -1,10 +1,12 @@
 package com.ihandy.rbquote.controller;
 
-import com.ihandy.qoute_common.springutils.SpringMVCUtils;
-import com.ihandy.quote_core.bean.Cookie;
-import com.ihandy.quote_core.bean.other.CarInfoResponse;
-import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
-import com.ihandy.quote_core.service.IService;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,12 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.alibaba.fastjson.JSONObject;
+import com.ihandy.qoute_common.springutils.SpringMVCUtils;
+import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
+import com.ihandy.quote_core.service.IQuoteService;
+import com.ihandy.quote_core.service.IService;
 
 /**
  * Created by fengwen on 2016/4/28.
@@ -32,6 +33,9 @@ public class RbController {
 
 	@Autowired
 	private IService rbService;
+
+	@Resource(name = "quoteServiceImpl")
+	private IQuoteService quoteServiceImpl;
 
 	/**
 	 * 查询续保信息
@@ -49,10 +53,10 @@ public class RbController {
 
 		try {
 
-          //  CarInfoResponse response = rbService.getBaseCarInfoByLicenseNo(LicenseNo);
+			// CarInfoResponse response =
+			// rbService.getBaseCarInfoByLicenseNo(LicenseNo);
 
 		} catch (Exception e) {
-
 
 		}
 		return null;
@@ -71,7 +75,8 @@ public class RbController {
 		Map map = new HashMap();
 		try {
 
-			//CarInfoResponse response = rbService.getCarInfoByLicenseNo(LicenseNo, "02");
+			// CarInfoResponse response =
+			// rbService.getCarInfoByLicenseNo(LicenseNo, "02");
 
 		} catch (Exception e) {
 
@@ -226,20 +231,20 @@ public class RbController {
 			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
 			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
-		//判断是否是get请求
+		// 判断是否是get请求
 		if (request.getMethod().equals("GET")) {
 			try {
-				if(StringUtils.isNotBlank(LicenseNo)){
-					LicenseNo = new String(LicenseNo.getBytes("iso8859-1"), "UTF-8");
+				if (StringUtils.isNotBlank(LicenseNo)) {
+					LicenseNo = new String(LicenseNo.getBytes("iso8859-1"), "GBK");
 				}
-				if(StringUtils.isNotBlank(CarOwnersName)){
-					CarOwnersName = new String(CarOwnersName.getBytes("iso8859-1"), "UTF-8");
+				if (StringUtils.isNotBlank(CarOwnersName)) {
+					CarOwnersName = new String(CarOwnersName.getBytes("iso8859-1"), "GBK");
 				}
-				if(StringUtils.isNotBlank(InsuredName)){
-					InsuredName = new String(InsuredName.getBytes("iso8859-1"), "UTF-8");
+				if (StringUtils.isNotBlank(InsuredName)) {
+					InsuredName = new String(InsuredName.getBytes("iso8859-1"), "GBK");
 				}
-				if(StringUtils.isNotBlank(MoldName)){
-					MoldName = new String(MoldName.getBytes("iso8859-1"), "UTF-8");
+				if (StringUtils.isNotBlank(MoldName)) {
+					MoldName = new String(MoldName.getBytes("iso8859-1"), "GBK");
 				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -247,14 +252,14 @@ public class RbController {
 		}
 		PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
 		try {
-			postPrecisePricerResponse = rbService.postPrecisePrice(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit,
-					IntentionCompany, InsuredName, InsuredIdCard, InsuredIdType, InsuredMobile, IsNewCar, CarType,
-					CarUsedType, CityCode, EngineNo, CarVin, RegisterDate, MoldName, ForceTax, BizStartDate, BoLi,
-					BuJiMianCheSun, BuJiMianDaoQiang, BuJiMianFuJia, BuJiMianRenYuan, BuJiMianSanZhe, CheDeng, SheShui,
-					HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount, TonCount, HcSheBeiSunshi,
-					HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue, HcXiuLiChang, DName, DQuantity,
-					DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2, DQuantity2, DAmount2, PDate2, DName3,
-					DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode);
+			postPrecisePricerResponse = quoteServiceImpl.postPrecisePrice(LicenseNo, CarOwnersName, IdCard,
+					IsSingleSubmit, IntentionCompany, InsuredName, InsuredIdCard, InsuredIdType, InsuredMobile,
+					IsNewCar, CarType, CarUsedType, CityCode, EngineNo, CarVin, RegisterDate, MoldName, ForceTax,
+					BizStartDate, BoLi, BuJiMianCheSun, BuJiMianDaoQiang, BuJiMianFuJia, BuJiMianRenYuan,
+					BuJiMianSanZhe, CheDeng, SheShui, HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount,
+					TonCount, HcSheBeiSunshi, HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue,
+					HcXiuLiChang, DName, DQuantity, DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2,
+					DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode);
 			logger.info("PICC API ，【上传险种信息响应成功】，LicenseNo：" + LicenseNo);
 		} catch (Exception e) {
 			postPrecisePricerResponse.setBusinessStatus("-1");
@@ -263,4 +268,46 @@ public class RbController {
 		}
 		SpringMVCUtils.renderJson(response, postPrecisePricerResponse);
 	}
+
+	/**
+	 * 查询报价结果
+	 * 
+	 * @param request
+	 * @param response
+	 * @param LicenseNo
+	 * @param IntentionCompany
+	 * @param Agent
+	 * @param CustKey
+	 * @param SecCode
+	 */
+	@RequestMapping("/getPrecisePrice")
+	@ResponseBody
+	public void postPrecisePrice(HttpServletRequest request, HttpServletResponse response, String LicenseNo, String IntentionCompany, String Agent, String CustKey, String SecCode) {
+		// 判断是否是get请求
+		if (request.getMethod().equals("GET")) {
+			try {
+				if (StringUtils.isNotBlank(LicenseNo)) {
+					LicenseNo = new String(LicenseNo.getBytes("iso8859-1"), "GBK");
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		JSONObject result = null;
+		try {
+			 result = quoteServiceImpl.getPrecisePrice(LicenseNo, IntentionCompany, Agent, CustKey, SecCode);
+			logger.info("PICC API ，【查询报价结果响应成功】，LicenseNo：" + LicenseNo);
+		} catch (Exception e) {
+			logger.error("PICC API ，【查询报价结果响应成功】，" + e.getMessage());
+		}
+		if(result == null){
+			PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
+			postPrecisePricerResponse.setBusinessStatus("-1");
+			postPrecisePricerResponse.setStatusMessage("报价信息获取失败");
+			SpringMVCUtils.renderJson(response, postPrecisePricerResponse);
+			return;
+		}
+		SpringMVCUtils.renderJson(response, result);
+	}
+
 }

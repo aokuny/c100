@@ -1,8 +1,5 @@
 package com.ihandy.quote_core.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +19,7 @@ public abstract class BasePage {
 
 	public String piccSessionId;//picc登录session
 
-	private static Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
+	protected static Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
 
 	public BasePage(int type){
 		switch (type) {
@@ -31,89 +28,10 @@ public abstract class BasePage {
 				initPiccLogin();//初始化picc登录session
 				//logger.info("抓取机器人，【初始化PICC登录session完成】");
 				break;
-			case 2://天平
-				//logger.info("抓取机器人，【初始化Axatp登录session开始】");
-				initAxatpLogin();//初始化天平网销登录session
-				//logger.info("抓取机器人，【初始化Axatp登录session完成】");
-				break;
 			default:
 				break;
 		}
 	}
-
-	public void initAxatpLogin(){
-
-
-
-		//获取session信息
-		String url_login = "http://dm.axatp.com/login.do";
-		String cookieValue = HttpsUtil.sendGetForAxatp(url_login, null, "GBK").get("cookieValue");
-//        System.out.println(cookieValue);
-
-		//获取要邀请码标识
-		StringBuffer param_login = new StringBuffer();
-		param_login.append("memberName=jtl_bj&");
-		param_login.append("flag=ajaxRecommendCode");
-		String login_two = HttpsUtil.sendPost(url_login, param_login.toString(), cookieValue, "GBK").get("html");
-//        System.out.println(login_two);
-
-		//获取验证码图片
-		String url_randCode = "http://dm.axatp.com/getAdditionNo.do?type=login";
-		Map imgMap = HttpsUtil.getURLImgOutByte(url_randCode, cookieValue, "GBK");
-//        System.out.println(html_randCode);
-
-		//生成图片
-		String path = "../resource/";
-		File f = new File("");
-		if (!f.exists()) {
-			f.mkdirs();
-		}
-		String fileName="code_"+new Date().getTime()+"." + imgMap.get("type");
-		String filePath = path + File.separator + fileName;
-		File imageFile = new File(filePath);
-		//创建输出流
-		try {
-			FileOutputStream outStream = null;
-			outStream = new FileOutputStream(imageFile);
-			//写入数据
-			outStream.write((byte[]) imgMap.get("byte"));
-			//关闭输出流
-			outStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String localUrl="http://192.168.1.1/resource/randomCode/"+fileName;
-		//解析验证码
-		String url_getCode = "http://192.168.4.117:8011/GetSeccode.aspx?ImgURL="+localUrl;
-		String html_getCode = HttpsUtil.sendGetForAxatp(url_getCode, cookieValue, "GBK").get("html");
-//        System.out.println(html_getCode);
-
-		//用户登录
-		StringBuffer paramSb = new StringBuffer();
-		paramSb.append("memberName=jtl_bj&");
-		paramSb.append("voucherNoArray=&");
-		paramSb.append("voucherNoArrayLogin=&");
-		paramSb.append("defaultAgentCode=1&");
-		paramSb.append("isVIP=false&");
-		paramSb.append("linkResource=&");
-		paramSb.append("flag=login&");
-		paramSb.append("memberName=jtl_bj&");
-		paramSb.append("password=123456&");
-		paramSb.append("showRecommendCode=1&");
-		paramSb.append("isAgent=3212&");
-		paramSb.append("checkRecommendCode=0&");
-		paramSb.append("recommendCode=123&");
-		paramSb.append("randomCode=" + html_getCode + "&");
-		String param = paramSb.toString();
-		param = param.substring(0, param.length() - 1);
-//        String coo="JSESSIONID=315C14F8FDD9A3B7407806A2CFA3F7D2";
-		String html_index = HttpsUtil.sendPost(url_login, param.toString(), cookieValue, "GBK").get("html");
-		System.out.println(html_index);
-
-
-	}
-
-
 
 	/**
 	 * 初始化picc登录session(已测试)
@@ -123,13 +41,13 @@ public abstract class BasePage {
 		//尝试sessionId是否可用
 		String urlString1 = "http://" + SysConfigInfo.PICC_MAIN_URL + ":8000/prpall/bindvalid/bjptBindValid.do";
 		String param1="operatorCode=" + SysConfigInfo.PICC_USERNAME + "&checkOperaType=BJ_PT";
-		String html = HttpsUtil.sendPost(urlString1, param1, piccSessionId,null).get("html");
+		String html = HttpsUtil.sendPost(urlString1, param1, piccSessionId, "").get("html");
 		boolean f = false;
 		if(!html.contains("302 Moved Temporarily")){//证明sessionId可用
 			f = true;
 		}
 		if(f){
-			logger.info("抓取机器人，【Picc sessionId有效】");
+			//logger.info("抓取机器人，【Picc sessionId有效】");
 		}else{//不可用的时候，重新获取保持会话sessionid
 			logger.info("抓取机器人，【Picc sessionId失效】");
 			Map<String, String> ticketMap = this.getTicket("https://" + SysConfigInfo.PICC_MAIN_URL + ":8888/casserver/login?service=http%3A%2F%2F10.134.136.48%3A80%2Fportal%2Findex.jsp", SysConfigInfo.PICC_USERNAME, SysConfigInfo.PICC_PWD1);
@@ -155,7 +73,8 @@ public abstract class BasePage {
 			HttpsUtil.sendGet(reUrl2, sessionId, null);
 			piccSessionId = sessionId;
 			piccSessionIdMap.put("picc_sessionId", piccSessionId);
-			logger.info("抓取机器人，【Picc sessionId重新获取成功】，piccSessionId：" + piccSessionId);
+			piccSessionIdMap.put("CASTGC", CASTGC);
+			logger.info("抓取机器人，【Picc sessionId获取成功】，piccSessionId：" + piccSessionId);
 		}
 	}
 
@@ -221,8 +140,6 @@ public abstract class BasePage {
 		logger.info("抓取机器人，【PICC获取ticket成功，使用密码：" + password + "，ticket：" + ticket + "】");
 		return result;
 	}
-
-
 
 	/**
 	 * 发送请求，返回html页面

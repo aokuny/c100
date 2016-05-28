@@ -178,9 +178,11 @@ public class SysConfigInfo {
             insuranceNameMap.put("车上人员责任险（乘客）", "ChengKe");
             insuranceNameMap.put("车身划痕损失险条款", "HuaHen");
             insuranceNameMap.put("玻璃单独破碎险", "BoLi");
+            insuranceNameMap.put("玻璃单独破碎险条款", "BoLi");
             insuranceNameMap.put("自燃损失险条款", "ZiRan");
             insuranceNameMap.put("发动机特别损失险条款", "SheShui");
             insuranceNameMap.put("不计免赔率（车辆损失险）", "BuJiMianCheSun");
+            insuranceNameMap.put("不计免赔率（车损险）", "BuJiMianCheSun");
             insuranceNameMap.put("不计免赔率（三者险）", "BuJiMianSanZhe");
             insuranceNameMap.put("不计免赔率（机动车盗抢险）", "BuJiMianDaoQiang");
             insuranceNameMap.put("不计免赔率（车身划痕损失险）", "BuJiMianFuJia");

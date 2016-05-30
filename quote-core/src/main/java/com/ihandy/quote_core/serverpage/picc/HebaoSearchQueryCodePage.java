@@ -48,7 +48,7 @@ public class HebaoSearchQueryCodePage extends BasePage {
                 map = StringBaseUtils.parseJSON2Map(html);
                 JSONArray jsonArray = JSONArray.fromObject(map);
                 Map map1 = (Map) jsonArray.get(0);
-                JSONArray  jsonArrayData = (JSONArray) map1.get("data");
+                JSONArray jsonArrayData = (JSONArray) map1.get("data");
                 for(int i=0;i<jsonArrayData.size();i++){
                     Map mapHebao = (Map)jsonArrayData.get(i);
                     String underWriteFlag =  mapHebao.get("underWriteFlag").toString();

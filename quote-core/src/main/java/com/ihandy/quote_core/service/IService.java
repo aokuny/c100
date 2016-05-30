@@ -1,6 +1,7 @@
 package com.ihandy.quote_core.service;
 
 
+import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.bean.other.*;
 
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
@@ -38,5 +39,7 @@ public interface IService {
      */
      List<ClaimResponse> getClaimInfoList(String licenseNo);
 
-	String commitHeBaoInfo(Map preMap);
+    String commitHeBaoInfo(Response response);
+
+    HebaoResponse getHebaoResponse(String licenseNo);
 }

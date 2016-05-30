@@ -1,15 +1,12 @@
 package com.ihandy.quote_core.serverpage.picc;
 
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
-import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
-import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

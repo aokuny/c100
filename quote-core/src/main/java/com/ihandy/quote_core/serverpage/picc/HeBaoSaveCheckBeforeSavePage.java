@@ -1,16 +1,16 @@
 package com.ihandy.quote_core.serverpage.picc;
 
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
-import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
-import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by fengwen on 2016/5/24.
@@ -27,7 +27,7 @@ public class HeBaoSaveCheckBeforeSavePage extends BasePage {
     public String doRequest(Request request) {
         String html= "";
         String url = request.getUrl();
-        Map paraMap = request.getRequestParam();
+        Map paraMap =(Map) request.getRequestParam().get("Map");
         String param ="";
         try{
             //prpCitemCar
@@ -103,6 +103,34 @@ public class HeBaoSaveCheckBeforeSavePage extends BasePage {
     public Response run(Request request) {
         String html = doRequest(request);
         Response response = getResponse(html, request);
+        Map requestMap = request.getRequestParam();
+        Map returnMap =  response.getResponseMap();
+        Map nextMap =(Map) response.getResponseMap().get("nextParams");
+        Map paramsMap = (Map) request.getRequestParam().get("Map");
+        String  paramsStr = request.getRequestParam().get("String").toString();
+        
+       // paramsStr.replace("PayRefReason=", "");
+        Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
+        for (Iterator it = key.iterator(); it.hasNext();) {
+            String keyName = (String) it.next();
+            String keyValue = nextMap.get(keyName).toString();
+            try{
+            keyName = java.net.URLEncoder.encode(keyName, "gbk");
+            }catch(Exception e){
+            	
+            }   
+            if(paramsStr.contains(keyName+"=&")){
+            	//paramsStr = paramsStr.replace(keyName+"=", keyName+"="+keyValue);
+            }
+            if(paramsMap.containsKey(keyName)){
+            //	paramsMap.put(keyName, keyValue);
+            }    
+        }
+        requestMap.put("String",paramsStr);
+        requestMap.put("Map",paramsMap);
+        
+        returnMap.put("nextParams",requestMap);
+        response.setResponseMap(returnMap);
         return response;
     }
 }

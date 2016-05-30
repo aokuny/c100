@@ -27,7 +27,17 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
     public String doRequest(Request request) {
         String html= "";
         String url = request.getUrl();
-        Map paraMap = request.getRequestParam();
+        String  params = request.getRequestParam().get("nextParams").toString();
+        Map paraMap = new HashMap();
+        String[] paramsArr = params.split("&");
+        for(int i=0;i<paramsArr.length;i++){
+        	try{
+        	String[] kvArr = paramsArr[i].split("=");
+        	paraMap.put(kvArr[0], kvArr[1]);
+        	}catch(Exception e){
+        		
+        	}
+        }
         String param ="startDateBi="+paraMap.get("biStartDate").toString()+"&startHourBi=0" +
                      "&startDateCi="+paraMap.get("ciStartDate").toString()+"&startHourCi=0" +
                      "&bizType="+paraMap.get("bizType").toString();
@@ -51,6 +61,7 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
                 Map map1 = (Map) jsonArray.get(0);
                 String msg =  map1.get("msg").toString();
                 if(msg.equals("0")){
+                	nextParamsMap.put("checkTimeFlag", 0);
                     returnMap.put("nextParams",nextParamsMap);
                     response.setResponseMap(returnMap);
                     response.setReturnCode(SysConfigInfo.SUCCESS200);
@@ -79,8 +90,31 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
 
     @Override
     public Response run(Request request) {
-        String html = doRequest(request);
+        String html = doRequest(request);        
         Response response = getResponse(html, request);
+        String  params = request.getRequestParam().get("nextParams").toString();
+        Map paraMap = new HashMap();
+        String[] paramsArr = params.split("&");
+        for(int i=0;i<paramsArr.length;i++){
+        	try{
+        	String[] kvArr = paramsArr[i].split("=");
+        	paraMap.put(kvArr[0], kvArr[1]);
+        	}catch(Exception e){
+        		
+        	}
+        }
+        Map map = (Map) response.getResponseMap().get("nextParams");
+        if(map.containsKey("checkTimeFlag")){
+	        if(params.contains("checkTimeFlag=&")){
+	        	params = params.replace("checkTimeFlag=", "checkTimeFlag=0");
+	        	paraMap.put("checkTimeFlag", 0);
+	        }
+        }
+
+        Map strMap = new HashMap();
+        strMap.put("String",params);
+        strMap.put("Map", paraMap);
+        response.setResponseMap(strMap);
         return response;
     }
 }

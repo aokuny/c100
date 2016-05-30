@@ -570,7 +570,6 @@ public class RBServiceImpl implements IService {
 			HebaoSaveCheckEngageTimePage hebaoSaveCheckEngageTimePage = new HebaoSaveCheckEngageTimePage(1);
 			Request request1 =new Request();
 			request1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE1);
-
 			request1.setRequestParam(nextParamsMap);
 			Response response1 = hebaoSaveCheckEngageTimePage.run(request1);
 			//保存2操作

@@ -41,7 +41,7 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html, Request request) {
+    public Response getResponse(String html,Request ruquest) {
         //解析{"msg":"SINGLE,,66692393-6,","totalRecords":0,"data":[]}
         Response response = new Response();
         if(!html.equals("")||null!=html){
@@ -84,23 +84,23 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html, request);
+        Response response = getResponse(html,request);
         //上个请求返回的参数继续传递下去
         Map requestMap = request.getRequestParam();
         String paramstr = requestMap.get("String").toString();
         Map map = (Map)requestMap.get("Map");
-        
+
         Map returnMap =  response.getResponseMap();
         Map nextMap =(Map) returnMap.get("nextParams");
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
         for (Iterator it = key.iterator(); it.hasNext();) {
             String keyName = (String) it.next();
             String keyValue = nextMap.get(keyName).toString();
-         
-            map.put(keyName,keyValue);           
+
+            map.put(keyName,keyValue);
             if(paramstr.contains(keyName+"=&")){
-            	paramstr = paramstr.replace(keyName+"=", keyName+"="+keyValue);
-            }        
+                paramstr = paramstr.replace(keyName+"=", keyName+"="+keyValue);
+            }
         }
         requestMap.put("String", paramstr);
         System.out.println("paramsData = "+paramstr);

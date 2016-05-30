@@ -9,7 +9,12 @@ import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by fengwen on 2016/5/24.
@@ -37,15 +42,15 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         *///String param = StringBaseUtils.Map2GetParam(paraMap);
         //System.out.println("right data="+right);
         //System.out.println("error data = "+paramsStr);
-       // compareStringDifference(right,paramsStr);
-       // compareStringDifference1(right,paramsStr);
+        // compareStringDifference(right,paramsStr);
+        // compareStringDifference1(right,paramsStr);
         Map map = HttpsUtil.sendPost(url,paramsStr,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
     }
 
     @Override
-    public Response getResponse(String html, Request request) {
+    public Response getResponse(String html,Request request) {
         Response response = new Response();
         if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();
@@ -57,55 +62,69 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                 jsonArray = JSONArray.fromObject(map);
                 Map map1 = (Map) jsonArray.get(0);
                 JSONArray data = (JSONArray) map1.get("data");
+                // int ii=0;
                 //1）组装 prpCplanTemps
                 for(int i=0;i<data.size();i++){
-                	
-            
-                			
+
+
+
                     Map mapPrpCplanTemps = (Map)data.get(i);
-                    Map expireDate = (Map) mapPrpCplanTemps.get("planDate");            
+                    Map expireDate = (Map) mapPrpCplanTemps.get("planDate");
                     String year1 =Integer.parseInt((Integer.parseInt(expireDate.get("year").toString()) + 1900)+"")+"";
-                   
+
                     int month = Integer.parseInt(expireDate.get("month").toString()) + 1;
                     int day = Integer.parseInt(expireDate.get("date").toString());
-                  
+
                     String expireDateStr = year1 + "-" + month + "-" + day;
-                    
-                    
-                    nextParamsMap.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency"));
+
+
+
+                    nextParamsMap.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
                     nextParamsMap.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
                     nextParamsMap.put("prpCplanTemps["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
                     nextParamsMap.put("prpCplanTemps["+i+"].flag",mapPrpCplanTemps.get("flag"));
                     nextParamsMap.put("prpCplanTemps["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                    if(mapPrpCplanTemps.get("netPremium").toString()==null||mapPrpCplanTemps.get("netPremium").toString().equals("null")){
+                        nextParamsMap.put("prpCplanTemps["+i+"].netPremium","");
+                    }else{
+                        nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                    }
+                    //nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
                     nextParamsMap.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
                     nextParamsMap.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
                     nextParamsMap.put("prpCplanTemps["+i+"].planDate",expireDateStr);
                     nextParamsMap.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
                     nextParamsMap.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
                     nextParamsMap.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].taxPremium", mapPrpCplanTemps.get("taxPremium"));
-                    
+                    // nextParamsMap.put("prpCplanTemps["+i+"].taxPremium", mapPrpCplanTemps.get("taxPremium"));
+
+                    if(mapPrpCplanTemps.get("taxPremium").toString()==null||mapPrpCplanTemps.get("taxPremium").toString().equals("null")){
+                        nextParamsMap.put("prpCplanTemps["+i+"].taxPremium","");
+                    }else{
+                        nextParamsMap.put("prpCplanTemps["+i+"].taxPremium", mapPrpCplanTemps.get("taxPremium"));
+                    }
+
+
                     String payReasonName = mapPrpCplanTemps.get("payReasonName").toString();
-                  
+
                     payReasonName =  java.net.URLEncoder.encode(payReasonName, "gb2312");
                     if(payReasonName.contains("%28")){
-                    	payReasonName = payReasonName.replace("%28", "(");
-                    	payReasonName = payReasonName.replace("%29", ")");
-                    }              
+                        payReasonName = payReasonName.replace("%28", "(");
+                        payReasonName = payReasonName.replace("%29", ")");
+                    }
                     String currency ="人民币";
                     try{
-                     currency = mapPrpCplanTemps.get("currency").toString().split(",")[1];
+                        currency = mapPrpCplanTemps.get("currency").toString().split(",")[1];
                     }catch(Exception e){}
                     currency = java.net.URLEncoder.encode(currency, "gb2312");
-                    
-                   nextParamsMap.put("cplan["+i+"].payReasonC",payReasonName);// value=(%C7%BF%D6%C6)%CA%D5%B1%A3%B7%D1
-                   nextParamsMap.put("description["+i+"].currency",currency);// value=%C8%CB%C3%F1%B1%D2
-                  
-                   nextParamsMap.put("cplans["+i+"].planFee",mapPrpCplanTemps.get("planFee"));// value=580.83
-                   nextParamsMap.put("cplans["+i+"].backPlanFee",mapPrpCplanTemps.get("planFee"));// value=580.83
-                 
-                   
+
+                    nextParamsMap.put("cplan["+i+"].payReasonC",payReasonName);// value=(%C7%BF%D6%C6)%CA%D5%B1%A3%B7%D1
+                    nextParamsMap.put("description["+i+"].currency",currency);// value=%C8%CB%C3%F1%B1%D2
+
+                    nextParamsMap.put("cplans["+i+"].planFee",mapPrpCplanTemps.get("planFee"));// value=580.83
+                    nextParamsMap.put("cplans["+i+"].backPlanFee",mapPrpCplanTemps.get("planFee"));// value=580.83
+
+
                   /*//no  cplan_%5B0%5D.payReasonC value=%CA%D5%B1%A3%B7%D1
         		    // no  description_%5B0%5D.currency value=%C8%CB%C3%F1%B1%D2
         		    /// no  cplan%5B0%5D.payReasonC value=(%C7%BF%D6%C6)%CA%D5%B1%A3%B7%D1
@@ -114,22 +133,25 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         		   no  description%5B1%5D.currency value=%C8%CB%C3%F1%B1%D2
         		    /// no  cplan%5B2%5D.payReasonC value=%CA%D5%B1%A3%B7%D1
         		   no  description%5B2%5D.currency value=%C8%CB%C3%F1%B1%D2*/
-                        // no  cplans_%5B0%5D.planFee value=2704.63
-                		//  no  cplans_%5B0%5D.backPlanFee value=2704.63	
+                    // no  cplans_%5B0%5D.planFee value=2704.63
+                    //  no  cplans_%5B0%5D.backPlanFee value=2704.63
                     if(mapPrpCplanTemps.get("isBICI").toString().equals("BI")){
-                    	 nextParamsMap.put("cplans_[0].planFee",mapPrpCplanTemps.get("planFee"));
-                         nextParamsMap.put("cplans_[0].backPlanFee",mapPrpCplanTemps.get("planFee"));
-                         // nextParamsMap.put("cplans_[0].payReasonC",mapPrpCplanTemps.get("payReason"));
-                         //              MORE  cplans_%5B0%5D.payReasonC value=null
-                         nextParamsMap.put("cplan_[0].payReasonC",payReasonName);
-                         nextParamsMap.put("description_[0].currency",currency);
-                         
+                        nextParamsMap.put("cplans_[0].planFee",mapPrpCplanTemps.get("planFee"));
+                        nextParamsMap.put("cplans_[0].backPlanFee",mapPrpCplanTemps.get("planFee"));
+                        // nextParamsMap.put("cplans_[0].payReasonC",mapPrpCplanTemps.get("payReason"));
+                        //              MORE  cplans_%5B0%5D.payReasonC value=null
+                        nextParamsMap.put("cplan_[0].payReasonC",payReasonName);
+                        nextParamsMap.put("description_[0].currency",currency);
+
                         nextParamsMap.put("prpCplanTemps_[0].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
                         // more              prpCplanTemps_%5B0%5D.currency value=null
                         nextParamsMap.put("prpCplanTemps_[0].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
                         nextParamsMap.put("prpCplanTemps_[0].endorseNo",mapPrpCplanTemps.get("endorseNo"));
                         nextParamsMap.put("prpCplanTemps_[0].flag",mapPrpCplanTemps.get("flag"));
                         nextParamsMap.put("prpCplanTemps_[0].isBICI",mapPrpCplanTemps.get("isBICI"));
+
+                        nextParamsMap.put("prpCplanTemps_[0].netPremium",mapPrpCplanTemps.get("netPremium"));
+
                         nextParamsMap.put("prpCplanTemps_[0].netPremium",mapPrpCplanTemps.get("netPremium"));
                         nextParamsMap.put("prpCplanTemps_[0].payNo", mapPrpCplanTemps.get("payNo"));
                         nextParamsMap.put("prpCplanTemps_[0].payReason",mapPrpCplanTemps.get("payReason"));
@@ -138,6 +160,8 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         nextParamsMap.put("prpCplanTemps_[0].serialNo",mapPrpCplanTemps.get("serialNo"));
                         nextParamsMap.put("prpCplanTemps_[0].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
                         nextParamsMap.put("prpCplanTemps_[0].taxPremium", mapPrpCplanTemps.get("taxPremium"));
+
+
                     }
                 }
 
@@ -164,63 +188,92 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html, request);
+        Response response = getResponse(html,request);
         //上个请求返回的参数继续传递下去
         Map requestMap = request.getRequestParam();
         Map returnMap =  response.getResponseMap();
         Map nextMap =(Map) response.getResponseMap().get("nextParams");
         Map paramsMap = (Map) request.getRequestParam().get("Map");
         String  paramsStr = request.getRequestParam().get("String").toString();
-        
+
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
         for (Iterator it = key.iterator(); it.hasNext();) {
             String keyName = (String) it.next();
             String keyValue = nextMap.get(keyName).toString();
             try{
-            keyName = java.net.URLEncoder.encode(keyName, "gbk");
+                keyName = java.net.URLEncoder.encode(keyName, "gbk");
             }catch(Exception e){
-            	
-            }   
-            if(paramsStr.contains(keyName+"=&")){
-            	paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
-            }else{
-            	paramsStr = paramsStr+"&"+keyName+"="+keyValue;
+
             }
-            if(paramsMap.containsKey(keyName)){
-            	paramsMap.put(keyName, keyValue);
-            }  else{
-            	paramsMap.put(keyName, keyValue);
-            }  
+
+            if(keyName.equals("prpCplanTemps%5B0%5D.serialNo")||keyName.equals("prpCplanTemps%5B0%5D.subsidyRate")||keyName.equals("prpCplanTemps%5B0%5D.delinquentFee")||keyName.equals("prpCplanTemps%5B0%5D.planFee") || keyName.equals("prpCplanTemps%5B0%5D.planDate") ||keyName.equals("prpCplanTemps%5B0%5D.isBICI")||keyName.equals("prpCplanTemps_%5B0%5D.isBICI")||keyName.equals("prpCplanTemps%5B0%5D.payReason")){
+                if(paramsMap.containsKey(keyName)){
+
+                    String oldValue ="";
+                    try{oldValue = paramsMap.get(keyName).toString();}
+                    catch(Exception e){}
+                    String old1 = keyName+"="+oldValue+"&";
+                    String new1 = keyName+"="+keyValue+"&";
+                    paramsStr = paramsStr.replace(old1, new1);
+                }else{
+                    String oldValue ="";
+
+                    String old1 = keyName+"="+oldValue+"&";
+                    String new1 = keyName+"="+keyValue+"&";
+                    paramsStr = paramsStr.replace(old1, new1);
+                }
+            }
+            else if(keyName.equals("PayRefReason")){
+                if(paramsMap.containsKey(keyName)){
+
+                    String oldValue ="";
+                    try{oldValue = paramsMap.get(keyName).toString();}
+                    catch(Exception e){}
+                    String old1 = keyName+"="+oldValue+"&";
+
+                    paramsStr = paramsStr.replace(old1, "");// delete PayRefReason
+                }
+            }
+            else{
+                if(paramsStr.contains(keyName+"=&")){
+                    if(keyValue.equals("null")||keyValue.equals("")){
+
+                    }else{
+                        paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
+                    }
+
+                }else{
+                    paramsStr = paramsStr+"&"+keyName+"="+keyValue;
+                }
+                if(paramsMap.containsKey(keyName)){
+                    paramsMap.put(keyName, keyValue);
+                }  else{
+                    paramsMap.put(keyName, keyValue);
+                }
+            }
         }
         paramsStr =paramsStr.replace("&planFlag=0&", "&planFlag=1&");// planFlag
-        paramsStr =paramsStr.replace("&prpAnciInfo.operCommRate=0&", "&prpAnciInfo.operCommRate=21.287&");// operCommRate
-        paramsStr =paramsStr.replace("&prpAnciInfo.operCommRateAmount=0&", "&prpAnciInfo.operCommRateAmount=699.39&");// operCommRateAmount
-        paramsStr =paramsStr.replace("&prpAnciInfo.operateCommRateCI=0&", "&prpAnciInfo.operateCommRateCI=4&");// operateCommRateCI
-        paramsStr =paramsStr.replace("&prpAnciInfo.operateCommCI=0&", "&prpAnciInfo.operateCommCI=23.23&");// operateCommCI
-        paramsStr =paramsStr.replace("&prpAnciInfo.operateCommRateBI=0&", "&prpAnciInfo.operateCommRateBI=25&");// operateCommRateBI
-        paramsStr =paramsStr.replace("&prpAnciInfo.operateCommBI=0&", "&prpAnciInfo.operateCommBI=676.16&");// operateCommBI
-      
         paramsStr =paramsStr.replace("&prpCmainCar.agreeDriverFlag=&", "&prpCmainCar.agreeDriverFlag=0&");//prpCmainCar.agreeDriverFlag
         paramsStr =paramsStr.replace("&prpCmainCommon.groupFlag=0&", "&prpCmainCommon.groupFlag=2&");//prpCmainCommon.groupFlag
-       try{
-        paramsStr =paramsStr.replace("&prpCsettlement.flag=&", "&prpCsettlement.flag=0&"); //prpCsettlement.flag value
-       }catch(Exception e){
-    	   paramsStr = paramsStr+"&prpCsettlement.flag=0"; 
-       }
-       paramsStr =paramsStr.replace("&actProfitRate=&", "&actProfitRate=44.88&");//actProfitRate=44.88 TODO
-       paramsStr =paramsStr.replace("&prpAnciInfo.expProCommRateUp=56.15&", "&prpAnciInfo.expProCommRateUp=50&");//actProfitRate=44.88 TODO
-       paramsStr =paramsStr.replace("&actProfitRate=&", "&actProfitRate=44.88&");//actProfitRate=44.88 TODO
-       paramsStr =paramsStr.replace("&expProCommRateUp_Disc=&", "&expProCommRateUp_Disc=-5.12&");//actProfitRate=44.88 TODO
-      // paramsStr =paramsStr.replace("&expRiskNote=&", "&expRiskNote=-5.12&");//actProfitRate=44.88 TODO
-          
-               //no  prpAnciInfo.standbyField1 value=23.23,0,44.88,-5.12,,A%CF%D5L%CF%D5%CA%F4%D3%DA%B8%DF%C5%E2%B8%B6%CF%D5%D6%D6,050100 050500 050600 050701 050702 050231 050912 050921 050928 050929 ,,,,050200 050911 
-    		  // no  actProfitRate value=44.88
-    		   //no  prpAnciInfo.expProCommRateUp value=50
-    		  // no  expProCommRateUp_Disc value=-5.12
-    		   //no  expRiskNote value=A%CF%D5L%CF%D5%CA%F4%D3%DA%B8%DF%C5%E2%B8%B6%CF%D5%D6%D6
+        try{
+            paramsStr =paramsStr.replace("&prpCsettlement.flag=&", "&prpCsettlement.flag=0&"); //prpCsettlement.flag value
+        }catch(Exception e){
+            paramsStr = paramsStr+"&prpCsettlement.flag=0";
+        }
+        paramsStr =paramsStr.replace("&actProfitRate=&", "&actProfitRate=44.88&");//actProfitRate=44.88 TODO
+        paramsStr =paramsStr.replace("&prpAnciInfo.expProCommRateUp=56.15&", "&prpAnciInfo.expProCommRateUp=50&");//expProCommRateUp=50 TODO
+        paramsStr =paramsStr.replace("&actProfitRate=&", "&actProfitRate=44.88&");//actProfitRate=44.88 TODO
+        paramsStr =paramsStr.replace("&expProCommRateUp_Disc=&", "&expProCommRateUp_Disc=-5.12&");//expProCommRateUp_Disc=-5.12 TODO
+
+
+        //no  prpAnciInfo.standbyField1 value=23.23,0,44.88,-5.12,,A%CF%D5L%CF%D5%CA%F4%D3%DA%B8%DF%C5%E2%B8%B6%CF%D5%D6%D6,050100 050500 050600 050701 050702 050231 050912 050921 050928 050929 ,,,,050200 050911
+        // no  actProfitRate value=44.88
+        //no  prpAnciInfo.expProCommRateUp value=50
+        // no  expProCommRateUp_Disc value=-5.12
+        //no  expRiskNote value=A%CF%D5L%CF%D5%CA%F4%D3%DA%B8%DF%C5%E2%B8%B6%CF%D5%D6%D6
         requestMap.put("String",paramsStr);
         requestMap.put("Map",paramsMap);
-        
+
         returnMap.put("nextParams",requestMap);
         response.setResponseMap(returnMap);
         return response;
@@ -228,12 +281,12 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
     public void compareStringDifference1(String right,String error){
         String[] paramArr1=right.split("&");
         String[] paramArr2=error.split("&");
-      
+
         for(int i=0;i<paramArr1.length;i++){
-         
+
             if(error.contains(paramArr1[i])){//包含
-            	
-              
+
+
             }else{
                 try{
                     System.out.println("no  "+paramArr1[i].split("=")[0] +" value="+paramArr1[i].split("=")[1]);
@@ -242,10 +295,10 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                 }
 
             }//else end
-            
-          
+
+
         }//for end
-  
+
 
     }
     public void compareStringDifference(String right,String error){
@@ -254,14 +307,14 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         List<String> list = new LinkedList<String>();
         List<String> list1 = new LinkedList<String>();
         for(int j=0;j<paramArr2.length;j++){
-        	list.add(paramArr2[j].split("=")[0]);
-        	try{
-        	list1.add(paramArr2[j].split("=")[1]);
-        	}catch(Exception e){
-        	list1.add(null);
-        	}
-        	}
-    
+            list.add(paramArr2[j].split("=")[0]);
+            try{
+                list1.add(paramArr2[j].split("=")[1]);
+            }catch(Exception e){
+                list1.add(null);
+            }
+        }
+
         for(int i=0;i<paramArr1.length;i++){
             paramArr1[i].split("=");
             String[] key = {};   //创建空数组
@@ -269,9 +322,9 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
             String[] value = {};   //创建空数组
             value = (String[]) list1.toArray(value);
             if(error.contains(paramArr1[i].split("=")[0])){//包含
-            	
+
                 for(int j=0;j<key.length;j++){
-               
+
                     if(key[j].equals(paramArr1[i].split("=")[0])){
                         String value1 ="";
                         String value2="";
@@ -279,37 +332,37 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                             value1 = paramArr1[i].split("=")[1];
                             try{
                                 value2 = value[j];
-                                if(!value1.equals(value2)){                              
-                                        System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 =  "+value1+"       value2 =  "+value2);                                     
+                                if(!value1.equals(value2)){
+                                    System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 =  "+value1+"       value2 =  "+value2);
                                 }
-                                list.remove(key[j]); 
-                                list1.remove(value[j]);   
-                               break;
+                                list.remove(key[j]);
+                                list1.remove(value[j]);
+                                break;
                             }catch(Exception e2){
                                 System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = "+value1+"  value2 =null");
-                                list.remove(key[j]); 
-                                list1.remove(value[j]);  
+                                list.remove(key[j]);
+                                list1.remove(value[j]);
                                 break;
                             }
-                        
+
                         }catch(Exception e){
                             try{
                                 value2 = paramArr2[j].split("=")[1];
-                               // System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 ="+value2);
-                                list.remove(key[j]); 
-                                list1.remove(value[j]);  
+                                // System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 ="+value2);
+                                list.remove(key[j]);
+                                list1.remove(value[j]);
                                 break;
                             }catch(Exception e2){
-                                list.remove(key[j]); 
-                                list1.remove(value[j]);  
+                                list.remove(key[j]);
+                                list1.remove(value[j]);
                                 // System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 =null");
                                 break;
                             }
                         }
-                     
+
                     }//if end
-                    
-                    
+
+
 
                 }//for end
             }else{
@@ -320,8 +373,8 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                 }
 
             }//else end
-            
-          
+
+
         }//for end
         System.out.println("key  list length = "+list.size());
         System.out.println("value list length = "+list1.size());

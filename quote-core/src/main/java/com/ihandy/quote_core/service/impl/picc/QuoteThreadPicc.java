@@ -883,6 +883,10 @@ public class QuoteThreadPicc extends Thread{
 				break;
 			}
 		}
+		//第七部分：BIdemandNo，商业险投保查询码
+		String BIdemandNo = syxJson.getJSONArray("data").getJSONObject(0).getJSONObject("ciInsureDemandDAA").getString("demandNo");
+		param = param.replace("BIdemandNo=", "BIdemandNo=" + BIdemandNo);
+		
 		return param;
 	}
 	

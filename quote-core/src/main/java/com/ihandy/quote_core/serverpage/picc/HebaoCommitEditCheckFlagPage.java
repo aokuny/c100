@@ -40,7 +40,7 @@ public class HebaoCommitEditCheckFlagPage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html) {
+    public Response getResponse(String html, Request request) {
         //解析{"totalRecords":1,"data":[{"specialflag":null,"checkFlag":"0","agentCode":"110021100065","proposalNo":"TDAA201611010000953919","specialflagConnect":null,"jfeeFlag":"1","hourFlag":"2","connectUndWrtFlag":"0","unitedSaleflagZBW":"","dmFlag":null,"contractNo":null,"nowDate":"2016-05-25","checkUpCode":"020083","operatorCode1":"020083","checkStatus":"0","inputFlag":"0","underWriteFlag":"0","checkIsNewMakeCom":"","unitedSaleflagRisk":"","strStartDate":"2016-06-26","connectSerialNo":"TDZA201611010000976366","projectCode":"","businessNature":"2  ","specialflagRisk":"","othFlag":"0"}]}
         Response response = new Response();
         if(!html.equals("")||null!=html){
@@ -105,7 +105,7 @@ public class HebaoCommitEditCheckFlagPage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html);
+        Response response = getResponse(html, request);
         return response;
     }
 }

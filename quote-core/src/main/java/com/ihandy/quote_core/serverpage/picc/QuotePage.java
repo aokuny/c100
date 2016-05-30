@@ -49,7 +49,7 @@ public class QuotePage extends BasePage{
 	}
 
 	@Override
-	public Response getResponse(String html) {
+	public Response getResponse(String html, Request request) {
 		Response response = new Response();
 		//TODO 报价结果需要进行缓存
 		if(StringUtils.isNotBlank(html)){
@@ -123,7 +123,7 @@ public class QuotePage extends BasePage{
 		} catch (Exception e) {
 			logger.error("PICC API 【HTTP请求出错】" + e.getMessage() + "，url：" + request.getUrl());
 		}
-		return this.getResponse(html);
+		return this.getResponse(html, request);
 	}
 	
 }

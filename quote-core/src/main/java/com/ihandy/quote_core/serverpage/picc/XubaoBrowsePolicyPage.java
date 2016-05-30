@@ -34,7 +34,7 @@ public class XubaoBrowsePolicyPage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html) {
+    public Response getResponse(String html, Request request) {
         Response response = new Response();
         if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();
@@ -77,7 +77,7 @@ public class XubaoBrowsePolicyPage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html);
+        Response response = getResponse(html, request);
         Map map =(Map) response.getResponseMap().get("nextParams");
         map.put("bizNo",request.getRequestParam().get("bizNo")); //将保单号传到下一个请求页面参数中
         //  Map map1 =(Map) response.getResponseMap().get("nextParams");

@@ -153,7 +153,7 @@ public abstract class BasePage {
 	 * @param html
 	 * @return
 	 */
-	public abstract Response getResponse(String html);
+	public abstract Response getResponse(String html, Request request);
 
 	/**
 	 * 结合doRequest、getResponse完成整体HTTP发送到解析流程

@@ -37,7 +37,7 @@ public class IsXuBaoPage extends BasePage {
 	}
 
 	@Override
-	public Response getResponse(String html) {
+	public Response getResponse(String html, Request request) {
 		Response response = new Response();
 		if(StringUtils.isNotBlank(html)){//返回结果不为空的时候
 			Map<String, Object> returnMap = new HashMap<>();
@@ -58,7 +58,7 @@ public class IsXuBaoPage extends BasePage {
 	@Override
 	public Response run(Request request) {
 		String html = this.doRequest(request);
-		return this.getResponse(html);
+		return this.getResponse(html, request);
 	}
 
 }

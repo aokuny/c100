@@ -41,7 +41,7 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html) {
+    public Response getResponse(String html, Request request) {
         //解析{"msg":"SINGLE,,66692393-6,","totalRecords":0,"data":[]}
         Response response = new Response();
         if(!html.equals("")||null!=html){
@@ -84,7 +84,7 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html);
+        Response response = getResponse(html, request);
         //上个请求返回的参数继续传递下去
         Map requestMap = request.getRequestParam();
         Map returnMap =  response.getResponseMap();

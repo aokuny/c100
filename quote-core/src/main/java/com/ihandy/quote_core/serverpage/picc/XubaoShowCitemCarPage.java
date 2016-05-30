@@ -41,7 +41,7 @@ public class XubaoShowCitemCarPage extends BasePage{
     }
 
     @Override
-    public Response getResponse(String html) {
+    public Response getResponse(String html, Request request) {
         Response response = new Response();
         String CarUsedType=""; //使用性质
         String MoldName="";//品牌型号
@@ -129,7 +129,7 @@ public class XubaoShowCitemCarPage extends BasePage{
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html);
+        Response response = getResponse(html, request);
         return response;
     }
 }

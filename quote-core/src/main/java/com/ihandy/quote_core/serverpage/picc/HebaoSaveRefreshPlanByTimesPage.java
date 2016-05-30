@@ -37,7 +37,7 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html) {
+    public Response getResponse(String html, Request request) {
         Response response = new Response();
         if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();
@@ -105,7 +105,7 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html);
+        Response response = getResponse(html, request);
         //上个请求返回的参数继续传递下去
         Map requestMap = request.getRequestParam();
         Map returnMap =  response.getResponseMap();

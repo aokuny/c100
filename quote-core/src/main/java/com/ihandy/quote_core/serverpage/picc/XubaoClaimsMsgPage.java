@@ -34,7 +34,7 @@ public class XubaoClaimsMsgPage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html) {
+    public Response getResponse(String html, Request request) {
         Response response = new Response();
         if(null!=html){
             Map  returnMap  = new HashMap<>();
@@ -72,7 +72,7 @@ public class XubaoClaimsMsgPage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html);
+        Response response = getResponse(html, request);
         return response;
     }
 }

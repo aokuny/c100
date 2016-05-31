@@ -33,7 +33,7 @@ public class HebaoSaveInsertPage extends BasePage {
         String param ="";
         try{
             param = request.getRequestParam().get("String").toString();
-            System.out.println("param = "+param);
+            System.out.println("ErrorParam = "+param);
 
         }catch(Exception e) {
             logger.info("抓取机器人，【 PICC 核保保存6获取post参数失败】");
@@ -48,8 +48,8 @@ public class HebaoSaveInsertPage extends BasePage {
 
 
         // System.out.println("rightParam = "+rightParam);
-        //  StringBaseUtils.compareErrorStringLess(rightParam,param);
-        //  StringBaseUtils.compareErrorStringMore(rightParam,param);
+        StringBaseUtils.compareErrorStringLess(rightParam,param);
+        StringBaseUtils.compareErrorStringMore(rightParam,param);
         String newParams = StringBaseUtils.combineStringByRightOrder(rightParam,param);
         //prpAnciInfo.profitRateBIUp=, prpAnciInfo.discountRateBIUpAmountp=, kindBusiTypeA=, kindBusiTypeE=, prpCcommissionsTemp_%5B0%5D.coinsRate=
         //prpAnciInfo.profitRateBIUp=
@@ -58,7 +58,7 @@ public class HebaoSaveInsertPage extends BasePage {
         // compareStringDifference1(rightParam,param);
         // compareStringDifference2(rightParam,param);
 
-        Map map = HttpsUtil.sendPost(url,newParams,super.piccSessionId,"UTF-8");
+        Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
     }

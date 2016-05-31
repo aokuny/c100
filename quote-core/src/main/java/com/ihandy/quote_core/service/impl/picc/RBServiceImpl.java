@@ -9,7 +9,6 @@ import com.ihandy.quote_core.bean.other.*;
 
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.ClaimResponse;
-import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
 import com.ihandy.quote_core.bean.other.RelaPeopleResponse;
 import com.ihandy.quote_core.bean.other.SaveQuoteResponse;
 import com.ihandy.quote_core.serverpage.picc.*;
@@ -18,12 +17,10 @@ import com.ihandy.quote_core.service.IService;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 
 import net.sf.json.JSONArray;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

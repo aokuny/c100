@@ -80,7 +80,11 @@ public class StringBaseUtils {
 		}
 		return map;
 	}
-
+    public  static  double forDight(double num, int count){//保留count 位double
+		double dight=0;
+		dight = Math.round(num*Math.pow(10,count))/Math.pow(10,count);
+		return dight;
+	}
 	public static String combineStringByRightOrder(String right,String error){
 		String newParams ="";
 		String[] paramArr1=right.split("&");

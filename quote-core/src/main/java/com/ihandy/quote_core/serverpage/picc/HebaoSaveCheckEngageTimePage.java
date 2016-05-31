@@ -96,11 +96,11 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
         Map paraMap = new HashMap();
         String[] paramsArr = params.split("&");
         for(int i=0;i<paramsArr.length;i++){
+            String[] kvArr = paramsArr[i].split("=");
             try{
-                String[] kvArr = paramsArr[i].split("=");
                 paraMap.put(kvArr[0], kvArr[1]);
             }catch(Exception e){
-
+                paraMap.put(kvArr[0], "");
             }
         }
         Map map = (Map) response.getResponseMap().get("nextParams");

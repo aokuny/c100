@@ -52,36 +52,38 @@ public class HebaoCommitEditCheckFlagPage extends BasePage {
                 JSONArray jsonArray = JSONArray.fromObject(map);
                 Map map1 = (Map) jsonArray.get(0);
                 Map  dataMap = (Map) map1.get("data");
+                try{
+                    nextParamsMap.put("specialflag",dataMap.get("specialflag"));
+                    nextParamsMap.put("checkFlag",dataMap.get("checkFlag"));
+                    nextParamsMap.put("agentCode",dataMap.get("agentCode"));
+                    nextParamsMap.put("proposalNo",dataMap.get("proposalNo"));
+                    nextParamsMap.put("specialflagConnect",dataMap.get("specialflagConnect"));
+                    nextParamsMap.put("jfeeFlag",dataMap.get("jfeeFlag"));
+                    nextParamsMap.put("hourFlag",dataMap.get("hourFlag"));
 
-                nextParamsMap.put("specialflag",dataMap.get("specialflag"));
-                nextParamsMap.put("checkFlag",dataMap.get("checkFlag"));
-                nextParamsMap.put("agentCode",dataMap.get("agentCode"));
-                nextParamsMap.put("proposalNo",dataMap.get("proposalNo"));
-                nextParamsMap.put("specialflagConnect",dataMap.get("specialflagConnect"));
-                nextParamsMap.put("jfeeFlag",dataMap.get("jfeeFlag"));
-                nextParamsMap.put("hourFlag",dataMap.get("hourFlag"));
+                    nextParamsMap.put("connectUndWrtFlag",dataMap.get("connectUndWrtFlag"));
+                    nextParamsMap.put("unitedSaleflagZBW",dataMap.get("unitedSaleflagZBW"));
+                    nextParamsMap.put("dmFlag",dataMap.get("dmFlag"));
+                    nextParamsMap.put("contractNo",dataMap.get("contractNo"));
+                    nextParamsMap.put("nowDate",dataMap.get("nowDate"));
+                    nextParamsMap.put("checkUpCode",dataMap.get("checkUpCode"));
+                    nextParamsMap.put("operatorCode1",dataMap.get("operatorCode1"));
 
-                nextParamsMap.put("connectUndWrtFlag",dataMap.get("connectUndWrtFlag"));
-                nextParamsMap.put("unitedSaleflagZBW",dataMap.get("unitedSaleflagZBW"));
-                nextParamsMap.put("dmFlag",dataMap.get("dmFlag"));
-                nextParamsMap.put("contractNo",dataMap.get("contractNo"));
-                nextParamsMap.put("nowDate",dataMap.get("nowDate"));
-                nextParamsMap.put("checkUpCode",dataMap.get("checkUpCode"));
-                nextParamsMap.put("operatorCode1",dataMap.get("operatorCode1"));
+                    nextParamsMap.put("checkStatus",dataMap.get("checkStatus"));
+                    nextParamsMap.put("inputFlag",dataMap.get("inputFlag"));
+                    nextParamsMap.put("underWriteFlag",dataMap.get("underWriteFlag"));
+                    nextParamsMap.put("checkIsNewMakeCom",dataMap.get("checkIsNewMakeCom"));
+                    nextParamsMap.put("unitedSaleflagRisk",dataMap.get("unitedSaleflagRisk"));
+                    nextParamsMap.put("strStartDate",dataMap.get("strStartDate"));
+                    nextParamsMap.put("connectSerialNo",dataMap.get("connectSerialNo"));
 
-                nextParamsMap.put("checkStatus",dataMap.get("checkStatus"));
-                nextParamsMap.put("inputFlag",dataMap.get("inputFlag"));
-                nextParamsMap.put("underWriteFlag",dataMap.get("underWriteFlag"));
-                nextParamsMap.put("checkIsNewMakeCom",dataMap.get("checkIsNewMakeCom"));
-                nextParamsMap.put("unitedSaleflagRisk",dataMap.get("unitedSaleflagRisk"));
-                nextParamsMap.put("strStartDate",dataMap.get("strStartDate"));
-                nextParamsMap.put("connectSerialNo",dataMap.get("connectSerialNo"));
-
-                nextParamsMap.put("projectCode",dataMap.get("projectCode"));
-                nextParamsMap.put("businessNature",dataMap.get("businessNature"));
-                nextParamsMap.put("specialflagRisk",dataMap.get("specialflagRisk"));
-                nextParamsMap.put("othFlag",dataMap.get("othFlag"));
-
+                    nextParamsMap.put("projectCode",dataMap.get("projectCode"));
+                    nextParamsMap.put("businessNature",dataMap.get("businessNature"));
+                    nextParamsMap.put("specialflagRisk",dataMap.get("specialflagRisk"));
+                    nextParamsMap.put("othFlag",dataMap.get("othFlag"));
+                }catch(Exception e){
+                    logger.info("抓取机器人，PICC 核保提交1 解析参数错误");
+                }
                 returnMap.put("nextParams",nextParamsMap);
                 response.setResponseMap(returnMap);
                 response.setReturnCode(SysConfigInfo.SUCCESS200);

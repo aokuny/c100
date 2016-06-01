@@ -269,11 +269,14 @@ public class HebaoCalAnciInfoPage extends BasePage {
         }
         if(params.contains("&operCommRateBIUpAmount=&")){//operCommRateBIUpAmount 0  operCommRateBIUpAmount 赋值;
             Double operateCommRateBI= Double.parseDouble(nextMap.get("prpAnciInfo.operateCommRateBI").toString());
-            params=params.replace("operCommRateBIUpAmount=&", "operCommRateBIUpAmount="+StringBaseUtils.forDight(operateCommRateBI,2)+"&");
             if(StringBaseUtils.forDight(operateCommRateBI,2)==0){
                 nextMap.put("operCommRateBIUpAmount","0");
+                params=params.replace("operCommRateBIUpAmount=&", "operCommRateBIUpAmount=0&");
+
             }else{
                 nextMap.put("operCommRateBIUpAmount",StringBaseUtils.forDight(operateCommRateBI,2));
+                params=params.replace("operCommRateBIUpAmount=&", "operCommRateBIUpAmount="+StringBaseUtils.forDight(operateCommRateBI,2)+"&");
+
             }
         }
         if(params.contains("&prpAnciInfo.operateCommCI=&")) {//operateCommCI 23.23
@@ -290,7 +293,7 @@ public class HebaoCalAnciInfoPage extends BasePage {
         if(params.contains("&prpAnciInfo.operateCommRateBI=0&")){// 56.15-31.15 = 25  expProCommRateUp-profitRateBIUp
             double operateCommRateBI=0;
             double operateCommBI = 0;
-            operateCommRateBI = StringBaseUtils.forDight( Double.parseDouble( nextMap.get("prpAnciInfo.expProCommRateUp").toString())- Double.parseDouble( nextMap.get("prpAnciInfo.profitRateBIUp").toString()),2);
+            operateCommRateBI =  Double.parseDouble( nextMap.get("prpAnciInfo.expProCommRateUp").toString())- Double.parseDouble( nextMap.get("prpAnciInfo.profitRateBIUp").toString());
             params =params.replace("&prpAnciInfo.operateCommRateBI=0&", "&prpAnciInfo.operateCommRateBI="+operateCommRateBI+"&");//
             nextMap.put("prpAnciInfo.operateCommRateBI",operateCommRateBI);
             operateCommBI = StringBaseUtils.forDight(Double.parseDouble( nextMap.get("prpAnciInfo.sumPremiumBI").toString())*operateCommRateBI/100,2);

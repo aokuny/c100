@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -43,7 +44,14 @@ public class TestHebao {
 	   String code = 	irbService.commitHeBaoInfo(response);
 	   System.out.println("code = "+code);
     }
-    
+
+	@Test
+	public  void  searchHebao(){
+
+		List<HebaoResponse> hebaoResponseList = 	irbService.getHebaoResponse("京55M11");
+		System.out.println("\n");
+		System.out.println("return hebaoResponse = "+hebaoResponseList);
+	}
      /* @Test
     public void testGetprpAnciInfo() {
         Map nextParamsMap = new HashMap<>();

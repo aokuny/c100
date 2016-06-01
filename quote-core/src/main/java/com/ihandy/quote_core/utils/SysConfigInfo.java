@@ -18,46 +18,50 @@ public class SysConfigInfo {
     private static Properties properties;
 
     /** ====================================================人保begin====================*/
-     /** 人保域名*/
-     public static String PICC_DOMIAN ;
-     /**续保对话框 */
-     public static String  PICC_EDITRENEWALSEARCH ;
-     /**查看保单数据源 */
-     public static String  PICC_SELECTRENEWAL;
-     /**浏览保单 */
-     public static String  PICC_BROWSEPOLICYNO;
-     /**车辆信息 */
-     public static String  PICC_CARTAB;
-     /**关系人信息 */
-     public static String  PICC_INSUREDTAB;
-     /**保险责任 */
-     public static String  PICC_KINDTAB;
-     /**查询理赔信息 */
-     public static String  PICC_QUERYCLAIMSMSG;
+    /** 人保域名*/
+    public static String PICC_DOMIAN ;
+    /**续保对话框 */
+    public static String  PICC_EDITRENEWALSEARCH ;
+    /**查看保单数据源 */
+    public static String  PICC_SELECTRENEWAL;
+    /**浏览保单 */
+    public static String  PICC_BROWSEPOLICYNO;
+    /**车辆信息 */
+    public static String  PICC_CARTAB;
+    /**关系人信息 */
+    public static String  PICC_INSUREDTAB;
+    /**保险责任 */
+    public static String  PICC_KINDTAB;
+    /**查询理赔信息 */
+    public static String  PICC_QUERYCLAIMSMSG;
 
 
     /**计算辅助核保 */
     public static String PICC_CALANCIINFO;
     /**保存核保1  */
     public static String  PICC_HEBAOSAVE1;
-     /**保存核保2  */
+    /**保存核保2  */
     public static String  PICC_HEBAOSAVE2;
-     /**保存核保3   */
+    /**保存核保3   */
     public static String  PICC_HEBAOSAVE3;
-     /** 保存核保4  */
+    /** 保存核保4  */
     public static String  PICC_HEBAOSAVE4;
-     /** 保存核保5  */
+    /** 保存核保5  */
     public static String  PICC_HEBAOSAVE5;
-     /** 保存核保6   */
+    /** 保存核保6   */
     public static String  PICC_HEBAOSAVE6;
-     /**提交核保1   */
+    /**提交核保1   */
     public static String PICC_HEBAOCOMMIT1;
-     /**提交核保2   */
+    /**提交核保2   */
     public static String PICC_HEBAOCOMMIT2;
-     /** 查询核保   */
+    /** 查询核保   */
     public static String PICC_HEBAOSEARCH;
+    /** 查询核保前   */
+    public static String  PICC_HEBAOPREPARESEARCH;
+    /** 查询核保意见   */
+    public static String  PICC_HEBAOSEARCHUNDWRTMSG;
 
-    
+
     /**----------------------------- 人保URL ----------------------------------*/
     /** PICC人保业务登录 */
     public static String PICC_MAIN_URL;
@@ -76,7 +80,7 @@ public class SysConfigInfo {
 
     /**----------------------------- 返回保险公司信息 ----------------------------------*/
     public static String  PICC_NAME;
-    
+
     /** 玻璃险值 */
     public static List<String> boliValueList = new ArrayList<String>();
     /** 不计免赔 */
@@ -129,6 +133,8 @@ public class SysConfigInfo {
             PICC_HEBAOCOMMIT1 = getString("picc_hebaocommit1","");
             PICC_HEBAOCOMMIT2 = getString("picc_hebaocommit2","");
             PICC_HEBAOSEARCH = getString("picc_hebaosearch","");
+            PICC_HEBAOPREPARESEARCH = getString("picc_hebaopreparesearch","");
+            PICC_HEBAOSEARCHUNDWRTMSG = getString("picc_hebaosearchundwrtmsg","");
 
 
 
@@ -141,7 +147,7 @@ public class SysConfigInfo {
             //保险公司信息
             PICC_NAME =getString("picc_name","PICC");
 
-            
+
             //险种信息验证
             boliValueList.add("0");
             boliValueList.add("1");

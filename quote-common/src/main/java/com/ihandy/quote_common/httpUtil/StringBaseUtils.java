@@ -15,7 +15,7 @@ public class StringBaseUtils {
 	private static Logger logger = Logger.getLogger(StringBaseUtils.class);
 
 	public static String getTextForMatcher(String resourceStr, String patternStr){
-		Pattern patternOutput = Pattern.compile(patternStr);		
+		Pattern patternOutput = Pattern.compile(patternStr);
 		Matcher mOutput = patternOutput.matcher(resourceStr);
 		while(mOutput.find()){
 			String outputStr = mOutput.group();
@@ -80,7 +80,7 @@ public class StringBaseUtils {
 		}
 		return map;
 	}
-    public  static  double forDight(double num, int count){//保留count 位double
+	public  static  double forDight(double num, int count){//保留count 位double
 		double dight=0;
 		dight = Math.round(num*Math.pow(10,count))/Math.pow(10,count);
 		return dight;
@@ -181,7 +181,7 @@ public class StringBaseUtils {
 		String[] result = {};
 		return list.toArray(result);
 	}
-    public static String  String2Double(String num){
+	public static String  String2Double(String num){
 		String returnNum="";
 		try {
 			if (!num.equals("0")) {

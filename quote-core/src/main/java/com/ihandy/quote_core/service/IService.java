@@ -41,5 +41,5 @@ public interface IService {
 
     String commitHeBaoInfo(Response response);
 
-    HebaoResponse getHebaoResponse(String licenseNo);
+    List<HebaoResponse> getHebaoResponse(String licenseNo);
 }

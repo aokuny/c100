@@ -9,6 +9,7 @@ import com.ihandy.quote_core.bean.other.*;
 
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.ClaimResponse;
+import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
 import com.ihandy.quote_core.bean.other.RelaPeopleResponse;
 import com.ihandy.quote_core.bean.other.SaveQuoteResponse;
 import com.ihandy.quote_core.serverpage.picc.*;
@@ -17,10 +18,14 @@ import com.ihandy.quote_core.service.IService;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 
 import net.sf.json.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -529,6 +534,8 @@ public class RBServiceImpl implements IService {
 	@Override
 	public String commitHeBaoInfo(Response resp) {
 		String code="";
+		String DAAno="";
+		String DZAno="";
 		Response response = new Response();
 		HebaoCalAnciInfoPage hebaoCalAnciInfoPage = new HebaoCalAnciInfoPage(1);
 		Request request = new Request();
@@ -615,28 +622,74 @@ public class RBServiceImpl implements IService {
 			Response responseCommit2 = hebaoCommitEditSubmitUndwrtPage.run(requestCommit2);
 			//返回核保单号
 			Map mapTDAA = (Map) response6.getResponseMap().get("nextParams");
-			code = mapTDAA.get("TDAA").toString();
+			DAAno = mapTDAA.get("TDAA").toString();
+			//返回关联保单号
+			Map mapTDZA = (Map) responseCommit1.getResponseMap().get("nextParams");
+			DZAno = mapTDZA.get("connectSerialNo").toString();
 		}else{
 			logger.info("机器人抓取，获取辅助计算核保参数失败");
 		}
+		code = "DAAno = "+DAAno+",DZAno = "+DZAno;
 		return code;
 	}
 
 	@Override
-	public HebaoResponse getHebaoResponse(String licenseNo) {
-		HebaoResponse response = new HebaoResponse();
-		HebaoSearchQueryCodePage hebaoSearchQueryCodePage =new HebaoSearchQueryCodePage(1);
-		Request request =new Request();
-		Map paramMap = new HashMap<>();
-		paramMap.put("licenseNo",licenseNo);
-		request.setRequestParam(paramMap);
-		Response response1 = hebaoSearchQueryCodePage.run(request);
-		JSONArray jsonArray = (JSONArray) response1.getResponseMap().get("lastResult");
-		for(int i=0;i<jsonArray.size();i++){
-			Map map = (Map)jsonArray.get(i);
-			response.setSubmitResult(map.get("underWriteFlag").toString());
-			response.setBizNo(map.get("proposalNo").toString());
-		}//应该返回一个list
-		return response;
+	public List<HebaoResponse>  getHebaoResponse(String licenseNo) {
+		List<HebaoResponse> responseList = new ArrayList<HebaoResponse>();
+		HebaoSearchPrepareQueryCodePage hebaoSearchPrepareQueryCodePage =new HebaoSearchPrepareQueryCodePage(1);
+		Request request1 =new Request();
+		request1.setRequestParam(null);
+		request1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOPREPARESEARCH);
+		Response response1 = hebaoSearchPrepareQueryCodePage.run(request1);
+		if(response1.getReturnCode()==SysConfigInfo.SUCCESS200){
+			Map paramMap = (LinkedHashMap)	response1.getResponseMap().get("nextParams");
+			HebaoSearchQueryCodePage hebaoSearchQueryCodePage =new HebaoSearchQueryCodePage(1);
+			Request request2 =new Request();
+			try {
+				licenseNo = URLEncoder.encode(licenseNo, "GBK");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			paramMap.put("prpCproposalVo.licenseNo", licenseNo);
+			request2.setRequestParam(paramMap);
+			request2.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSEARCH);
+			Response response2 = hebaoSearchQueryCodePage.run(request2);
+			Map lastResultMap = (Map) response2.getResponseMap().get("lastResult");
+			Set set = lastResultMap.keySet();
+			Iterator it = set.iterator();
+
+			while(it.hasNext())
+			{
+				int key = Integer.parseInt(it.next().toString());
+				Map map = (Map)lastResultMap.get(key);
+				HebaoResponse response = new HebaoResponse();
+
+				String proposalNo = "";
+				proposalNo = map.get("proposalNo").toString();
+				response.setBizNo(proposalNo);
+
+				// 根据BizNo获取核保意见
+				HebaoSearchQueryUndwrtMsgPage hebaoSearchQueryUndwrtMsgPage =new HebaoSearchQueryUndwrtMsgPage(1);
+				Request request3 =new Request();
+				Map request3ParamMap = new HashMap();
+				if(proposalNo.contains("TDAA")){
+					request3ParamMap.put("bizNo", proposalNo);
+				}else if (proposalNo.contains("TDZA")){
+					request3ParamMap.put("bizNoCI", proposalNo);
+				}
+				request3ParamMap.put("bizType", "PROPOSAL");
+				request3.setRequestParam(request3ParamMap);
+				request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSEARCHUNDWRTMSG);
+				Response response3 = hebaoSearchQueryUndwrtMsgPage.run(request3);
+				Map return3Map = (Map)response3.getResponseMap().get("nextParams");
+				response.setSubmitResult(return3Map.get("msg").toString());
+				responseList.add(response);
+			}
+			//应该返回一个list
+		}
+
+		return responseList;
+
 	}
 }

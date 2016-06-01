@@ -664,19 +664,19 @@ public class RBServiceImpl implements IService {
 				int key = Integer.parseInt(it.next().toString());
 				Map map = (Map)lastResultMap.get(key);
 				HebaoResponse response = new HebaoResponse();
-
-				String proposalNo = "";
-				proposalNo = map.get("proposalNo").toString();
-				response.setBizNo(proposalNo);
-
+				
 				// 根据BizNo获取核保意见
 				HebaoSearchQueryUndwrtMsgPage hebaoSearchQueryUndwrtMsgPage =new HebaoSearchQueryUndwrtMsgPage(1);
 				Request request3 =new Request();
 				Map request3ParamMap = new HashMap();
+				String proposalNo = "";
+				proposalNo = map.get("proposalNo").toString();
 				if(proposalNo.contains("TDAA")){
 					request3ParamMap.put("bizNo", proposalNo);
+					response.setBizNo(proposalNo);
 				}else if (proposalNo.contains("TDZA")){
 					request3ParamMap.put("bizNoCI", proposalNo);
+					response.setForceNo(proposalNo);
 				}
 				request3ParamMap.put("bizType", "PROPOSAL");
 				request3.setRequestParam(request3ParamMap);

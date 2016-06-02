@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,14 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                 jsonArray = JSONArray.fromObject(map);
                 Map map1 = (Map) jsonArray.get(0);
                 JSONArray data = (JSONArray) map1.get("data");
+
+
+                //上个请求返回的参数继续传递下去
+
+                String  paramsStr = request.getRequestParam().get("String").toString();
                 // int ii=0;
                 //1）组装 prpCplanTemps
+                Map nextParamsMap1 = new LinkedHashMap<>();
                 for(int i=0;i<data.size();i++){
                     Map mapPrpCplanTemps = (Map)data.get(i);
                     Map expireDate = (Map) mapPrpCplanTemps.get("planDate");
@@ -59,24 +66,46 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                     int month = Integer.parseInt(expireDate.get("month").toString()) + 1;
                     int day = Integer.parseInt(expireDate.get("date").toString());
                     String expireDateStr = year1 + "-" + month + "-" + day;
+                    if(i==0){
+                        nextParamsMap.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
+                        nextParamsMap.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].flag",mapPrpCplanTemps.get("flag"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
+                        if(mapPrpCplanTemps.get("netPremium").toString().equals("")||mapPrpCplanTemps.get("netPremium").toString().equals("null")){
+                            nextParamsMap.put("prpCplanTemps["+i+"].netPremium","");
+                        }else{
+                            nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                        }
+                        //nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].planDate",expireDateStr);
+                        nextParamsMap.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
+                        nextParamsMap.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
 
-                    nextParamsMap.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
-                    nextParamsMap.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].flag",mapPrpCplanTemps.get("flag"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
-                    if(mapPrpCplanTemps.get("netPremium").toString().equals("")||mapPrpCplanTemps.get("netPremium").toString().equals("null")){
-                        nextParamsMap.put("prpCplanTemps["+i+"].netPremium","");
                     }else{
-                        nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
+                        nextParamsMap1.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].flag",mapPrpCplanTemps.get("flag"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
+                        if(mapPrpCplanTemps.get("netPremium").toString().equals("")||mapPrpCplanTemps.get("netPremium").toString().equals("null")){
+                            nextParamsMap1.put("prpCplanTemps["+i+"].netPremium","");
+                        }else{
+                            nextParamsMap1.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                        }
+                        //nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].planDate",expireDateStr);
+                        nextParamsMap1.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
+                        nextParamsMap1.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
+
                     }
-                    //nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].planDate",expireDateStr);
-                    nextParamsMap.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
-                    nextParamsMap.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
+
                     if(mapPrpCplanTemps.get("taxPremium").toString().equals("")||mapPrpCplanTemps.get("taxPremium").toString().equals("null")){
                         nextParamsMap.put("prpCplanTemps["+i+"].taxPremium","");
                     }else{
@@ -106,27 +135,38 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         nextParamsMap.put("cplan_[0].payReasonC",payReasonName);
                         nextParamsMap.put("description_[0].currency",currency);
 
-                        nextParamsMap.put("prpCplanTemps_[0].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
-                        // more              prpCplanTemps_%5B0%5D.currency value=null
-                        nextParamsMap.put("prpCplanTemps_[0].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
-                        nextParamsMap.put("prpCplanTemps_[0].endorseNo",mapPrpCplanTemps.get("endorseNo"));
-                        nextParamsMap.put("prpCplanTemps_[0].flag",mapPrpCplanTemps.get("flag"));
-                        nextParamsMap.put("prpCplanTemps_[0].isBICI",mapPrpCplanTemps.get("isBICI"));
-
-                        nextParamsMap.put("prpCplanTemps_[0].netPremium",mapPrpCplanTemps.get("netPremium"));
-
-                        nextParamsMap.put("prpCplanTemps_[0].netPremium",mapPrpCplanTemps.get("netPremium"));
                         nextParamsMap.put("prpCplanTemps_[0].payNo", mapPrpCplanTemps.get("payNo"));
+                        nextParamsMap.put("prpCplanTemps_[0].serialNo",mapPrpCplanTemps.get("serialNo"));
+                        nextParamsMap.put("prpCplanTemps_[0].endorseNo",mapPrpCplanTemps.get("endorseNo"));
+
                         nextParamsMap.put("prpCplanTemps_[0].payReason",mapPrpCplanTemps.get("payReason"));
                         nextParamsMap.put("prpCplanTemps_[0].planDate",expireDateStr);
+
+                        nextParamsMap.put("prpCplanTemps_[0].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
+                        nextParamsMap.put("prpCplanTemps_[0].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
+
+                        nextParamsMap.put("prpCplanTemps_[0].flag",mapPrpCplanTemps.get("flag"));
+                        nextParamsMap.put("prpCplanTemps_[0].isBICI",mapPrpCplanTemps.get("isBICI"));
+                        nextParamsMap.put("prpCplanTemps_[0].netPremium",mapPrpCplanTemps.get("netPremium"));
                         nextParamsMap.put("prpCplanTemps_[0].planFee", mapPrpCplanTemps.get("planFee"));
-                        nextParamsMap.put("prpCplanTemps_[0].serialNo",mapPrpCplanTemps.get("serialNo"));
                         nextParamsMap.put("prpCplanTemps_[0].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
                         nextParamsMap.put("prpCplanTemps_[0].taxPremium", mapPrpCplanTemps.get("taxPremium"));
                     }
                 }
+                String starParam1="planfee_index=1";
+                //先删除prpCcommissionsTemp[0]
 
+                // String startParam33="prpCcommissionsTemp_%5B0%5D.costType=&prpCcommissionsTemp_%5B0%5D.riskCode=&prpCcommissionsTemp_%5B0%5D.currency=AED&prpCcommissionsTemp_%5B0%5D.adjustFlag=0&prpCcommissionsTemp_%5B0%5D.upperFlag=0&prpCcommissionsTemp_%5B0%5D.auditRate=&prpCcommissionsTemp_%5B0%5D.auditFlag=1&prpCcommissionsTemp_%5B0%5D.sumPremium=&prpCcommissionsTemp_%5B0%5D.costRate=&prpCcommissionsTemp_%5B0%5D.costRateUpper=&prpCcommissionsTemp_%5B0%5D.coinsRate=100&prpCcommissionsTemp_%5B0%5D.coinsDeduct=1&prpCcommissionsTemp_%5B0%5D.costFee=&prpCcommissionsTemp_%5B0%5D.agreementNo=&prpCcommissionsTemp_%5B0%5D.configCode=&";
+                if(paramsStr.contains(starParam1)){
+                    String param1 = StringBaseUtils.addParam(starParam1,nextParamsMap1)+"&";
+                    //  System.out.println("param1 = "+param1);
+                    paramsStr = paramsStr.replace(starParam1, param1);
+                }else{
+                    paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap1)+"&";
+                }
 
+                returnMap.put("String",paramsStr);
+                // System.out.println("paramsStr = "+paramsStr);
                 returnMap.put("nextParams",nextParamsMap);
                 response.setResponseMap(returnMap);
                 response.setReturnCode(SysConfigInfo.SUCCESS200);
@@ -153,10 +193,11 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         //上个请求返回的参数继续传递下去
         Map requestMap = request.getRequestParam();
         Map returnMap =  response.getResponseMap();
-        Map nextMap =(Map) response.getResponseMap().get("nextParams");
+        Map nextMap =(Map)returnMap.get("nextParams");
         Map paramsMap = (Map) request.getRequestParam().get("Map");
-        String  paramsStr = request.getRequestParam().get("String").toString();
-
+        // String  paramsStr = request.getRequestParam().get("String").toString();
+        String  paramsStr = returnMap.get("String").toString();
+        // System.out.println("paramsStr3="+paramsStr);
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
         for (Iterator it = key.iterator(); it.hasNext();) {
             String keyName = (String) it.next();
@@ -203,8 +244,11 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
                     }
 
+                }else if(paramsStr.contains(keyName+"="+keyValue+"&")){
+
                 }else{
-                    paramsStr = paramsStr+"&"+keyName+"="+keyValue;
+                    String oldStr ="&planStr=";
+                    paramsStr = paramsStr.replace(oldStr, "&"+keyName+"="+keyValue+oldStr);
                 }
                 if(paramsMap.containsKey(keyName)){
                     paramsMap.put(keyName, keyValue);

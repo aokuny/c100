@@ -9,6 +9,8 @@ import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +29,10 @@ public class HebaoSearchQueryCodePage extends BasePage {
     public String doRequest(Request request) {
         String html= "";
         String url = request.getUrl();
-        url = url+"?"+"pigeNo=1&pageSize=10";
+        url = url+"?"+"pageSize=10&pageNo=1";
         Map paraMap = request.getRequestParam();
-        String param ="comCode=11010286&riskCode=DAA&prpCproposalVo.checkFlag=&prpCproposalVo.underWriteFlag=&prpCproposalVo.strStartDate=&prpCproposalVo.othFlag=&prpCproposalVo.checkUpCode=&prpCproposalVo.operatorCode1=&prpCproposalVo.businessNature=&noNcheckFlag=0&jfcdURL=http://10.134.136.48:8100/cbc&prpallURL=http://10.134.136.48:8000/prpall&bizNoZ=&pageNo_=1&pageSize_=10&scmIsOpen=1111100000&searchConditionSwitch=0&prpCproposalVo.proposalNo=&prpCproposalVo.policyNo=&prpCproposalVo.licenseNo=&prpCproposalVo.vinNo=&prpCproposalVo.insuredCode=&prpCproposalVo.insuredName=&prpCproposalVo.contractNo=&prpCproposalVo.operateDate=&prpCproposalVo.operateDate2=&prpCproposalVo.startDate=&prpCproposalVo.startDate2=&prpCproposalVo.dmFlag=all&prpCproposalVo.underWriteFlagC=&prpCproposalVo.brandName=&prpCproposalVo.engineNo=&prpCproposalVo.frameNo=&prpCproposalVo.riskCode=&prpCproposalVo.appliCode=&prpCproposalVo.apliName=&prpCproposalVo.makeCom=&makeComDes=&prpCproposalVo.operatorCode=&operatorCodeDes=&prpCproposalVo.comCode=&comCodeDes=&prpCproposalVo.handlerCode=&handlerCodeDes=&prpCproposalVo.handler1Code=&handler1CodeDes=&prpCproposalVo.endDate=&prpCproposalVo.endDate2=&prpCproposalVo.underWriteEndDate=&prpCproposalVo.underWriteEndDate2=";
-        param.replace("prpCproposalVo.licenseNo","prpCproposalVo.licenseNo="+paraMap.get("licenseNo").toString());
+        String param =StringBaseUtils.Map2GetParam(paraMap);
+        System.out.println("param = "+param);
         Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
@@ -41,6 +43,7 @@ public class HebaoSearchQueryCodePage extends BasePage {
         //解析{"totalRecords":2,"data":[{"dmFlag":"0","policyNo":"                      ","contractNo":"                      ","specialflag":"初始值","underWriteEndDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"licenseNo":"京P55M11","checkStatus":"初始状态","operateDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"comCode":"11010286","checkFlag":"初始值","proposalNo":"TDAA201611010000955201","underWriteFlag":"见费出单待缴费","insuredName":"朱佳佳","operatorCode":"020083    ","startDate":{"date":26,"day":0,"timezoneOffset":-480,"year":116,"month":5,"hours":0,"seconds":0,"minutes":0,"time":1466870400000,"nanos":0}},{"dmFlag":"0","policyNo":"                      ","contractNo":"                      ","specialflag":"初始值","underWriteEndDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"licenseNo":"京P55M11","checkStatus":"初始状态","operateDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"comCode":"11010286","checkFlag":"初始值","proposalNo":"TDZA201611010000977639","underWriteFlag":"见费出单待缴费","insuredName":"朱佳佳","operatorCode":"020083    ","startDate":{"date":26,"day":0,"timezoneOffset":-480,"year":116,"month":5,"hours":0,"seconds":0,"minutes":0,"time":1466870400000,"nanos":0}}],"startIndex":1,"recordsReturned":10}
         Response response = new Response();
         if(!html.equals("")||null!=html){
+            System.out.println("html = "+html);
             Map  returnMap  = new HashMap<>();
             Map lastResultMap = new HashMap<>();
             try{
@@ -57,7 +60,6 @@ public class HebaoSearchQueryCodePage extends BasePage {
 
                     mapResult.put("underWriteFlag", underWriteFlag);
                     mapResult.put("proposalNo", proposalNo);
-                    mapResult.put("policyNo", mapHebao.get("policyNo").toString());
                     lastResultMap.put(i, mapResult);
 
                 }

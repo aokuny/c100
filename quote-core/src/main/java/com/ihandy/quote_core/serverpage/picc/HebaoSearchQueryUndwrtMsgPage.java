@@ -56,7 +56,9 @@ public class HebaoSearchQueryUndwrtMsgPage extends BasePage {
                     Elements tds = trs.get(i).select("td");
                     Element  no = tds.get(0);
                     Element  msg = tds.get(3);
+                    Element time = tds.get(1);
                     nextParamMap.put("no", no.childNode(1).attributes().get("value"));
+                    nextParamMap.put("time", time.childNode(1).attributes().get("value"));
                     Node node = msg.childNode(1);
                     String msg1 = node.toString();
                     msg1 =  msg1.split(">")[1].split("<")[0];

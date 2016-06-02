@@ -48,7 +48,7 @@ public class TestHebao {
 	@Test
 	public  void  searchHebao(){
 
-		List<HebaoResponse> hebaoResponseList = 	irbService.getHebaoResponse("京P55M11");
+		HebaoResponse hebaoResponseList = 	irbService.getHebaoResponse("京P55M11");
 		System.out.println("\n");
 		System.out.println("return hebaoResponse = "+hebaoResponseList);
 	}

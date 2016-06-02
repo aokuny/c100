@@ -7,6 +7,8 @@ import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,6 +55,33 @@ public class StringBaseUtils {
 			logger.info("Get请求参数为 null，【HTTPGET PARAM IS NULL】");
 		}
 
+
+		return param;
+	}
+
+	public  static String  Map2StringURLEncoder(Map map){
+		String param = "";
+		if(null!= map){
+			Set<String> key = map.keySet();
+			for (Iterator it = key.iterator(); it.hasNext();) {
+				String keyName = (String) it.next();
+				String keyValue = map.get(keyName).toString();
+				try{
+					keyName = java.net.URLEncoder.encode(keyName, "gbk");
+					keyValue = java.net.URLEncoder.encode(keyValue, "gbk");
+				}
+				catch(Exception e){
+
+				}
+				param = param + keyName + "="+keyValue+"&";
+			}
+			if(!param.equals("")){
+				param =  param.substring(0,param.length()-1);//删除最后一个&符号
+			}
+
+		}else{
+			logger.info("Map ===null");
+		}
 
 		return param;
 	}
@@ -262,5 +291,33 @@ public class StringBaseUtils {
 		System.out.println("key  list length = "+list.size());
 		System.out.println("value list length = "+list1.size());
 
+	}
+
+	public static int compareDate(String DATE1, String DATE2) {
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		try {
+			Date dt1 = df.parse(DATE1);
+			Date dt2 = df.parse(DATE2);
+			if (dt1.getTime() > dt2.getTime()) {
+				// System.out.println("dt1 在dt2前");
+				return 1;
+			} else if (dt1.getTime() < dt2.getTime()) {
+				// System.out.println("dt1在dt2后");
+				return -1;
+			} else {
+				return 0;
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static String addParam(String startString,Map map){
+		String param = startString;
+		param = param+Map2GetParam(map);
+
+		return param;
 	}
 }

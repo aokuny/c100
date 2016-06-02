@@ -36,6 +36,7 @@ public class HebaoCommitEditCheckFlagPage extends BasePage {
         }
         Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
+        //System.out.print("html = "+html);
         return html;
     }
 
@@ -51,7 +52,8 @@ public class HebaoCommitEditCheckFlagPage extends BasePage {
                 map = StringBaseUtils.parseJSON2Map(html);
                 JSONArray jsonArray = JSONArray.fromObject(map);
                 Map map1 = (Map) jsonArray.get(0);
-                Map  dataMap = (Map) map1.get("data");
+                JSONArray jsonArray1 =  (JSONArray) map1.get("data");
+                Map  dataMap = (Map) jsonArray1.get(0);
                 try{
                     nextParamsMap.put("specialflag",dataMap.get("specialflag"));
                     nextParamsMap.put("checkFlag",dataMap.get("checkFlag"));

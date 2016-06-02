@@ -103,7 +103,7 @@ public class HeBaoSaveCheckAgentTypePage extends BasePage {
             }
         }
         requestMap.put("String", paramstr);
-       // System.out.println("paramsData = "+paramstr);
+        // System.out.println("paramsData = "+paramstr);
         requestMap.put("Map",map);
         returnMap.put("nextParams",requestMap);
         response.setResponseMap(returnMap);

@@ -33,11 +33,11 @@ public interface IService {
     /**
      * 通过车辆信息获取关系人信息
      */
-     List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo);
+    List<RelaPeopleResponse> getRelaPeopleInfoByCarInfoList(String licenseNo);
     /**
      * 通过车辆信息获取出险信息list
      */
-     List<ClaimResponse> getClaimInfoList(String licenseNo);
+    List<ClaimResponse> getClaimInfoList(String licenseNo);
 
     String commitHeBaoInfo(Response response);
 

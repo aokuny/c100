@@ -31,16 +31,16 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
         Map paraMap = new HashMap();
         String[] paramsArr = params.split("&");
         for(int i=0;i<paramsArr.length;i++){
-        	try{
-        	String[] kvArr = paramsArr[i].split("=");
-        	paraMap.put(kvArr[0], kvArr[1]);
-        	}catch(Exception e){
-        		
-        	}
+            try{
+                String[] kvArr = paramsArr[i].split("=");
+                paraMap.put(kvArr[0], kvArr[1]);
+            }catch(Exception e){
+
+            }
         }
         String param ="startDateBi="+paraMap.get("biStartDate").toString()+"&startHourBi=0" +
-                     "&startDateCi="+paraMap.get("ciStartDate").toString()+"&startHourCi=0" +
-                     "&bizType="+paraMap.get("bizType").toString();
+                "&startDateCi="+paraMap.get("ciStartDate").toString()+"&startHourCi=0" +
+                "&bizType="+paraMap.get("bizType").toString();
         url = url+"?"+param;
         Map map = HttpsUtil.sendGet(url,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
@@ -48,7 +48,7 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html, Request request) {
+    public Response getResponse(String html,Request request) {
         //解析{"msg":"0","totalRecords":0,"data":[]}
         Response response = new Response();
         if(!html.equals("")||null!=html){
@@ -61,7 +61,7 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
                 Map map1 = (Map) jsonArray.get(0);
                 String msg =  map1.get("msg").toString();
                 if(msg.equals("0")){
-                	nextParamsMap.put("checkTimeFlag", 0);
+                    nextParamsMap.put("checkTimeFlag", 0);
                     returnMap.put("nextParams",nextParamsMap);
                     response.setResponseMap(returnMap);
                     response.setReturnCode(SysConfigInfo.SUCCESS200);
@@ -90,25 +90,26 @@ public class HebaoSaveCheckEngageTimePage extends BasePage {
 
     @Override
     public Response run(Request request) {
-        String html = doRequest(request);        
-        Response response = getResponse(html, request);
+        String html = doRequest(request);
+        Response response = getResponse(html,request);
         String  params = request.getRequestParam().get("nextParams").toString();
         Map paraMap = new HashMap();
         String[] paramsArr = params.split("&");
         for(int i=0;i<paramsArr.length;i++){
-        	try{
-        	String[] kvArr = paramsArr[i].split("=");
-        	paraMap.put(kvArr[0], kvArr[1]);
-        	}catch(Exception e){
-        		
-        	}
+            String[] kvArr = paramsArr[i].split("=");
+
+            try{
+                paraMap.put(kvArr[0], kvArr[1]);
+            }catch(Exception e){
+                paraMap.put(kvArr[0], "");
+            }
         }
         Map map = (Map) response.getResponseMap().get("nextParams");
         if(map.containsKey("checkTimeFlag")){
-	        if(params.contains("checkTimeFlag=&")){
-	        	params = params.replace("checkTimeFlag=", "checkTimeFlag=0");
-	        	paraMap.put("checkTimeFlag", 0);
-	        }
+            if(params.contains("checkTimeFlag=&")){
+                params = params.replace("checkTimeFlag=", "checkTimeFlag=0");
+                paraMap.put("checkTimeFlag", 0);
+            }
         }
 
         Map strMap = new HashMap();

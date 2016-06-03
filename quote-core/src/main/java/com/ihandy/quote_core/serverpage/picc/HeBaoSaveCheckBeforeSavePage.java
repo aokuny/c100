@@ -1,10 +1,12 @@
 package com.ihandy.quote_core.serverpage.picc;
 
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
+import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
+import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -48,7 +50,7 @@ public class HeBaoSaveCheckBeforeSavePage extends BasePage {
             param = param +"&"+ "prpCitemCar.licenseType="+paraMap.get("prpCitemCar.licenseType");
             param = param +"&"+ "prpCitemCar.modelCode="+paraMap.get("prpCitemCar.modelCode");
             param = param +"&"+ "prpCitemCar.vinNo="+paraMap.get("prpCitemCar.vinNo");
-           //cmain
+            //cmain
             param = param +"&"+ "prpCmain.endDate="+paraMap.get("prpCmain.endDate");
             param = param +"&"+ "prpCmain.endHour="+paraMap.get("prpCmain.endHour");
             param = param +"&"+ "prpCmain.proposalNo="+paraMap.get("prpCmain.proposalNo");
@@ -73,7 +75,7 @@ public class HeBaoSaveCheckBeforeSavePage extends BasePage {
     }
 
     @Override
-    public Response getResponse(String html, Request request) {
+    public Response getResponse(String html,Request request) {
         //解析2,TDAA201611020000300881=TDZA201611020000308237,|
         Response response = new Response();
         if(!html.equals("")||null!=html){
@@ -102,33 +104,35 @@ public class HeBaoSaveCheckBeforeSavePage extends BasePage {
     @Override
     public Response run(Request request) {
         String html = doRequest(request);
-        Response response = getResponse(html, request);
+        Response response = getResponse(html,request);
         Map requestMap = request.getRequestParam();
         Map returnMap =  response.getResponseMap();
         Map nextMap =(Map) response.getResponseMap().get("nextParams");
         Map paramsMap = (Map) request.getRequestParam().get("Map");
         String  paramsStr = request.getRequestParam().get("String").toString();
-        
-       // paramsStr.replace("PayRefReason=", "");
+
+        // paramsStr.replace("PayRefReason=", "");
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
         for (Iterator it = key.iterator(); it.hasNext();) {
             String keyName = (String) it.next();
             String keyValue = nextMap.get(keyName).toString();
             try{
-            keyName = java.net.URLEncoder.encode(keyName, "gbk");
+                keyName = java.net.URLEncoder.encode(keyName, "gbk");
             }catch(Exception e){
-            	
-            }   
+
+            }
             if(paramsStr.contains(keyName+"=&")){
-            	//paramsStr = paramsStr.replace(keyName+"=", keyName+"="+keyValue);
+                //paramsStr = paramsStr.replace(keyName+"=", keyName+"="+keyValue);
             }
             if(paramsMap.containsKey(keyName)){
-            //	paramsMap.put(keyName, keyValue);
-            }    
+                //	paramsMap.put(keyName, keyValue);
+            }
         }
+
+
         requestMap.put("String",paramsStr);
         requestMap.put("Map",paramsMap);
-        
+
         returnMap.put("nextParams",requestMap);
         response.setResponseMap(returnMap);
         return response;

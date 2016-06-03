@@ -120,6 +120,7 @@ public class QuotePage extends BasePage{
 		String html = null;
 		try {
 			html = this.doRequest(request);
+			System.err.println(html);
 		} catch (Exception e) {
 			logger.error("PICC API 【HTTP请求出错】" + e.getMessage() + "，url：" + request.getUrl());
 		}

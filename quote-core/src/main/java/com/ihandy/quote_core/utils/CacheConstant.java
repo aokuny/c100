@@ -29,6 +29,14 @@ public class CacheConstant {
 		map.put("identifyNumber", "320684198411040279");//车主身份证
 		map.put("mobile", "13520030193");//车主手机号
 		renewalInfo.put("京P55M11", map);
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("reCiPolicyNo", "PDZA20151102T000162603");//上一年交强险投保单号
+		map1.put("reBiPolicyNo", "PDAT20151102T000158991");//上一年商业险投保单号
+		map1.put("ciEndDate", "2016-07-14");//上一年交强险结束日期
+		map1.put("biEndDate", "2016-07-14");//上一年商业险结束日期  
+		map1.put("identifyNumber", "110107196401121237");//车主身份证
+		map1.put("mobile", "13520030193");//车主手机号
+		renewalInfo.put("京MH0501", map1);
 	}
 	
 }

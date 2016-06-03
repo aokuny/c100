@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 /**
@@ -64,11 +65,48 @@ public class QuoteCalculateUtils {
      */  
     public static Double m2(Double f) { 
     	if(f== 0){
-			return 0D;
+    		return 0.00;
 		}
+    	if(f == null){
+    		return 0.00;
+    	}
     	DecimalFormat df = new DecimalFormat("######0.00");     
         return Double.parseDouble(df.format(f));
     }  
+    
+	/**
+	 * 保留几位有效数据，不够用0补全
+	 * @param s
+	 * @param n
+	 * @return
+	 */
+    public static String mN(String s, int n) { 
+    	StringBuffer sb = new StringBuffer();
+    	sb.append("0.");
+		for(int i=0; i<n; i++){
+			sb.append("0");
+		}
+    	if(StringUtils.isBlank(s)){
+    		return sb.toString();
+    	}
+    	DecimalFormat df = new DecimalFormat("######" + sb);
+    	s = String.valueOf(Double.parseDouble(df.format(Double.parseDouble(s))));
+    	String[] ss = s.split("[.]");
+    	int length = ss[1].length();
+    	if(length< n){
+    		StringBuffer sb1 = new StringBuffer();
+    		int sub = n - length;
+    		for(int i=0; i<sub ; i++){
+    			sb1.append("0");
+    		}
+    		s = s + sb1.toString();
+    	}
+        return s;
+    }  
+    
+    public static void main(String[] args) {
+		System.err.println(mN("256.22", 1));
+	}
 	
 	/**
 	 * 检查小数点后几位，如果不够两位补全

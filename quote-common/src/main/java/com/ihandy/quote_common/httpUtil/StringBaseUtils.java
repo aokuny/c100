@@ -6,6 +6,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -210,6 +213,8 @@ public class StringBaseUtils {
 		String[] result = {};
 		return list.toArray(result);
 	}
+
+	//string 转两位小数double
 	public static String  String2Double(String num){
 		String returnNum="";
 		try {
@@ -224,74 +229,7 @@ public class StringBaseUtils {
 		}
 		return returnNum;
 	}
-	public static void compareStringDifference(String right,String error){
-		String[] paramArr1=right.split("&");
-		String[] paramArr2=error.split("&");
-		List<String> list = new LinkedList<String>();
-		List<String> list1 = new LinkedList<String>();
-		for(int j=0;j<paramArr2.length;j++){
-			list.add(paramArr2[j].split("=")[0]);
-			try{
-				list1.add(paramArr2[j].split("=")[1]);
-			}catch(Exception e){
-				list1.add(null);
-			}
-		}
-		for(int i=0;i<paramArr1.length;i++){
-			paramArr1[i].split("=");
-			String[] key = {};   //创建空数组
-			key = (String[]) list.toArray(key);
-			String[] value = {};   //创建空数组
-			value = (String[]) list1.toArray(value);
-			if(error.contains(paramArr1[i].split("=")[0])){//包含
-				for(int j=0;j<key.length;j++){
-					if(key[j].equals(paramArr1[i].split("=")[0])){
-						String value1 ="";
-						String value2="";
-						try{
-							value1 = paramArr1[i].split("=")[1];
-							try{
-								value2 = value[j];
-								if(!value1.equals(value2)){
-									System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 =  "+value1+"       value2 =  "+value2);
-								}
-								list.remove(key[j]);
-								list1.remove(value[j]);
-								break;
-							}catch(Exception e2){
-								System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = "+value1+"  value2 =null");
-								list.remove(key[j]);
-								list1.remove(value[j]);
-								break;
-							}
-						}catch(Exception e){
-							try{
-								value2 = paramArr2[j].split("=")[1];
-								System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 ="+value2);
-								list.remove(key[j]);
-								list1.remove(value[j]);
-								break;
-							}catch(Exception e2){
-								list.remove(key[j]);
-								list1.remove(value[j]);
-								// System.out.println("key="+paramArr1[i].split("=")[0]+"   value1 = null   value2 =null");
-								break;
-							}
-						}
-					}//if end
-				}//for end
-			}else{
-				try{
-					System.out.println("no  "+paramArr1[i].split("=")[0] +" value="+paramArr1[i].split("=")[1]);
-				}catch(Exception e){
-					System.out.println("no  "+paramArr1[i].split("=")[0] +" value=null");
-				}
-			}//else end
-		}//for end
-		System.out.println("key  list length = "+list.size());
-		System.out.println("value list length = "+list1.size());
 
-	}
 
 	public static int compareDate(String DATE1, String DATE2) {
 
@@ -319,5 +257,49 @@ public class StringBaseUtils {
 		param = param+Map2GetParam(map);
 
 		return param;
+	}
+
+	 public static String readFile(String filePath)
+	{
+           // 读取txt内容为字符串
+		StringBuffer txtContent = new StringBuffer();
+         // 每次读取的byte数
+		byte[] b = new byte[8 * 1024];
+		InputStream in = null;
+		try
+		{
+           // 文件输入流
+			in = new FileInputStream(filePath);
+			while (in.read(b) != -1)
+			{
+// 字符串拼接
+				txtContent.append(new String(b));
+			}
+// 关闭流
+			in.close();
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (in != null)
+			{
+				try
+				{
+					in.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		return txtContent.toString();
 	}
 }

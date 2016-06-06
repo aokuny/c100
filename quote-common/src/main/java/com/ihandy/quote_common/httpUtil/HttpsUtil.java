@@ -1,10 +1,6 @@
 package com.ihandy.quote_common.httpUtil;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.CertificateException;
@@ -12,6 +8,7 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -350,6 +347,7 @@ public class HttpsUtil {
 			conn = url.openConnection();
 			if (StringUtils.isNoneBlank(sessionId)) {
 				conn.setRequestProperty("Cookie", sessionId);
+				cookieValue = sessionId;
 			}else{
 				Map <String,List<String>> headerFields = conn.getHeaderFields();
 				for(Map.Entry<String,List<String>> entry:headerFields.entrySet()){
@@ -444,5 +442,70 @@ public class HttpsUtil {
 		map.put("byte",img);
 		map.put("type",type);
 		return map;
+	}
+
+
+	/**
+	 * 图片流post上传
+	 * @param b
+	 * @param url
+	 * @param name
+	 * @return
+	 */
+	public static String uploadFile(byte[] b , String url , String name){
+		String BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
+		try {
+			URL u= new URL(url);
+			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+			//设置头部
+			huc.setReadTimeout(10*10000000);
+			huc.setConnectTimeout(10*10000000);
+			huc.setDoInput(true);
+			huc.setDoOutput(true);
+			huc.setUseCaches(false);
+			huc.setRequestMethod("POST");
+			huc.setRequestProperty("Charset", "utf-8");
+			huc.setRequestProperty("Connection", "keep-alive");
+			huc.setRequestProperty("Content-Type", "multipart/form-data;boundary="+BOUNDARY);
+			//设置头部结束
+
+			DataOutputStream dos = new DataOutputStream(huc.getOutputStream());
+			//文件写入准备工作
+			StringBuffer sb = new StringBuffer();
+			sb.append("--"+BOUNDARY+"\r\n");
+			sb.append("Content-Disposition: form-data; name=\""+name+"\"; filename=\"1.jpg\"\r\n");
+			sb.append("Content-Type: application/octet-stream; charset=utf-8\r\n" );
+			sb.append("\r\n");
+			dos.write(sb.toString().getBytes());
+			//文件写入准备工作结束
+
+			//开始写入文件流
+			dos.write(b, 0, b.length);
+			//写入文件流结束
+
+			//开始结尾工作
+			sb.delete(0, sb.length());
+			sb.append("\r\n--"+BOUNDARY+"--\r\n");
+			dos.write(sb.toString().getBytes());
+			//结束结尾工作
+
+			//传参结束
+			dos.flush();
+
+			//获取返回值
+			InputStream inStream = huc.getInputStream();
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int responseLen = 0;
+			while( (responseLen = inStream.read(buffer)) != -1 ){
+				outStream.write(buffer, 0, responseLen);
+			}
+			inStream.close();
+			byte[] data = outStream.toByteArray();
+			return new String(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

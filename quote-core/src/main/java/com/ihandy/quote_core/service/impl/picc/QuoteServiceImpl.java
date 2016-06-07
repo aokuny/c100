@@ -75,13 +75,22 @@ public class QuoteServiceImpl implements IQuoteService {
 				t3.start();
 				break;
 			case "-1"://全部
-				QuoteThreadPingan t4 = new QuoteThreadPingan(LicenseNo, param);
-				t4.start();
-				QuoteThreadCpic t5 = new QuoteThreadCpic(LicenseNo, param);
-				t5.start();
+				param.put("IntentionCompany", "2");
 				QuoteThreadPicc t6 = new QuoteThreadPicc(LicenseNo, param);
 				t6.start();
 				break;
+		}
+		//上传前，把以前的报价缓存进行删除
+		Map<String, Object> quoteResultMap = CacheConstant.quoteResultInfo.get(LicenseNo);
+		if(quoteResultMap != null){
+			if("-1".equals(IntentionCompany)){//全部清除
+				CacheConstant.quoteResultInfo.remove(LicenseNo);
+				logger.info("人保 API，【清除全部报价结果成功】，LicenseNo：" + LicenseNo);
+			}else{
+				quoteResultMap.remove(IntentionCompany);//存在的时候，就删除
+				CacheConstant.quoteResultInfo.put(LicenseNo, quoteResultMap);//在存放
+				logger.info("人保 API，【清除报价结果成功】，LicenseNo：" + LicenseNo + "，IntentionCompany：" + IntentionCompany);
+			}
 		}
 		postPrecisePricerResponse.setStatusMessage("险种信息上传成功");
 		return postPrecisePricerResponse;
@@ -366,12 +375,28 @@ public class QuoteServiceImpl implements IQuoteService {
 	}
 
 	@Override
-	public JSONObject getPrecisePrice(String LicenseNo, String IntentionCompany, String Agent, String CustKey,
-			String SecCode) {
+	public JSONObject getPrecisePrice(String LicenseNo, String IntentionCompany, String Agent, String CustKey, String SecCode) {
 		Map<String, Object> quoteMap = CacheConstant.quoteResultInfo.get(LicenseNo);
-		JSONObject quoteJson = (JSONObject) quoteMap.get(IntentionCompany);
+		JSONObject quoteJson = null;
+		for(int i=1;i<=4; i++){
+			try {
+				Thread.sleep(8000);//休眠10秒，再次进行查询
+			} catch (Exception e) {
+			}
+			logger.info("人保 API，【报价结果查询 " + i + " 次】，LicenseNo：" + LicenseNo);
+			if(quoteMap == null){//没有报价结果集
+				quoteMap = CacheConstant.quoteResultInfo.get(LicenseNo);
+				continue;
+			}
+			quoteJson = (JSONObject) quoteMap.get(IntentionCompany);
+			if(quoteJson == null){
+				continue;//没查询到，继续
+			}else{
+				break;//查询到了，结束
+			}
+		}
 		logger.info("人保 API，【报价结果查询】，LicenseNo：" + LicenseNo + "， IntentionCompany：" + IntentionCompany + "，结果：" + quoteJson);
 		return quoteJson;
 	}
-
+	
 }

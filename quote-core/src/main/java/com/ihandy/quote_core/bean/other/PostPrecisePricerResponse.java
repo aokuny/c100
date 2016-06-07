@@ -11,6 +11,7 @@ public class PostPrecisePricerResponse {
 	 * 	-10001：校验参数错误；？
 	 * 	-10002:请求报价信息失败；？
 	 */
+	
 	private String BusinessStatus;
 	/**
 	 * 错误信息描述

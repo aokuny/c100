@@ -90,6 +90,7 @@ public class QuoteThreadPicc extends Thread{
 				carMap.put("biEndDate", renewalMap.get("biEndDate"));//上一年商业险结束日期
 				carMap.put("identifyNumber", renewalMap.get("identifyNumber"));//车主身份证
 				carMap.put("mobile", renewalMap.get("mobile"));//车主手机号
+				logger.info("人保 API，【续保车辆报价】：" + LicenseNo);
 			}
 			
 			if(f){

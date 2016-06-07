@@ -1,5 +1,3 @@
-package com.ihandy.rbquote;
-
 import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
@@ -26,32 +24,26 @@ import javax.annotation.Resource;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-init.xml")
-public class TestHebao {
-	
-	private static Logger logger = LoggerFactory.getLogger(TestHebao.class);
+public class TestHeBao {
+
+    private static Logger logger = LoggerFactory.getLogger(TestHeBao.class);
     @Resource(name="RBServiceImpl")
     private IService irbService;
-     @Test
+    @Test
     public  void  testHebao(){
-    	Response response = new Response();
-		//HebaoCalAnciInfoPage hebaoCalAnciInfoPage = new HebaoCalAnciInfoPage(1);
-		//Request request = new Request();
-		//Map preMap =(Map)resp.getResponseMap().get("nextParams");
-		//request.setRequestParam(preMap);//
-		//request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CALANCIINFO);// GET
-		//Response responseHebaoCalAnciInfo = hebaoCalAnciInfoPage.run(request);
-		
-	   String code = 	irbService.commitHeBaoInfo(response);
-	   System.out.println("code = "+code);
+        Response response = new Response();
+
+        String code = 	irbService.commitHeBaoInfo(response);
+        System.out.println("code = "+code);
     }
 
-	@Test
+	/*@Test
 	public  void  searchHebao(){
 
-		HebaoResponse hebaoResponseList = 	irbService.getHebaoResponse("京P55M11");
+		HebaoResponse hebaoResponse = 	irbService.getHebaoResponse("京P55M11");
 		System.out.println("\n");
-		System.out.println("return hebaoResponse = "+hebaoResponseList);
-	}
+		System.out.println("return hebaoResponse = "+hebaoResponse);
+	}*/
      /* @Test
     public void testGetprpAnciInfo() {
         Map nextParamsMap = new HashMap<>();
@@ -355,15 +347,15 @@ public class TestHebao {
             }
             returnMap.put("lastResult",lastResultMap);
     }
-    
+
     public void test1(){
-    	
+
     	HebaoResponse response = irbService.getHebaoResponse("京P55M11");
     }
     public void test2(){
     	Response response = new Response();
     	String  responseCode = irbService.commitHeBaoInfo( response);
     }*/
-    
-    
+
+
 }

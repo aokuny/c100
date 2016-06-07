@@ -43,7 +43,7 @@
     <belerweb.version>2.5.0</belerweb.version>
     <gson.version>2.2.4</gson.version>
     <axis.version>1.4</axis.version>
-    <junit.version>4.5</junit.version>
+    <junit.version>4.12</junit.version>
     <jxl.version>2.6.12</jxl.version>
     <jmimemagic.version>0.1.2</jmimemagic.version>
     <xstream.version>1.4.2</xstream.version>

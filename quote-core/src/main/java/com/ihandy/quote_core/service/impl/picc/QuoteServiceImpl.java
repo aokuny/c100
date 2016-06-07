@@ -315,6 +315,8 @@ public class QuoteServiceImpl implements IQuoteService {
 		map.put("IntentionCompany", IntentionCompany);
 		map.put("InsuredName", InsuredName);
 		map.put("InsuredIdCard", InsuredIdCard);
+		map.put("InsuredIdType", InsuredIdType);
+		map.put("InsuredMobile", InsuredMobile);
 		map.put("CityCode", CityCode);
 		map.put("EngineNo", EngineNo);
 		map.put("CarVin", CarVin);

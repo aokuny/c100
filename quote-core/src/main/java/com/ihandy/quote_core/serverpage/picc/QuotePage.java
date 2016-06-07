@@ -97,13 +97,17 @@ public class QuotePage extends BasePage{
 				}
 			}
 			Map<String, Double> premiumMapFujia = new HashMap<>();
-			premiumMapFujia.put("premium", QuoteCalculateUtils.m2(bujimianFujia));
-			premiumMapFujia.put("amount", 0D);
-			returnMap.put("BuJiMianFuJia", premiumMapFujia);
+			if(bujimianFujia != 0){
+				premiumMapFujia.put("premium", QuoteCalculateUtils.m2(bujimianFujia));
+				premiumMapFujia.put("amount", 0D);
+				returnMap.put("BuJiMianFuJia", premiumMapFujia);
+			}
 			Map<String, Double> premiumMapRenyuan = new HashMap<>();
-			premiumMapRenyuan.put("premium", QuoteCalculateUtils.m2(bujimianRenyuan));
-			premiumMapRenyuan.put("amount", 0D);
-			returnMap.put("BuJiMianRenYuan", premiumMapRenyuan);
+			if(bujimianRenyuan != 0){
+				premiumMapRenyuan.put("premium", QuoteCalculateUtils.m2(bujimianRenyuan));
+				premiumMapRenyuan.put("amount", 0D);
+				returnMap.put("BuJiMianRenYuan", premiumMapRenyuan);
+			}
 			response.setResponseMap(returnMap);
             response.setReturnCode(SysConfigInfo.SUCCESS200);
             response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
@@ -120,7 +124,6 @@ public class QuotePage extends BasePage{
 		String html = null;
 		try {
 			html = this.doRequest(request);
-			System.err.println(html);
 		} catch (Exception e) {
 			logger.error("PICC API 【HTTP请求出错】" + e.getMessage() + "，url：" + request.getUrl());
 		}

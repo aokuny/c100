@@ -5,8 +5,12 @@ import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
+import com.ihandy.quote_core.utils.QuoteCalculateUtils;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -51,7 +55,30 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                 jsonArray = JSONArray.fromObject(map);
                 Map map1 = (Map) jsonArray.get(0);
                 JSONArray data = (JSONArray) map1.get("data");
-
+                //把金钱全部转换为保留2位小数
+                for(int i = 0; i < data.size() ; i++){
+                	JSONObject obj = data.getJSONObject(i);
+                	//delinquentFee
+                	String delinquentFee = obj.getString("delinquentFee");
+                	if(StringUtils.isNoneBlank(delinquentFee) && !"null".equals(delinquentFee)){
+                		obj.put("delinquentFee", QuoteCalculateUtils.mN(delinquentFee, 2));
+                	}
+                	//planFee
+                	String planFee = obj.getString("planFee");
+                	if(StringUtils.isNoneBlank(planFee) && !"null".equals(planFee)){
+                		obj.put("planFee", QuoteCalculateUtils.mN(planFee, 2));
+                	}
+                	//netPremium
+                	String netPremium = obj.getString("netPremium");
+                	if(StringUtils.isNoneBlank(netPremium) && !"null".equals(netPremium)){
+                		obj.put("netPremium", QuoteCalculateUtils.mN(netPremium, 2));
+                	}
+                	//taxPremium
+                	String taxPremium = obj.getString("taxPremium");
+                	if(StringUtils.isNoneBlank(taxPremium) && !"null".equals(taxPremium)){
+                		obj.put("taxPremium", QuoteCalculateUtils.mN(taxPremium, 2));
+                	}
+                }
 
                 //上个请求返回的参数继续传递下去
 

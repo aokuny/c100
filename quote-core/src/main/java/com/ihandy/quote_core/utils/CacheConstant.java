@@ -36,7 +36,23 @@ public class CacheConstant {
 		map1.put("biEndDate", "2016-07-14");//上一年商业险结束日期  
 		map1.put("identifyNumber", "110107196401121237");//车主身份证
 		map1.put("mobile", "13520030193");//车主手机号
-		renewalInfo.put("京MH0501", map1);
+		//renewalInfo.put("京MH0501", map1);
+		Map<String, Object> map2 = new HashMap<>();
+		map2.put("reCiPolicyNo", "PDZA201511010000566671");//上一年交强险投保单号
+		map2.put("reBiPolicyNo", "PDAA201511010000504540");//上一年商业险投保单号
+		map2.put("ciEndDate", "2016-06-30");//上一年交强险结束日期
+		map2.put("biEndDate", "2016-06-30");//上一年商业险结束日期  
+		map2.put("identifyNumber", "110105195312190436");//车主身份证
+		map2.put("mobile", "13520030192");//车主手机号
+		renewalInfo.put("京KL3491", map2);
+		Map<String, Object> map3 = new HashMap<>();
+		map3.put("reCiPolicyNo", "PDZA201611010000525920");//上一年交强险投保单号
+		map3.put("reBiPolicyNo", "PDAA201511010000504540");//上一年商业险投保单号
+		map3.put("ciEndDate", "2016-06-30");//上一年交强险结束日期
+		map3.put("biEndDate", "2016-06-30");//上一年商业险结束日期  
+		map3.put("identifyNumber", "110105195312190436");//车主身份证
+		map3.put("mobile", "13520030192");//车主手机号
+		renewalInfo.put("", map3);
 	}
 	
 }

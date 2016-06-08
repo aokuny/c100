@@ -75,7 +75,7 @@ public class QuoteServiceImpl implements IQuoteService {
 				t3.start();
 				break;
 			case "-1"://全部
-				param.put("IntentionCompany", "2");
+				param.put("IntentionCompany", SysConfigInfo.PICC_FLAG.toString());
 				QuoteThreadPicc t6 = new QuoteThreadPicc(LicenseNo, param);
 				t6.start();
 				break;

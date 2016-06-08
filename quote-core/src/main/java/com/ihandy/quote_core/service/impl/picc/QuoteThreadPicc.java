@@ -75,7 +75,6 @@ public class QuoteThreadPicc extends Thread{
 			quoteBeforeRequest2.setRequestParam(quoteBeforeMap2);
 			QuoteBefore2Page quoteBefore2Page = new QuoteBefore2Page(1);
 			quoteBefore2Page.run(quoteBeforeRequest2);
-			
 			String param  = null;//请求参数
 			//封装请求参数
 			boolean f = true;//是否续保
@@ -84,6 +83,11 @@ public class QuoteThreadPicc extends Thread{
 			if(renewalMap == null || (!renewalMap.containsKey("reCiPolicyNo") && !renewalMap.containsKey("reBiPolicyNo"))){
 				f = false;
 			}else{
+				//判断是否查询出来车主信息
+				String owner = (String) carMap.get("owner");
+				if(StringUtils.isBlank(owner)){
+					carMap.put("owner", renewalMap.get("owner"));
+				}
 				carMap.put("reCiPolicyNo", renewalMap.get("reCiPolicyNo"));//上一年交强险投保单号
 				carMap.put("reBiPolicyNo", renewalMap.get("reBiPolicyNo"));//上一年商业险投保单号
 				carMap.put("ciEndDate", renewalMap.get("ciEndDate"));//上一年交强险结束日期
@@ -187,7 +191,7 @@ public class QuoteThreadPicc extends Thread{
 			if("1".equals(quoteMap.get("ForceTax"))){//报价交强险
 				param = this.setJqxHebaoParam(param, LicenseNo, (String) carMap.get("identifyNumber"));
 			}
-			//System.err.println(param);
+			System.err.println(param);
 			//辅助核保计算
 //			String url = "http://10.134.136.48:8000/prpall/business/refreshPlanByTimes.do";
 //			String html = HttpsUtil.sendPost(url,param, quotePage.piccSessionId, "utf-8").get("html");

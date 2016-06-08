@@ -80,6 +80,9 @@ public class SysConfigInfo {
 
     /**----------------------------- 返回保险公司信息 ----------------------------------*/
     public static String  PICC_NAME;
+    
+    /**------------------------------保险公司标识------------------------*/
+    public static Integer PICC_FLAG;
 
     /** 玻璃险值 */
     public static List<String> boliValueList = new ArrayList<String>();
@@ -193,6 +196,8 @@ public class SysConfigInfo {
             insuranceNameMap.put("不计免赔率（机动车盗抢险）", "BuJiMianDaoQiang");
             insuranceNameMap.put("不计免赔率（车身划痕损失险）", "BuJiMianFuJia");
             insuranceNameMap.put("不计免赔率（车上人员责任险（司机））", "BuJiMianRenYuan");
+            //保险公司标识
+            PICC_FLAG =  Integer.parseInt(getString("picc_flag","2"));
         } catch (Exception e) {
             logger.error("加载属性文件失败",e);
         }

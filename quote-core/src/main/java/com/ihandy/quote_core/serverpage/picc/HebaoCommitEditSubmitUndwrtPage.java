@@ -29,9 +29,9 @@ public class HebaoCommitEditSubmitUndwrtPage extends BasePage {
         Map paraMap = request.getRequestParam();
         String param ="";
         try{
-        	String TDAA = paraMap.get("TDAA").toString();
-        	String TDZA = paraMap.get("TDZA").toString();
-        	if(StringUtils.isNotBlank(TDAA)){
+         	String TDAA = String.valueOf(paraMap.get("TDAA"));
+        	String TDZA = String.valueOf(paraMap.get("TDZA"));
+        	if(StringUtils.isNotBlank(TDAA) && !"null".equals(TDAA)){
         		param ="bizNo=" +TDAA;
         	}else{
         		param ="bizNo=" +TDZA;

@@ -17,6 +17,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
+import com.ihandy.quote_core.serverpage.picc.HeBaoSaveCheckAgentTypePage;
+import com.ihandy.quote_core.serverpage.picc.HeBaoSaveCheckBeforeSavePage;
+import com.ihandy.quote_core.serverpage.picc.HebaoCalAnciInfoPage;
+import com.ihandy.quote_core.serverpage.picc.HebaoCommitEditCheckFlagPage;
+import com.ihandy.quote_core.serverpage.picc.HebaoCommitEditSubmitUndwrtPage;
+import com.ihandy.quote_core.serverpage.picc.HebaoSaveCheckEngageTimePage;
+import com.ihandy.quote_core.serverpage.picc.HebaoSaveInsertPage;
+import com.ihandy.quote_core.serverpage.picc.HebaoSaveQueryPayForPage;
+import com.ihandy.quote_core.serverpage.picc.HebaoSaveRefreshPlanByTimesPage;
 import com.ihandy.quote_core.serverpage.picc.QuoteBefore1Page;
 import com.ihandy.quote_core.serverpage.picc.QuoteBefore2Page;
 import com.ihandy.quote_core.serverpage.picc.QuoteGetCarInfoOtherPage;
@@ -191,14 +200,18 @@ public class QuoteThreadPicc extends Thread{
 			if("1".equals(quoteMap.get("ForceTax"))){//报价交强险
 				param = this.setJqxHebaoParam(param, LicenseNo, (String) carMap.get("identifyNumber"));
 			}
-			System.err.println(param);
-			//辅助核保计算
-//			String url = "http://10.134.136.48:8000/prpall/business/refreshPlanByTimes.do";
-//			String html = HttpsUtil.sendPost(url,param, quotePage.piccSessionId, "utf-8").get("html");
-//			System.err.println("缴费计划结果：" + html);
-//			String url = "http://10.134.136.48:8000/prpall/undwrtassist/calAnciInfo.do";
-//			String html = HttpsUtil.sendPost(url,param, quotePage.piccSessionId, "utf-8").get("html");
-//			System.err.println("辅助核保计算结果：" + html);
+			//判断是否核保
+			if("1".equals((String) quoteMap.get("IsSingleSubmit"))){
+				logger.info("人保 API接口，【开始插入核保】，牌照：" + LicenseNo);
+				long hebaoStartTime = System.currentTimeMillis();
+				try {
+					this.commitHeBaoInfo(param);
+				} catch (Exception e) {
+					logger.error("人保 AIP接口，【插入核保报错】，牌照：" + LicenseNo + "，" + e.getMessage());
+					e.printStackTrace();
+				}
+				logger.info("人保 API接口，【结束插入核保】，牌照：" + LicenseNo + "使用时间：" + ((System.currentTimeMillis() - hebaoStartTime)/1000) + "S");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -455,12 +468,17 @@ public class QuoteThreadPicc extends Thread{
 		}
 		
 		try {
-			carNo =  java.net.URLEncoder.encode(carNo,   "gb2312");
 			owner =  java.net.URLEncoder.encode(owner,   "gb2312");
+		} catch (Exception e) {
+			logger.error("人保 API接口，【转码车主姓名，报错】，" + e.getMessage());
+		}
+		
+		try {
+			carNo =  java.net.URLEncoder.encode(carNo,   "gb2312");
 			brandName =  java.net.URLEncoder.encode(brandName,   "gb2312");
 			modelCodeAlias =  java.net.URLEncoder.encode(modelCodeAlias,   "gb2312");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("人保 API接口，【转码carNo、brandName、modelCodeAlias，报错】，" + e.getMessage());
 		}
 		
 		
@@ -517,7 +535,7 @@ public class QuoteThreadPicc extends Thread{
 	 */
 	private String makeQuoteInsuredInfoParam(Map<String, String> quoteParam, String param3, String owner, String id, String mobile){
 		//车主身份证为空的时候，查询
-		if(StringUtils.isBlank(id)){
+		if(StringUtils.isBlank(id) && StringUtils.isNoneBlank(owner)){
 			QuoteGetUserInfoByNamePage quoteGetUserInfoByNamePage = new QuoteGetUserInfoByNamePage(1);
 			Request request = new Request();
 			request.setUrl("http://10.134.136.48:8300/cif/customperson/findCustomPersonIntf.do?pageSize=10&pageNo=1");
@@ -532,14 +550,16 @@ public class QuoteThreadPicc extends Thread{
 		try {
 			owner =  java.net.URLEncoder.encode(owner,   "gb2312");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("人保 API接口，【转码车主姓名，报错】，" + e.getMessage());
 		}
 		//车主
-		param3 = param3.replace("prpCinsureds%5B0%5D.insuredName=", "prpCinsureds%5B0%5D.insuredName=" + owner);//车主姓名
-		param3 = param3.replace("prpCinsureds%5B0%5D.identifyType=", "prpCinsureds%5B0%5D.identifyType=01");//证件类型
-		param3 = param3.replace("prpCinsureds%5B0%5D.identifyNumber=", "prpCinsureds%5B0%5D.identifyNumber=" + id);//证件号码
-		param3 = param3.replace("prpCinsureds%5B0%5D.phoneNumber=", "prpCinsureds%5B0%5D.phoneNumber=" + mobile);//手机
-		param3 = param3.replace("prpCinsureds%5B0%5D.mobile=", "prpCinsureds%5B0%5D.mobile=" + mobile);//手机
+		if(StringUtils.isNoneBlank(owner)){//外地车牌照，无法查询出车主信息
+			param3 = param3.replace("prpCinsureds%5B0%5D.insuredName=", "prpCinsureds%5B0%5D.insuredName=" + owner);//车主姓名
+			param3 = param3.replace("prpCinsureds%5B0%5D.identifyType=", "prpCinsureds%5B0%5D.identifyType=01");//证件类型
+			param3 = param3.replace("prpCinsureds%5B0%5D.identifyNumber=", "prpCinsureds%5B0%5D.identifyNumber=" + id);//证件号码
+			param3 = param3.replace("prpCinsureds%5B0%5D.phoneNumber=", "prpCinsureds%5B0%5D.phoneNumber=" + mobile);//手机
+			param3 = param3.replace("prpCinsureds%5B0%5D.mobile=", "prpCinsureds%5B0%5D.mobile=" + mobile);//手机
+		}
 		
 		String InsuredName = quoteParam.get("InsuredName");
 		String InsuredIdCard = quoteParam.get("InsuredIdCard");
@@ -564,6 +584,15 @@ public class QuoteThreadPicc extends Thread{
 			param3 = param3.replace("prpCinsureds%5B1%5D.identifyNumber=","prpCinsureds%5B1%5D.identifyNumber=" + InsuredIdCard);// 证件号码
 			param3 = param3.replace("prpCinsureds%5B1%5D.phoneNumber=", "prpCinsureds%5B1%5D.phoneNumber=" + InsuredMobile);// 手机
 			param3 = param3.replace("prpCinsureds%5B1%5D.mobile=", "prpCinsureds%5B1%5D.mobile=" + InsuredMobile);// 手机
+			
+			if(StringUtils.isBlank(owner)){
+				param3 = param3.replace("prpCinsureds%5B0%5D.insuredName=", "prpCinsureds%5B0%5D.insuredName=" + InsuredName);//车主姓名
+				param3 = param3.replace("prpCinsureds%5B0%5D.identifyType=", "prpCinsureds%5B0%5D.identifyType=01");//证件类型
+				param3 = param3.replace("prpCinsureds%5B0%5D.identifyNumber=", "prpCinsureds%5B0%5D.identifyNumber=" + InsuredIdCard);//证件号码
+				param3 = param3.replace("prpCinsureds%5B0%5D.phoneNumber=", "prpCinsureds%5B0%5D.phoneNumber=" + InsuredMobile);//手机
+				param3 = param3.replace("prpCinsureds%5B0%5D.mobile=", "prpCinsureds%5B0%5D.mobile=" + InsuredMobile);//手机
+			}
+			
 		}
 		return param3;
 	}
@@ -1339,8 +1368,10 @@ public class QuoteThreadPicc extends Thread{
 		param = param.replace("prpCcarShipTax.flag=", "prpCcarShipTax.flag=" + ciCarShipTax.getString("flag"));
 		//第十部分：设置交强险
 		param = param.replace("prpCitemKindCI.benchMarkPremium=", "prpCitemKindCI.benchMarkPremium=950");
-		String ciPremium = ciInsureDemand.getString("premium");
-		ciPremium = QuoteCalculateUtils.mN(ciPremium, 2);
+//		String ciPremium = ciInsureDemand.getString("premium");
+//		ciPremium = QuoteCalculateUtils.mN(ciPremium, 2);
+		Double ciPremium = ciInsureDemand.getDouble("premium");
+		ciPremium = QuoteCalculateUtils.m2(ciPremium);
 		param = param.replace("prpCitemKindCI.premium=", "prpCitemKindCI.premium=" + ciPremium);
 		String ciNetPremium = ciInsureDemand.getString("netPremium");
 		ciNetPremium = QuoteCalculateUtils.mN(ciNetPremium, 2);
@@ -1391,7 +1422,8 @@ public class QuoteThreadPicc extends Thread{
 		param = param.replace("sumPremiumChgFlag=0", "sumPremiumChgFlag=1");
 		param = param.replace("premiumChangeFlag=1", "premiumChangeFlag=");
 		param = param.replace("prpCmain.othFlag=110000YY00", "prpCmain.othFlag=100000YY00");//?
-		ciSumDiscount = QuoteCalculateUtils.sub(950, Double.parseDouble(ciPremium)) ;
+//		ciSumDiscount = QuoteCalculateUtils.sub(950, Double.parseDouble(ciPremium)) ;
+		ciSumDiscount = QuoteCalculateUtils.sub(950, ciPremium) ;
 		param = param.replace("prpCmainCI.sumDiscount=", "prpCmainCI.sumDiscount=" + QuoteCalculateUtils.mN(String.valueOf(ciSumDiscount), 2));
 		param = param.replace("sumPayTax1=0", "sumPayTax1=" + QuoteCalculateUtils.mN(ciCarShipTax.getString("thisPayTax"), 2));
 		param = param.replace("prpCstampTaxCI.ciPayTax=", "prpCstampTaxCI.ciPayTax=0");
@@ -1414,5 +1446,90 @@ public class QuoteThreadPicc extends Thread{
 		param = param.replace("prpCsettlement.buyerPreFee=", "prpCsettlement.buyerPreFee=" + sumPremium1);
 		
 		return param;
+	}
+	
+	/**
+	 * 插入核保相关数据
+	 * @param url
+	 * @return
+	 */
+	public String commitHeBaoInfo(String url) {
+		String code="";
+		String DAAno="";
+		String DZAno="";
+		Response response = new Response();
+		HebaoCalAnciInfoPage hebaoCalAnciInfoPage = new HebaoCalAnciInfoPage(1);
+		Request request = new Request();
+		//替换日期
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		url = url.replace("2016-05-23", sdf.format(new Date()));
+		Map preMap =new HashMap();
+		preMap.put("nextParams", url);
+		request.setRequestParam(preMap);//
+		request.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_CALANCIINFO);// GET
+		Response responseHebaoCalAnciInfo = hebaoCalAnciInfoPage.run(request);
+		if(responseHebaoCalAnciInfo.getReturnCode()==SysConfigInfo.SUCCESS200){
+			Map nextParamsMap  = responseHebaoCalAnciInfo.getResponseMap();
+			//保存1操作
+			HebaoSaveCheckEngageTimePage hebaoSaveCheckEngageTimePage = new HebaoSaveCheckEngageTimePage(1);
+			Request request1 =new Request();
+			request1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE1);
+			request1.setRequestParam(nextParamsMap);
+			Response response1 = hebaoSaveCheckEngageTimePage.run(request1);
+			//保存2操作
+			HeBaoSaveCheckAgentTypePage heBaoSaveCheckAgentTypePage = new HeBaoSaveCheckAgentTypePage(1);
+			Request request2 =new Request();
+			request2.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE2);
+			request2.setRequestParam(response1.getResponseMap());
+			Response response2 = heBaoSaveCheckAgentTypePage.run(request2);
+			//保存3操作
+			HebaoSaveQueryPayForPage hebaoSaveQueryPayForPage = new HebaoSaveQueryPayForPage(1);
+			Request request3 =new Request();
+			request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE3);
+			request3.setRequestParam((Map)response2.getResponseMap().get("nextParams"));
+			Response response3 = hebaoSaveQueryPayForPage.run(request3);
+			//保存4操作
+			HebaoSaveRefreshPlanByTimesPage hebaoSaveRefreshPlanByTimesPage = new HebaoSaveRefreshPlanByTimesPage(1);
+			Request request4 =new Request();
+			request4.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE4);
+			request4.setRequestParam((Map)response3.getResponseMap().get("nextParams"));
+			Response response4 = hebaoSaveRefreshPlanByTimesPage.run(request4);
+			//保存5操作
+			HeBaoSaveCheckBeforeSavePage heBaoSaveCheckBeforeSavePage = new HeBaoSaveCheckBeforeSavePage(1);
+			Request request5 =new Request();
+			request5.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE5);
+			request5.setRequestParam((Map)response4.getResponseMap().get("nextParams"));
+			Response response5 = heBaoSaveCheckBeforeSavePage.run(request5);
+			//保存6操作
+			HebaoSaveInsertPage hebaoSaveInsertPage = new HebaoSaveInsertPage(1);
+			Request request6 =new Request();
+			request6.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSAVE6);
+			request6.setRequestParam((Map)response4.getResponseMap().get("nextParams"));
+			Response response6 = hebaoSaveInsertPage.run(request6);
+
+			//提交核保1操作
+			HebaoCommitEditCheckFlagPage hebaoCommitEditCheckFlagPage = new HebaoCommitEditCheckFlagPage(1);
+			Request requestCommit1 =new Request();
+			requestCommit1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOCOMMIT1);
+			requestCommit1.setRequestParam((Map)response6.getResponseMap().get("nextParams"));
+			Response responseCommit1 = hebaoCommitEditCheckFlagPage.run(requestCommit1);
+
+			//提交核保2操作
+			HebaoCommitEditSubmitUndwrtPage hebaoCommitEditSubmitUndwrtPage = new HebaoCommitEditSubmitUndwrtPage(1);
+			Request requestCommit2 =new Request();
+			requestCommit2.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOCOMMIT2);
+			requestCommit2.setRequestParam((Map)response6.getResponseMap().get("nextParams"));
+			Response responseCommit2 = hebaoCommitEditSubmitUndwrtPage.run(requestCommit2);
+			//返回核保单号
+			Map mapTDAA = (Map) response6.getResponseMap().get("nextParams");
+			DAAno = mapTDAA.get("TDAA").toString();
+			//返回关联保单号
+			DZAno = mapTDAA.get("TDZA").toString();
+		}else{
+			logger.info("机器人抓取，获取辅助计算核保参数失败");
+		}
+		logger.info("人保AIP，【插入核保结果】，商业险投保单号："  + DAAno + "，交强险投保单号：" + DZAno);
+		code = "DAAno = "+DAAno+",DZAno = "+DZAno;
+		return code;
 	}
 }

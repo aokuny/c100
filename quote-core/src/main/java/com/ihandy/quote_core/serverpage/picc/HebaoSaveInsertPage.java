@@ -37,7 +37,7 @@ public class HebaoSaveInsertPage extends BasePage {
             param = request.getRequestParam().get("String").toString();
             param = param.replace("[", "%5B");
             param = param.replace("]", "%5D");
-            System.out.println("ErrorParam = "+param);
+            //System.out.println("ErrorParam = "+param);
         }catch(Exception e) {
             logger.info("抓取机器人，【 PICC 核保保存6获取post参数失败】");
         }
@@ -60,7 +60,6 @@ public class HebaoSaveInsertPage extends BasePage {
     @Override
     public Response getResponse(String html,Request request) {
         //解析TDAA201611010000936876,TDZA201611010000959123
-    	System.err.println("-----------" + html);
         Response response = new Response();
         if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();

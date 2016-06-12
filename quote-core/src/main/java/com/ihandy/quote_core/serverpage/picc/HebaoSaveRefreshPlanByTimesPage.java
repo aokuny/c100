@@ -47,7 +47,8 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         Response response = new Response();
         if(!html.equals("")||null!=html){
             Map  returnMap  = new HashMap<>();
-            Map nextParamsMap = new HashMap<>();
+            Map nextParamsMap = new HashMap<>();//下一次请求需要的参数
+            Map nextParamsMap1 = new LinkedHashMap<>();//拼接的参数
             try{
                 Map map = new HashMap<>();
                 map = StringBaseUtils.parseJSON2Map(html);
@@ -61,12 +62,12 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                 	//delinquentFee
                 	String delinquentFee = obj.getString("delinquentFee");
                 	if(StringUtils.isNoneBlank(delinquentFee) && !"null".equals(delinquentFee)){
-                		obj.put("delinquentFee", QuoteCalculateUtils.mN(delinquentFee, 2));
+                		//obj.put("delinquentFee", QuoteCalculateUtils.mN(delinquentFee, 2));
                 	}
                 	//planFee
                 	String planFee = obj.getString("planFee");
                 	if(StringUtils.isNoneBlank(planFee) && !"null".equals(planFee)){
-                		obj.put("planFee", QuoteCalculateUtils.mN(planFee, 2));
+                		//obj.put("planFee", QuoteCalculateUtils.mN(planFee, 2));
                 	}
                 	//netPremium
                 	String netPremium = obj.getString("netPremium");
@@ -84,8 +85,6 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
 
                 String  paramsStr = request.getRequestParam().get("String").toString();
                 // int ii=0;
-                //1）组装 prpCplanTemps
-                Map nextParamsMap1 = new LinkedHashMap<>();
                 for(int i=0;i<data.size();i++){
                     Map mapPrpCplanTemps = (Map)data.get(i);
                     Map expireDate = (Map) mapPrpCplanTemps.get("planDate");
@@ -111,7 +110,36 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         nextParamsMap.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
                         nextParamsMap.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
                         nextParamsMap.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
-
+                        String taxPremium = String.valueOf(mapPrpCplanTemps.get("taxPremium"));
+                        if(StringUtils.isNotBlank(taxPremium) && !"null".equals(taxPremium)){
+                        	nextParamsMap.put("prpCplanTemps["+i+"].taxPremium", taxPremium);
+                        }else{
+                        	nextParamsMap.put("prpCplanTemps["+i+"].taxPremium", "");
+                        }
+                        if(paramsStr.contains("planfee_index=0")){//非续保，不包含，prpCplanTemps%5B0%5D
+                        	 nextParamsMap1.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
+                             nextParamsMap1.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].endorseNo",mapPrpCplanTemps.get("endorseNo"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].flag",mapPrpCplanTemps.get("flag"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].isBICI",mapPrpCplanTemps.get("isBICI"));
+                             if(mapPrpCplanTemps.get("netPremium").toString().equals("")||mapPrpCplanTemps.get("netPremium").toString().equals("null")){
+                                 nextParamsMap1.put("prpCplanTemps["+i+"].netPremium","");
+                             }else{
+                                 nextParamsMap1.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                             }
+                             //nextParamsMap.put("prpCplanTemps["+i+"].netPremium",mapPrpCplanTemps.get("netPremium"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].payNo", mapPrpCplanTemps.get("payNo"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].payReason",mapPrpCplanTemps.get("payReason"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].planDate",expireDateStr);
+                             nextParamsMap1.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
+                             nextParamsMap1.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
+                             if(StringUtils.isNotBlank(taxPremium) && !"null".equals(taxPremium)){
+                             	nextParamsMap1.put("prpCplanTemps["+i+"].taxPremium", taxPremium);
+                             }else{
+                             	nextParamsMap1.put("prpCplanTemps["+i+"].taxPremium", "");
+                             }
+                        }
                     }else{
                         nextParamsMap1.put("prpCplanTemps["+i+"].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
                         nextParamsMap1.put("prpCplanTemps["+i+"].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
@@ -130,7 +158,12 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         nextParamsMap1.put("prpCplanTemps["+i+"].planFee", mapPrpCplanTemps.get("planFee"));
                         nextParamsMap1.put("prpCplanTemps["+i+"].serialNo",mapPrpCplanTemps.get("serialNo"));
                         nextParamsMap1.put("prpCplanTemps["+i+"].subsidyRate",mapPrpCplanTemps.get("subsidyRate"));
-
+                        String taxPremium = String.valueOf(mapPrpCplanTemps.get("taxPremium"));
+                        if(StringUtils.isNotBlank(taxPremium) && !"null".equals(taxPremium)){
+                        	nextParamsMap1.put("prpCplanTemps["+i+"].taxPremium", taxPremium);
+                        }else{
+                        	nextParamsMap1.put("prpCplanTemps["+i+"].taxPremium", "");
+                        }
                     }
 
                     if(mapPrpCplanTemps.get("taxPremium").toString().equals("")||mapPrpCplanTemps.get("taxPremium").toString().equals("null")){
@@ -161,17 +194,13 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                         nextParamsMap.put("cplans_[0].backPlanFee",mapPrpCplanTemps.get("planFee"));
                         nextParamsMap.put("cplan_[0].payReasonC",payReasonName);
                         nextParamsMap.put("description_[0].currency",currency);
-
                         nextParamsMap.put("prpCplanTemps_[0].payNo", mapPrpCplanTemps.get("payNo"));
                         nextParamsMap.put("prpCplanTemps_[0].serialNo",mapPrpCplanTemps.get("serialNo"));
                         nextParamsMap.put("prpCplanTemps_[0].endorseNo",mapPrpCplanTemps.get("endorseNo"));
-
                         nextParamsMap.put("prpCplanTemps_[0].payReason",mapPrpCplanTemps.get("payReason"));
                         nextParamsMap.put("prpCplanTemps_[0].planDate",expireDateStr);
-
                         nextParamsMap.put("prpCplanTemps_[0].currency",mapPrpCplanTemps.get("currency").toString().split("\\,")[0]);
                         nextParamsMap.put("prpCplanTemps_[0].delinquentFee",mapPrpCplanTemps.get("delinquentFee"));
-
                         nextParamsMap.put("prpCplanTemps_[0].flag",mapPrpCplanTemps.get("flag"));
                         nextParamsMap.put("prpCplanTemps_[0].isBICI",mapPrpCplanTemps.get("isBICI"));
                         nextParamsMap.put("prpCplanTemps_[0].netPremium",mapPrpCplanTemps.get("netPremium"));
@@ -189,7 +218,10 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
                     //  System.out.println("param1 = "+param1);
                     paramsStr = paramsStr.replace(starParam1, param1);
                 }else{
-                    paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap1)+"&";
+                	//paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap1)+"&";
+                	starParam1 = "planfee_index=0";
+                	String param1 = StringBaseUtils.addParam(starParam1,nextParamsMap1)+"&";
+                    paramsStr = paramsStr.replace(starParam1, param1);
                 }
 
                 returnMap.put("String",paramsStr);
@@ -226,63 +258,60 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         String  paramsStr = returnMap.get("String").toString();
         // System.out.println("paramsStr3="+paramsStr);
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数Map中
-        for (Iterator it = key.iterator(); it.hasNext();) {
-            String keyName = (String) it.next();
-            String keyValue = nextMap.get(keyName).toString();
-            try{
-                keyName = java.net.URLEncoder.encode(keyName, "gbk");
-            }catch(Exception e){
+        if(paramsStr.contains("planfee_index=1")){//续保的时候 在执行以下操作
+        	 for (Iterator it = key.iterator(); it.hasNext();) {
+                 String keyName = (String) it.next();
+                 String keyValue = nextMap.get(keyName).toString();
+                 try{
+                     keyName = java.net.URLEncoder.encode(keyName, "gbk");
+                 }catch(Exception e){
 
-            }
+                 }
 
-            if(keyName.equals("prpCplanTemps%5B0%5D.serialNo")||keyName.equals("prpCplanTemps%5B0%5D.subsidyRate")||keyName.equals("prpCplanTemps%5B0%5D.delinquentFee")||keyName.equals("prpCplanTemps%5B0%5D.planFee") || keyName.equals("prpCplanTemps%5B0%5D.planDate") ||keyName.equals("prpCplanTemps%5B0%5D.isBICI")||keyName.equals("prpCplanTemps_%5B0%5D.isBICI")||keyName.equals("prpCplanTemps%5B0%5D.payReason")){
-                if(paramsMap.containsKey(keyName)){
+                 if(keyName.equals("prpCplanTemps%5B0%5D.serialNo")||keyName.equals("prpCplanTemps%5B0%5D.subsidyRate")||keyName.equals("prpCplanTemps%5B0%5D.delinquentFee")||keyName.equals("prpCplanTemps%5B0%5D.planFee") || keyName.equals("prpCplanTemps%5B0%5D.planDate") ||keyName.equals("prpCplanTemps%5B0%5D.isBICI")||keyName.equals("prpCplanTemps_%5B0%5D.isBICI")||keyName.equals("prpCplanTemps%5B0%5D.payReason")){
+                     if(paramsMap.containsKey(keyName)){
+                         String oldValue ="";
+                         try{oldValue = paramsMap.get(keyName).toString();}
+                         catch(Exception e){}
+                         String old1 = keyName+"="+oldValue+"&";
+                         String new1 = keyName+"="+keyValue+"&";
+                         paramsStr = paramsStr.replace(old1, new1);
+                     }else{
+                         String oldValue ="";
+                         String old1 = keyName+"="+oldValue+"&";
+                         String new1 = keyName+"="+keyValue+"&";
+                         paramsStr = paramsStr.replace(old1, new1);
+                     }
+                 } else if(keyName.equals("PayRefReason")){
+                     if(paramsMap.containsKey(keyName)){
+                         String oldValue ="";
+                         try{oldValue = paramsMap.get(keyName).toString();}
+                         catch(Exception e){}
+                         String old1 = keyName+"="+oldValue+"&";
+                         paramsStr = paramsStr.replace(old1, "");// delete PayRefReason
+                     }
+                 }
+                 else{
+                     if(paramsStr.contains(keyName+"=&")){
+                         if(keyValue.equals("null")||keyValue.equals("")){
 
-                    String oldValue ="";
-                    try{oldValue = paramsMap.get(keyName).toString();}
-                    catch(Exception e){}
-                    String old1 = keyName+"="+oldValue+"&";
-                    String new1 = keyName+"="+keyValue+"&";
-                    paramsStr = paramsStr.replace(old1, new1);
-                }else{
-                    String oldValue ="";
+                         }else{
+                             paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
+                         }
 
-                    String old1 = keyName+"="+oldValue+"&";
-                    String new1 = keyName+"="+keyValue+"&";
-                    paramsStr = paramsStr.replace(old1, new1);
-                }
-            }
-            else if(keyName.equals("PayRefReason")){
-                if(paramsMap.containsKey(keyName)){
+                     }else if(paramsStr.contains(keyName+"="+keyValue+"&")){
 
-                    String oldValue ="";
-                    try{oldValue = paramsMap.get(keyName).toString();}
-                    catch(Exception e){}
-                    String old1 = keyName+"="+oldValue+"&";
-
-                    paramsStr = paramsStr.replace(old1, "");// delete PayRefReason
-                }
-            }
-            else{
-                if(paramsStr.contains(keyName+"=&")){
-                    if(keyValue.equals("null")||keyValue.equals("")){
-
-                    }else{
-                        paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
-                    }
-
-                }else if(paramsStr.contains(keyName+"="+keyValue+"&")){
-
-                }else{
-                    String oldStr ="&planStr=";
-                    paramsStr = paramsStr.replace(oldStr, "&"+keyName+"="+keyValue+oldStr);
-                }
-                if(paramsMap.containsKey(keyName)){
-                    paramsMap.put(keyName, keyValue);
-                }  else{
-                    paramsMap.put(keyName, keyValue);
-                }
-            }
+                     }else{
+                         String oldStr ="&planStr=";
+                         paramsStr = paramsStr.replace(oldStr, "&"+keyName+"="+keyValue+oldStr);
+                     }
+                     if(paramsMap.containsKey(keyName)){
+                         paramsMap.put(keyName, keyValue);
+                     }  else{
+                         paramsMap.put(keyName, keyValue);
+                     }
+                 }
+             }
         }
         paramsStr =paramsStr.replace("&planFlag=0&", "&planFlag=1&");// planFlag
         paramsStr =paramsStr.replace("&prpCmainCar.agreeDriverFlag=&", "&prpCmainCar.agreeDriverFlag=0&");//prpCmainCar.agreeDriverFlag
@@ -292,7 +321,6 @@ public class HebaoSaveRefreshPlanByTimesPage extends BasePage {
         }catch(Exception e){
             paramsStr = paramsStr+"&prpCsettlement.flag=0";
         }
-
         requestMap.put("String",paramsStr);
         requestMap.put("Map",paramsMap);
 

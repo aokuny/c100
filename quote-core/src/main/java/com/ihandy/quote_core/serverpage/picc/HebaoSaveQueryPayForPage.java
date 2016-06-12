@@ -113,7 +113,7 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                 String starParam1="hidden_index_prpDdismantleDetails=0&";
                 if(paramsStr.contains(starParam1)){
                     String param1 = StringBaseUtils.addParam(starParam1,nextParamsMap1)+"&";
-                    System.out.println("param1 = "+param1);
+                    //System.out.println("param1 = "+param1);
                     paramsStr = paramsStr.replace(starParam1, param1);
                 }else{
                     paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap1)+"&";
@@ -182,7 +182,7 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                 String starParam2="hidden_index_prpCsales=0&";
                 if(paramsStr.contains(starParam2)){
                     String param2 = StringBaseUtils.addParam(starParam2,nextParamsMap2)+"&";
-                    System.out.println("param2 = "+param2);
+                    //System.out.println("param2 = "+param2);
                     paramsStr = paramsStr.replace(starParam2, param2);
                 }else{
                     paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap2)+"&";
@@ -328,7 +328,7 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                     }
                 }else{
                     paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
-                    System.out.println("savequerypayfor  post data 中已经存在参数  keyName = "+keyName +" and keyValue = "+keyValue);
+                    //System.out.println("savequerypayfor  post data 中已经存在参数  keyName = "+keyName +" and keyValue = "+keyValue);
                 }
             }else if(paramsStr.contains(keyName+"="+keyValue+"&")){
 
@@ -342,12 +342,11 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                     //加在prpCcommissionsTemp_%5B0%5D.configCode 之前
                     String oldStr ="prpCcommissionsTemp_%5B0%5D.configCode";
                     paramsStr = paramsStr.replace(oldStr, keyName+"="+keyValue+"&"+oldStr);
-                    System.out.println("savequerypayfor  add   keyName = "+keyName +" and keyValue = "+keyValue);
+                    //System.out.println("savequerypayfor  add   keyName = "+keyName +" and keyValue = "+keyValue);
                 }else{
                     paramsStr = paramsStr+"&"+keyName+"="+keyValue;
-                    System.out.println("savequerypayfor  最后位置添加参数  keyName = "+keyName +" and keyValue = "+keyValue);
+                    //System.out.println("savequerypayfor  最后位置添加参数  keyName = "+keyName +" and keyValue = "+keyValue);
                 }
-
                 //addStr = addStr+"&"+keyName+"="+keyValue;
                 //System.out.println("savequerypayfor  post data 中添加参数  keyName = "+keyName +" and keyValue = "+keyValue);
             }

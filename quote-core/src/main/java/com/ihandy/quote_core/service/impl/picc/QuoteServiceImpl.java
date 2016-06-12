@@ -57,6 +57,20 @@ public class QuoteServiceImpl implements IQuoteService {
 		if(cacheParamMap == null){
 			cacheParamMap = new HashMap<>();
 		}
+		Integer IsSingleSubmitInt = Integer.parseInt(IsSingleSubmit);
+		Integer IntentionCompanyInt = Integer.parseInt(IntentionCompany);
+		if(IsSingleSubmitInt == 0 && IntentionCompanyInt == -1){//三家报价不核保
+			IsSingleSubmit = "0";//不核保
+		}
+		if(IsSingleSubmitInt == 2 && IntentionCompanyInt > -1){//一家报价不核保
+			IsSingleSubmit = "0";//不核保
+		}
+		if(IsSingleSubmitInt == 0 && IntentionCompanyInt > -1){//三家报价，一家核保
+			IsSingleSubmit = "1";//核保
+		}
+		if(IsSingleSubmitInt == 1 && IntentionCompanyInt > -1){//一家报价，一家核保
+			IsSingleSubmit = "1";//核保
+		}
 		Map<String, String> param = this.takeParamToMap(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit, IntentionCompany, InsuredName, InsuredIdCard, InsuredIdType, InsuredMobile, IsNewCar, CarType, CarUsedType, CityCode, EngineNo, CarVin, RegisterDate, MoldName, ForceTax, BizStartDate, BoLi, BuJiMianCheSun, BuJiMianDaoQiang, BuJiMianFuJia, BuJiMianRenYuan, BuJiMianSanZhe, CheDeng, SheShui, HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount, TonCount, HcSheBeiSunshi, HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue, HcXiuLiChang, DName, DQuantity, DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2, DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode);
 		cacheParamMap.put(IntentionCompany, param);
 		CacheConstant.uploadInsurInfo.put(LicenseNo, cacheParamMap);
@@ -121,9 +135,9 @@ public class QuoteServiceImpl implements IQuoteService {
 			return postPrecisePricerResponse;
 		}
 		// 验证IsSingleSubmit
-		if ((!"0".equals(IsSingleSubmit)) && (!"1".equals(IsSingleSubmit))) {
+		if ((!"0".equals(IsSingleSubmit)) && (!"1".equals(IsSingleSubmit) && (!"2".equals(IsSingleSubmit)))) {
 			postPrecisePricerResponse.setBusinessStatus("-1");
-			postPrecisePricerResponse.setStatusMessage("IsSingleSubmit 参数必须为0或1");
+			postPrecisePricerResponse.setStatusMessage("IsSingleSubmit 参数必须为0或1或2");
 			return postPrecisePricerResponse;
 		}
 		// 验证IntentionCompany

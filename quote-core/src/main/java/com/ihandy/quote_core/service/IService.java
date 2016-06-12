@@ -1,6 +1,7 @@
 package com.ihandy.quote_core.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.bean.other.*;
 
@@ -42,4 +43,12 @@ public interface IService {
     String commitHeBaoInfo(Response response);
 
     HebaoResponse getHebaoResponse(String licenseNo);
+    
+    /**
+     * 通过车牌号获取续保信息
+     * @param licenseNo
+     * @param CityCode
+     * @return
+     */
+    public JSONObject getRenewalInfo(String licenseNo, int CityCode, String CustKey);
 }

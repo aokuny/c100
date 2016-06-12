@@ -123,12 +123,14 @@ public class XubaoSearchPage extends BasePage {
                         if (riskCode.equals("DAT") || riskCode.equals("DAA")) {
                             if (year > maxSyYear) {
                                 nextParamsMap.put("bizNo", policyNo);//上次商业险保单号
+                                lastResultMap.put("biPolicyNo", policyNo);//上次商业险保单号
                                 lastResultMap.put("BusinessExpireDate", expireDateStr);//商业险到期日期
                                 maxSyYear = year;
                             }
                         } else if (riskCode.equals("DZA")) {
                             if (year > maxJqYear) {
                                 nextParamsMap.put("DZA", policyNo);//上次交强险保单号
+                                lastResultMap.put("ciPolicyNo", policyNo);//上次交强险保单号
                                 lastResultMap.put("ForceExpireDate", expireDateStr);//交强险到期日期
                                 maxJqYear = year;
                             }

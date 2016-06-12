@@ -254,8 +254,11 @@ public class StringBaseUtils {
 
 	public static String addParam(String startString,Map map){
 		String param = startString;
-		param = param+Map2GetParam(map);
-
+		if(startString.contains("0")){
+			param = param + "&" + Map2GetParam(map);
+		}else{
+			param = param+Map2GetParam(map);
+		}
 		return param;
 	}
 

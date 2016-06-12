@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ihandy.qoute_common.springutils.SpringMVCUtils;
+import com.ihandy.quote_core.bean.other.CarInfoResponse;
 import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
 import com.ihandy.quote_core.service.IQuoteService;
 import com.ihandy.quote_core.service.IService;
@@ -48,18 +49,24 @@ public class RbController {
 	 */
 	@RequestMapping("/getRenewalInfo")
 	@Transactional
-	@ResponseBody
-	public Map<String, Object> getRenewalInfo(String LicenseNo, int CityCode, String CustKey, String SecCode) {
-
-		try {
-
-			// CarInfoResponse response =
-			// rbService.getBaseCarInfoByLicenseNo(LicenseNo);
-
-		} catch (Exception e) {
-
+	public void getRenewalInfo(HttpServletRequest request, HttpServletResponse response, String LicenseNo, int CityCode, String CustKey, String SecCode) {
+		if (request.getMethod().equals("GET")) {
+			try {
+				if (StringUtils.isNotBlank(LicenseNo)) {
+					LicenseNo = new String(LicenseNo.getBytes("iso8859-1"), "GBK");
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
-		return null;
+		JSONObject renewalInfoJson = new JSONObject();
+		try {
+			renewalInfoJson = rbService.getRenewalInfo(LicenseNo, CityCode, CustKey);
+			logger.info("人保 API，【获取续保信息成功】，LicenseNo：" + LicenseNo);
+		} catch (Exception e) {
+			logger.info("人保 API，【获取续保信息失败】，LicenseNo：" + LicenseNo + "，" + e.getMessage());
+		}
+		SpringMVCUtils.renderJson(response, renewalInfoJson);
 	}
 
 	/**
@@ -74,12 +81,9 @@ public class RbController {
 	public Map<String, Object> getCarInfoByLicenseNo(String LicenseNo) {
 		Map map = new HashMap();
 		try {
-
 			// CarInfoResponse response =
 			// rbService.getCarInfoByLicenseNo(LicenseNo, "02");
-
 		} catch (Exception e) {
-
 		}
 		return map;
 	}
@@ -266,7 +270,15 @@ public class RbController {
 			postPrecisePricerResponse.setStatusMessage("接口报错：" + e.getMessage());
 			logger.error("PICC API ，【上传险种信息报错】，" + e.getMessage());
 		}
-		SpringMVCUtils.renderJson(response, postPrecisePricerResponse);
+		JSONObject postPrecisePricerResponseJson = (JSONObject) JSONObject.toJSON(postPrecisePricerResponse);
+		JSONObject resultPostPrecisePricerResponseJson = new JSONObject();
+		for (Map.Entry<String, Object> entry : postPrecisePricerResponseJson.entrySet()) {
+            String key = entry.getKey();
+            key  = key.substring(0,1).toUpperCase() + key.substring(1);
+            Object value = entry.getValue();
+            resultPostPrecisePricerResponseJson.put(key, value);
+        }
+		SpringMVCUtils.renderJson(response, resultPostPrecisePricerResponseJson);
 	}
 
 	/**
@@ -298,13 +310,21 @@ public class RbController {
 			 result = quoteServiceImpl.getPrecisePrice(LicenseNo, IntentionCompany, Agent, CustKey, SecCode);
 			logger.info("PICC API ，【查询报价结果响应成功】，LicenseNo：" + LicenseNo);
 		} catch (Exception e) {
-			logger.error("PICC API ，【查询报价结果响应成功】，" + e.getMessage());
+			logger.error("PICC API ，【查询报价结果响应失败】，" + e.getMessage());
 		}
 		if(result == null){
 			PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
 			postPrecisePricerResponse.setBusinessStatus("-1");
 			postPrecisePricerResponse.setStatusMessage("报价信息获取失败");
-			SpringMVCUtils.renderJson(response, postPrecisePricerResponse);
+			JSONObject postPrecisePricerResponseJson = (JSONObject) JSONObject.toJSON(postPrecisePricerResponse);
+			JSONObject resultPostPrecisePricerResponseJson = new JSONObject();
+			for (Map.Entry<String, Object> entry : postPrecisePricerResponseJson.entrySet()) {
+	            String key = entry.getKey();
+	            key  = key.substring(0,1).toUpperCase() + key.substring(1);
+	            Object value = entry.getValue();
+	            resultPostPrecisePricerResponseJson.put(key, value);
+	        }
+			SpringMVCUtils.renderJson(response, resultPostPrecisePricerResponseJson);
 			return;
 		}
 		SpringMVCUtils.renderJson(response, result);

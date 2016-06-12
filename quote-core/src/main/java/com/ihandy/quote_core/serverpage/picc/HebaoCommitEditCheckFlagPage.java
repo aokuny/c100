@@ -7,6 +7,8 @@ import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -30,7 +32,13 @@ public class HebaoCommitEditCheckFlagPage extends BasePage {
         Map paraMap = request.getRequestParam();
         String param ="";
         try{
-            param ="bizNo="+ paraMap.get("TDAA").toString();
+        	String TDAA = String.valueOf(paraMap.get("TDAA"));
+        	String TDZA = String.valueOf(paraMap.get("TDZA"));
+        	if(StringUtils.isNotBlank(TDAA) && !"null".equals(TDAA)){
+        		param ="bizNo=" +TDAA;
+        	}else{
+        		param ="bizNo=" +TDZA;
+        	}
         }catch(Exception e) {
             logger.info("抓取机器人，【 PICC 核保提交1获取post参数失败】");
         }

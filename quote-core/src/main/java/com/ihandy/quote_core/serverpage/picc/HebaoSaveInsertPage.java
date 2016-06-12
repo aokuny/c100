@@ -6,6 +6,8 @@ import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -35,15 +37,10 @@ public class HebaoSaveInsertPage extends BasePage {
             param = request.getRequestParam().get("String").toString();
             param = param.replace("[", "%5B");
             param = param.replace("]", "%5D");
-            System.out.println("ErrorParam = "+param);
-
+            //System.out.println("ErrorParam = "+param);
         }catch(Exception e) {
             logger.info("抓取机器人，【 PICC 核保保存6获取post参数失败】");
         }
-        String rightParam ="";
-
-
-
         // System.out.println("rightParam = "+rightParam);
         //StringBaseUtils.compareErrorStringLess(rightParam,param);
         //StringBaseUtils.compareErrorStringMore(rightParam,param);
@@ -54,7 +51,7 @@ public class HebaoSaveInsertPage extends BasePage {
         //param =  compareStringDifference(rightParam,param);
         // compareStringDifference1(rightParam,param);
         // compareStringDifference2(rightParam,param);
-
+        
         Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
@@ -68,10 +65,18 @@ public class HebaoSaveInsertPage extends BasePage {
             Map  returnMap  = new HashMap<>();
             Map nextParamsMap = new HashMap<>();
             try{
-                String[] noArr = html.split(",");
-                nextParamsMap.put("TDAA",noArr[0]);//投保单号
-                nextParamsMap.put("TDZA",noArr[1]);//关联单号
-                returnMap.put("nextParams",nextParamsMap);
+            	if(html.contains(",")){
+                    String[] noArr = html.split(",");
+                    nextParamsMap.put("TDAA",noArr[0]);//投保单号
+                    nextParamsMap.put("TDZA",noArr[1]);//关联单号
+            	}else{
+            		if(html.contains("TDAA")){
+            			nextParamsMap.put("TDAA",html);
+            		}else{
+            			 nextParamsMap.put("TDZA",html);
+            		}
+            	}
+            	returnMap.put("nextParams",nextParamsMap);
                 response.setResponseMap(returnMap);
                 response.setReturnCode(SysConfigInfo.SUCCESS200);
                 response.setErrMsg(SysConfigInfo.SUCCESS200MSG);

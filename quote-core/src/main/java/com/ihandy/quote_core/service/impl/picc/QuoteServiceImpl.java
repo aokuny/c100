@@ -57,6 +57,20 @@ public class QuoteServiceImpl implements IQuoteService {
 		if(cacheParamMap == null){
 			cacheParamMap = new HashMap<>();
 		}
+		Integer IsSingleSubmitInt = Integer.parseInt(IsSingleSubmit);
+		Integer IntentionCompanyInt = Integer.parseInt(IntentionCompany);
+		if(IsSingleSubmitInt == 0 && IntentionCompanyInt == -1){//三家报价不核保
+			IsSingleSubmit = "0";//不核保
+		}
+		if(IsSingleSubmitInt == 2 && IntentionCompanyInt > -1){//一家报价不核保
+			IsSingleSubmit = "0";//不核保
+		}
+		if(IsSingleSubmitInt == 0 && IntentionCompanyInt > -1){//三家报价，一家核保
+			IsSingleSubmit = "1";//核保
+		}
+		if(IsSingleSubmitInt == 1 && IntentionCompanyInt > -1){//一家报价，一家核保
+			IsSingleSubmit = "1";//核保
+		}
 		Map<String, String> param = this.takeParamToMap(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit, IntentionCompany, InsuredName, InsuredIdCard, InsuredIdType, InsuredMobile, IsNewCar, CarType, CarUsedType, CityCode, EngineNo, CarVin, RegisterDate, MoldName, ForceTax, BizStartDate, BoLi, BuJiMianCheSun, BuJiMianDaoQiang, BuJiMianFuJia, BuJiMianRenYuan, BuJiMianSanZhe, CheDeng, SheShui, HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount, TonCount, HcSheBeiSunshi, HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue, HcXiuLiChang, DName, DQuantity, DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2, DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode);
 		cacheParamMap.put(IntentionCompany, param);
 		CacheConstant.uploadInsurInfo.put(LicenseNo, cacheParamMap);
@@ -75,13 +89,22 @@ public class QuoteServiceImpl implements IQuoteService {
 				t3.start();
 				break;
 			case "-1"://全部
-				QuoteThreadPingan t4 = new QuoteThreadPingan(LicenseNo, param);
-				t4.start();
-				QuoteThreadCpic t5 = new QuoteThreadCpic(LicenseNo, param);
-				t5.start();
+				param.put("IntentionCompany", SysConfigInfo.PICC_FLAG.toString());
 				QuoteThreadPicc t6 = new QuoteThreadPicc(LicenseNo, param);
 				t6.start();
 				break;
+		}
+		//上传前，把以前的报价缓存进行删除
+		Map<String, Object> quoteResultMap = CacheConstant.quoteResultInfo.get(LicenseNo);
+		if(quoteResultMap != null){
+			if("-1".equals(IntentionCompany)){//全部清除
+				CacheConstant.quoteResultInfo.remove(LicenseNo);
+				logger.info("人保 API，【清除全部报价结果成功】，LicenseNo：" + LicenseNo);
+			}else{
+				quoteResultMap.remove(IntentionCompany);//存在的时候，就删除
+				CacheConstant.quoteResultInfo.put(LicenseNo, quoteResultMap);//在存放
+				logger.info("人保 API，【清除报价结果成功】，LicenseNo：" + LicenseNo + "，IntentionCompany：" + IntentionCompany);
+			}
 		}
 		postPrecisePricerResponse.setStatusMessage("险种信息上传成功");
 		return postPrecisePricerResponse;
@@ -112,9 +135,9 @@ public class QuoteServiceImpl implements IQuoteService {
 			return postPrecisePricerResponse;
 		}
 		// 验证IsSingleSubmit
-		if ((!"0".equals(IsSingleSubmit)) && (!"1".equals(IsSingleSubmit))) {
+		if ((!"0".equals(IsSingleSubmit)) && (!"1".equals(IsSingleSubmit) && (!"2".equals(IsSingleSubmit)))) {
 			postPrecisePricerResponse.setBusinessStatus("-1");
-			postPrecisePricerResponse.setStatusMessage("IsSingleSubmit 参数必须为0或1");
+			postPrecisePricerResponse.setStatusMessage("IsSingleSubmit 参数必须为0或1或2");
 			return postPrecisePricerResponse;
 		}
 		// 验证IntentionCompany
@@ -315,6 +338,8 @@ public class QuoteServiceImpl implements IQuoteService {
 		map.put("IntentionCompany", IntentionCompany);
 		map.put("InsuredName", InsuredName);
 		map.put("InsuredIdCard", InsuredIdCard);
+		map.put("InsuredIdType", InsuredIdType);
+		map.put("InsuredMobile", InsuredMobile);
 		map.put("CityCode", CityCode);
 		map.put("EngineNo", EngineNo);
 		map.put("CarVin", CarVin);
@@ -364,12 +389,28 @@ public class QuoteServiceImpl implements IQuoteService {
 	}
 
 	@Override
-	public JSONObject getPrecisePrice(String LicenseNo, String IntentionCompany, String Agent, String CustKey,
-			String SecCode) {
+	public JSONObject getPrecisePrice(String LicenseNo, String IntentionCompany, String Agent, String CustKey, String SecCode) {
 		Map<String, Object> quoteMap = CacheConstant.quoteResultInfo.get(LicenseNo);
-		JSONObject quoteJson = (JSONObject) quoteMap.get(IntentionCompany);
+		JSONObject quoteJson = null;
+		for(int i=1;i<=4; i++){
+			try {
+				Thread.sleep(8000);//休眠10秒，再次进行查询
+			} catch (Exception e) {
+			}
+			logger.info("人保 API，【报价结果查询 " + i + " 次】，LicenseNo：" + LicenseNo);
+			if(quoteMap == null){//没有报价结果集
+				quoteMap = CacheConstant.quoteResultInfo.get(LicenseNo);
+				continue;
+			}
+			quoteJson = (JSONObject) quoteMap.get(IntentionCompany);
+			if(quoteJson == null){
+				continue;//没查询到，继续
+			}else{
+				break;//查询到了，结束
+			}
+		}
 		logger.info("人保 API，【报价结果查询】，LicenseNo：" + LicenseNo + "， IntentionCompany：" + IntentionCompany + "，结果：" + quoteJson);
 		return quoteJson;
 	}
-
+	
 }

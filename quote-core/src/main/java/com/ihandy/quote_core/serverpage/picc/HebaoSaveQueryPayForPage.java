@@ -7,6 +7,10 @@ import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONNull;
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -109,7 +113,7 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                 String starParam1="hidden_index_prpDdismantleDetails=0&";
                 if(paramsStr.contains(starParam1)){
                     String param1 = StringBaseUtils.addParam(starParam1,nextParamsMap1)+"&";
-                    System.out.println("param1 = "+param1);
+                    //System.out.println("param1 = "+param1);
                     paramsStr = paramsStr.replace(starParam1, param1);
                 }else{
                     paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap1)+"&";
@@ -117,72 +121,97 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
 
                 //2）组装prpCsaless(6)
                 Map nextParamsMap2 = new LinkedHashMap<>();
-                JSONArray jsonArrayPrpCsaless =JSONArray.fromObject(dataMap.get("prpCsaless"));
-                for(int i=0;i<jsonArrayPrpCsaless.size();i++){
-                    Map mapPrpCsaless = (Map)jsonArrayPrpCsaless.get(i);
-                    JSONArray jsonArrayPrpDdismantleDetailsId =JSONArray.fromObject(mapPrpCsaless.get("id"));
-                    Map mapId = (Map)jsonArrayPrpDdismantleDetailsId.get(0);
-                    String salesName ="";
-                    String salesDetailName="";
-                    try{
-                        salesName =mapPrpCsaless.get("salesName").toString();
-                        salesDetailName = mapPrpCsaless.get("salesDetailName").toString();
-                        salesName = java.net.URLEncoder.encode(salesName, "gbk");
-                        salesDetailName =  java.net.URLEncoder.encode(salesDetailName, "gbk");
-                    }catch(Exception e){}
+                Object prpCsaless = dataMap.get("prpCsaless");
+                if(!(prpCsaless instanceof JSONNull)){
+                	  JSONArray jsonArrayPrpCsaless =JSONArray.fromObject(prpCsaless);
+                      for(int i=0;i<jsonArrayPrpCsaless.size();i++){
+                      	JSONObject jsonArrayPrpCsales = jsonArrayPrpCsaless.getJSONObject(i);
+                      	if(jsonArrayPrpCsales == null){
+                      		continue;
+                      	}
+                          Map mapPrpCsaless = (Map)jsonArrayPrpCsales;
+                          JSONArray jsonArrayPrpDdismantleDetailsId =JSONArray.fromObject(mapPrpCsaless.get("id"));
+                          Map mapId = (Map)jsonArrayPrpDdismantleDetailsId.get(0);
+                          String salesName ="";
+                          String salesDetailName="";
+                          try{
+                              salesName =mapPrpCsaless.get("salesName").toString();
+                              salesDetailName = mapPrpCsaless.get("salesDetailName").toString();
+                              salesName = java.net.URLEncoder.encode(salesName, "gbk");
+                              salesDetailName =  java.net.URLEncoder.encode(salesDetailName, "gbk");
+                          }catch(Exception e){}
 
-                    if(mapPrpCsaless.get("riskCode").toString().equals("DAA")){
+                          if(mapPrpCsaless.get("riskCode").toString().equals("DAA")){
 
-                        nextParamsMap.put("prpCsaless_[0].agreementNo",mapPrpCsaless.get("agreementNo").toString());
-                        nextParamsMap.put("prpCsaless_[0].flag",mapPrpCsaless.get("flag").toString());
-                        nextParamsMap.put("prpCsaless_[0].oriSplitNumber",mapPrpCsaless.get("oriSplitNumber").toString());
-                        nextParamsMap.put("prpCsaless_[0].remark",mapPrpCsaless.get("remark").toString());
-                        nextParamsMap.put("prpCsaless_[0].riskCode",mapPrpCsaless.get("riskCode").toString());
-                        nextParamsMap.put("prpCsaless_[0].salesDetailName",salesDetailName);
-                        nextParamsMap.put("prpCsaless_[0].salesName",salesName);
-                        nextParamsMap.put("prpCsaless_[0].splitFee",mapPrpCsaless.get("splitFee").toString());
-                        nextParamsMap.put("prpCsaless_[0].splitRate",mapPrpCsaless.get("splitRate").toString());
-                        nextParamsMap.put("prpCsaless_[0].splitWay",mapPrpCsaless.get("splitWay").toString());
-                        nextParamsMap.put("prpCsaless_[0].totalRate",mapPrpCsaless.get("totalRate").toString());
-                        nextParamsMap.put("prpCsaless_[0].totalRateMax",mapPrpCsaless.get("totalRateMax").toString());
-                        nextParamsMap.put("prpCsaless_[0].id.proposalNo", mapId.get("proposalNo").toString());
-                        nextParamsMap.put("prpCsaless_[0].id.salesCode", mapId.get("salesCode").toString());
-                        nextParamsMap.put("prpCsaless_[0].id.salesDetailCode",mapId.get("salesDetailCode").toString());
-                    }
+                              nextParamsMap.put("prpCsaless_[0].agreementNo",mapPrpCsaless.get("agreementNo").toString());
+                              nextParamsMap.put("prpCsaless_[0].flag",mapPrpCsaless.get("flag").toString());
+                              nextParamsMap.put("prpCsaless_[0].oriSplitNumber",mapPrpCsaless.get("oriSplitNumber").toString());
+                              nextParamsMap.put("prpCsaless_[0].remark",mapPrpCsaless.get("remark").toString());
+                              nextParamsMap.put("prpCsaless_[0].riskCode",mapPrpCsaless.get("riskCode").toString());
+                              nextParamsMap.put("prpCsaless_[0].salesDetailName",salesDetailName);
+                              nextParamsMap.put("prpCsaless_[0].salesName",salesName);
+                              nextParamsMap.put("prpCsaless_[0].splitFee",mapPrpCsaless.get("splitFee").toString());
+                              nextParamsMap.put("prpCsaless_[0].splitRate",mapPrpCsaless.get("splitRate").toString());
+                              nextParamsMap.put("prpCsaless_[0].splitWay",mapPrpCsaless.get("splitWay").toString());
+                              nextParamsMap.put("prpCsaless_[0].totalRate",mapPrpCsaless.get("totalRate").toString());
+                              nextParamsMap.put("prpCsaless_[0].totalRateMax",mapPrpCsaless.get("totalRateMax").toString());
+                              nextParamsMap.put("prpCsaless_[0].id.proposalNo", mapId.get("proposalNo").toString());
+                              nextParamsMap.put("prpCsaless_[0].id.salesCode", mapId.get("salesCode").toString());
+                              nextParamsMap.put("prpCsaless_[0].id.salesDetailCode",mapId.get("salesDetailCode").toString());
+                          }
 
-                    nextParamsMap2.put("commissionCount", "");
-                    nextParamsMap2.put("prpCsaless["+i+"].salesDetailName",salesDetailName);
-                    nextParamsMap2.put("prpCsaless["+i+"].riskCode",mapPrpCsaless.get("riskCode"));
-                    nextParamsMap2.put("prpCsaless["+i+"].splitRate",mapPrpCsaless.get("splitRate").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].oriSplitNumber",mapPrpCsaless.get("oriSplitNumber").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].splitFee",mapPrpCsaless.get("splitFee").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].agreementNo",mapPrpCsaless.get("agreementNo").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].id.salesCode", mapId.get("salesCode").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].salesName",salesName);
-                    nextParamsMap2.put("prpCsaless["+i+"].id.proposalNo", mapId.get("proposalNo").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].id.salesDetailCode",mapId.get("salesDetailCode").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].totalRate",mapPrpCsaless.get("totalRate").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].splitWay",mapPrpCsaless.get("splitWay").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].totalRateMax",mapPrpCsaless.get("totalRateMax").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].flag",mapPrpCsaless.get("flag").toString());
-                    nextParamsMap2.put("prpCsaless["+i+"].remark",mapPrpCsaless.get("remark").toString());
-
+                          nextParamsMap2.put("commissionCount", "");
+                          nextParamsMap2.put("prpCsaless["+i+"].salesDetailName",salesDetailName);
+                          nextParamsMap2.put("prpCsaless["+i+"].riskCode",mapPrpCsaless.get("riskCode"));
+                          nextParamsMap2.put("prpCsaless["+i+"].splitRate",mapPrpCsaless.get("splitRate").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].oriSplitNumber",mapPrpCsaless.get("oriSplitNumber").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].splitFee",mapPrpCsaless.get("splitFee").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].agreementNo",mapPrpCsaless.get("agreementNo").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].id.salesCode", mapId.get("salesCode").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].salesName",salesName);
+                          nextParamsMap2.put("prpCsaless["+i+"].id.proposalNo", mapId.get("proposalNo").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].id.salesDetailCode",mapId.get("salesDetailCode").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].totalRate",mapPrpCsaless.get("totalRate").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].splitWay",mapPrpCsaless.get("splitWay").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].totalRateMax",mapPrpCsaless.get("totalRateMax").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].flag",mapPrpCsaless.get("flag").toString());
+                          nextParamsMap2.put("prpCsaless["+i+"].remark",mapPrpCsaless.get("remark").toString());
+                      }
                 }
-
-
+                
                 String starParam2="hidden_index_prpCsales=0&";
                 if(paramsStr.contains(starParam2)){
                     String param2 = StringBaseUtils.addParam(starParam2,nextParamsMap2)+"&";
-                    System.out.println("param2 = "+param2);
+                    //System.out.println("param2 = "+param2);
                     paramsStr = paramsStr.replace(starParam2, param2);
                 }else{
                     paramsStr = paramsStr+"&"+StringBaseUtils.Map2StringURLEncoder(nextParamsMap2)+"&";
                 }
                 //3)
-                nextParamsMap.put("maxRateScmCi",dataMap.get("maxRateScmCi").toString());
-                nextParamsMap.put("maxRateScm",dataMap.get("maxRateScm").toString());
-                nextParamsMap.put("levelMaxRateCi",dataMap.get("levelMaxRateCi").toString());
-                nextParamsMap.put("levelMaxRate",dataMap.get("levelMaxRate").toString());
+                String maxRateScmCi = dataMap.get("maxRateScmCi").toString();
+                if(StringUtils.isNoneBlank(maxRateScmCi) && !"null".equals(maxRateScmCi)){
+                	nextParamsMap.put("maxRateScmCi", maxRateScmCi);
+                }else{
+                	nextParamsMap.put("maxRateScmCi", 0);
+                }
+                String maxRateScm = dataMap.get("maxRateScm").toString();
+                if(StringUtils.isNoneBlank(maxRateScm) && !"null".equals(maxRateScm)){
+                	nextParamsMap.put("maxRateScm",dataMap.get("maxRateScm").toString());
+                }else{
+                	nextParamsMap.put("maxRateScm",0);
+                }
+                String levelMaxRateCi = dataMap.get("levelMaxRateCi").toString();
+                if(StringUtils.isNoneBlank(levelMaxRateCi) && !"null".equals(levelMaxRateCi)){
+                	nextParamsMap.put("levelMaxRateCi", levelMaxRateCi);
+                }else{
+                	nextParamsMap.put("levelMaxRateCi", 0);
+                }
+                String levelMaxRate = dataMap.get("levelMaxRate").toString();
+                if(StringUtils.isNotBlank(levelMaxRate) && !"null".equals(levelMaxRate)){
+                	nextParamsMap.put("levelMaxRate", levelMaxRate);
+                }else{
+                	nextParamsMap.put("levelMaxRate", 0);
+                }
 
                 //4)组装prpDpayForPolicies
                 JSONArray jsonArrayPrpDpayForPolicies =JSONArray.fromObject(dataMap.get("prpDpayForPolicies"));
@@ -253,6 +282,7 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                 response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
             }
             catch (Exception e1){
+            	e1.printStackTrace();
                 logger.info("抓取机器人，【 PICC 核保保存3失败】");
                 response.setResponseMap(null);
                 response.setReturnCode(SysConfigInfo.ERROR404);
@@ -298,7 +328,7 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                     }
                 }else{
                     paramsStr = paramsStr.replace(keyName+"=&", keyName+"="+keyValue+"&");
-                    System.out.println("savequerypayfor  post data 中已经存在参数  keyName = "+keyName +" and keyValue = "+keyValue);
+                    //System.out.println("savequerypayfor  post data 中已经存在参数  keyName = "+keyName +" and keyValue = "+keyValue);
                 }
             }else if(paramsStr.contains(keyName+"="+keyValue+"&")){
 
@@ -312,12 +342,11 @@ public class HebaoSaveQueryPayForPage  extends BasePage {
                     //加在prpCcommissionsTemp_%5B0%5D.configCode 之前
                     String oldStr ="prpCcommissionsTemp_%5B0%5D.configCode";
                     paramsStr = paramsStr.replace(oldStr, keyName+"="+keyValue+"&"+oldStr);
-                    System.out.println("savequerypayfor  add   keyName = "+keyName +" and keyValue = "+keyValue);
+                    //System.out.println("savequerypayfor  add   keyName = "+keyName +" and keyValue = "+keyValue);
                 }else{
                     paramsStr = paramsStr+"&"+keyName+"="+keyValue;
-                    System.out.println("savequerypayfor  最后位置添加参数  keyName = "+keyName +" and keyValue = "+keyValue);
+                    //System.out.println("savequerypayfor  最后位置添加参数  keyName = "+keyName +" and keyValue = "+keyValue);
                 }
-
                 //addStr = addStr+"&"+keyName+"="+keyValue;
                 //System.out.println("savequerypayfor  post data 中添加参数  keyName = "+keyName +" and keyValue = "+keyValue);
             }

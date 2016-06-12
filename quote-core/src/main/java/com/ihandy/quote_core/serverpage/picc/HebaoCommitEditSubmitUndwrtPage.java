@@ -5,6 +5,8 @@ import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -27,11 +29,17 @@ public class HebaoCommitEditSubmitUndwrtPage extends BasePage {
         Map paraMap = request.getRequestParam();
         String param ="";
         try{
-            param ="bizNo="+ paraMap.get("TDAA").toString();
+         	String TDAA = String.valueOf(paraMap.get("TDAA"));
+        	String TDZA = String.valueOf(paraMap.get("TDZA"));
+        	if(StringUtils.isNotBlank(TDAA) && !"null".equals(TDAA)){
+        		param ="bizNo=" +TDAA;
+        	}else{
+        		param ="bizNo=" +TDZA;
+        	}
         }catch(Exception e) {
             logger.info("抓取机器人，【 PICC 核保提交2获取post参数失败】");
         }
-        Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
+        Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"");
         html = map.get("html").toString();
         return html;
     }

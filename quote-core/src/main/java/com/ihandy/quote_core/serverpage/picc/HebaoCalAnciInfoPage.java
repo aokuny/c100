@@ -155,7 +155,7 @@ public class HebaoCalAnciInfoPage extends BasePage {
         String params = requestMap.get("nextParams").toString();
         String right =params;
         //compareStringDifference(right,params);
-        System.out.println("params1 = "+params);
+        //System.out.println("params1 = "+params);
         Map nextMap =(Map) returnMap.get("nextParams");
         Set<String> key = nextMap.keySet();//将nextParams遍历写入上个请求的参数字符串中
         int newParamcount = 0;
@@ -170,7 +170,7 @@ public class HebaoCalAnciInfoPage extends BasePage {
                     //more  prpAnciInfo.baseActBusiType value=null
                     //more  prpAnciInfo.baseExpBusiType value=null
                     //more  prpAnciInfo.businessCode value=null
-                    System.out.println("不需要修改的参数"+keyName);
+                    //System.out.println("不需要修改的参数"+keyName);
                 }else if(keyName.equals("prpAnciInfo.operCommRateBIUp")){
 
                     if(keyValue=="null"||keyValue.equals("")){
@@ -210,7 +210,7 @@ public class HebaoCalAnciInfoPage extends BasePage {
                     params = params.replace(keyName+"=&", keyName+"="+keyValue+"&");
 
                     // nextMap.put(keyName,keyValue);
-                    System.out.println("重新赋值  keyName = "+keyName +" and keyValue = "+keyValue+"\n");
+                    //System.out.println("重新赋值  keyName = "+keyName +" and keyValue = "+keyValue+"\n");
                 }
             }else{//参数字符串中不包含有这些辅助计算参数
                 if(keyName.equals("prpAnciInfo.discountRateBIUpAmount")){//discountRateBIUpAmountp

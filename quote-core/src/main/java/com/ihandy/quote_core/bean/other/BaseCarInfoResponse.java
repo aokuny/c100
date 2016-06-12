@@ -20,6 +20,8 @@ public class BaseCarInfoResponse {
     private String CarRegisterDate;//车辆注册日期
     private int CarSeated;//座位数量
     private int CityCode ; //城市编码
+    private String ciPolicyNo;//上一年交强险投保单号
+    private String biPolicyNo;//上一年商业险投保单号
 
     public String getCarUsedType() {
         return CarUsedType;
@@ -148,4 +150,20 @@ public class BaseCarInfoResponse {
     public void setCityCode(int cityCode) {
         CityCode = cityCode;
     }
+
+	public String getCiPolicyNo() {
+		return ciPolicyNo;
+	}
+
+	public void setCiPolicyNo(String ciPolicyNo) {
+		this.ciPolicyNo = ciPolicyNo;
+	}
+
+	public String getBiPolicyNo() {
+		return biPolicyNo;
+	}
+
+	public void setBiPolicyNo(String biPolicyNo) {
+		this.biPolicyNo = biPolicyNo;
+	}
 }

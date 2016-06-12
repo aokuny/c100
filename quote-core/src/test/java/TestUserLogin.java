@@ -1,12 +1,17 @@
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
 import com.ihandy.quote_common.httpUtil.StringBaseUtils;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
+import com.ihandy.quote_core.utils.SysConfigInfo;
 import net.sf.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,18 +20,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Created by zhujiajia on 16/5/25.
  */
 public class TestUserLogin {
+    public String cookieValue;//axatp登录session
+    public  Map<String, String> axatpMap = new LinkedHashMap<>();//天平登录缓存
 
-
-    public String getCookies() {
+    @Test
+    public void testGetCookies() {
 
         //获取session信息
         String url_login = "http://dm.axatp.com/login.do";
+        //http://dm.axatp.com/login.do
         String cookieValue = HttpsUtil.sendGetForAxatp(url_login, null, "GBK").get("cookieValue");
 //        System.out.println(cookieValue);
 
@@ -34,7 +43,7 @@ public class TestUserLogin {
         StringBuffer param_login = new StringBuffer();
         param_login.append("memberName=jtl_bj&");
         param_login.append("flag=ajaxRecommendCode");
-        String login_two = HttpsUtil.sendPost(url_login, param_login.toString(), cookieValue, "GBK").get("html");
+        String login_two1 = HttpsUtil.sendPost(url_login, param_login.toString(), cookieValue, "GBK").get("html");
 //        System.out.println(login_two);
 
         //获取验证码图片
@@ -63,13 +72,29 @@ public class TestUserLogin {
         paramSb.append("randomCode=" + html_getCode + "&");
         String param = paramSb.toString();
         param = param.substring(0, param.length() - 1);
+        System.out.print("cookieValue = "+cookieValue);
         String html_index = HttpsUtil.sendPost(url_login, param.toString(), cookieValue, "GBK").get("html");
 //        System.out.println(html_index);
         if(!html_index.contains("你已经登录成功，你可以选择以下操作")){
             cookieValue="";
+        }else{
+            Document doc = Jsoup.parse(html_index);
+            Element e = doc.getElementById("services_query");
+            Elements es = e.getElementsByClass("userGoTo");
+            es.get(0).select("a");
+            String href =es.get(0).select("a").get(0).attributes().get("href").toString();
+            String[] arrParam = href.split("\\?")[1].split("&");
+            Map map = new HashMap<>();
+            map.put("a",arrParam[0]);
+            try {
+                map.put("linkResource", arrParam[1]);
+            }catch (Exception e1){
+                map.put("linkResource", "");
+            }
+            map.put("agent",arrParam[2]);
         }
-        return cookieValue;
-
+        System.out.println("cookieValue = "+cookieValue);
+         //oneStep(cookieValue);
     }
 
 
@@ -95,45 +120,44 @@ public class TestUserLogin {
 //        System.out.println(html3);
 
         //选择车辆信息
-        String url_SelectCarInfo="http://dm.axatp.com/carBasicVehiclePriceQuery.do?" +
-                "isAgent=3212&ecInsureId="+ecInsureId+"&isRenewal=0&cityCode=110100&localProvinceCode=110000&planDefineId=3&rt=&licenceNo=%BE%A9QS78J1&personnelName=%D5%C5%BD%F0%C9%FA";
+        String url_SelectCarInfo="http://dm.axatp.com/carBasicVehiclePriceQuery.do?isAgent=3212&ecInsureId="+ecInsureId+"&isRenewal=0&cityCode=110100&localProvinceCode=110000&planDefineId=3&rt=&licenceNo=¾©MM3767&personnelName=ÕÅÎÄº£";
 
         String postParm="defaultAgentCode=1&isVIP=false&birthdayYY=&birthdayMM=&birthdayDD=&newVehicleFlagHidden=0&lastForcePolicyNo=&ecInsureId=E1E65AD17E74DCCB454BB2BB7B0C207DD60E89E0C63AA315&isRenewal=0&linkResource=&isAgent=3212&cityCode=110100&localProvinceCode=110000&planDefineId=3&selectPayChannel=&pageInfo=carPrecisionInfo&tbsn=&buyerNick=&orderId=&auctionId=&cityPlat=&rt=&ms=&timedefault=&mark=&licenceLimits=&licenceLimitsMsg=%3Cdiv+style%3D%27border%3A1px+solid+%23F22D0D%3Bmargin-left%3A-5px%3Bwidth%3A304px%3B+margin-right%3A0px%3B+background-color%3A%23FFECEC%27%3E%B8%C3%B5%D8%C7%F8%D6%BB%D6%A7%B3%D6%B3%B5%C5%C6%CE%AA%B5%C4%B3%B5%C1%BE%CD%F8%C9%CF%CD%B6%B1%A3%3C%2Fdiv%3E&city_beijing=&bizInsureBeignTime=2016-06-04&forceInsureBeignTime=2016-06-04&pagereferrer=%25E5%259C%25B0%25E9%259D%25A2%25E8%2590%25A5%25E9%2594%2580-%25E6%258E%25A8%25E8%258D%2590&cityName=%25E5%258C%2597%25E4%25BA%25AC%25E5%25B8%2582&carcity=%BE%A9MM3767&live800_URL_JSP=http%3A%2F%2Fonlinecs.axatp.com%2Flive800%2FchatClient%2Fchatbox.jsp&gztFlag=0&viewMode=edit&hideFamilyName=&connectType=1&isFirstIframe=&vehicleId=&newCarPriceOld=&newCarPrice=&newCarSeats=&isJZ=1&ecEnginNo=&searchType=0&flag=&messages=&infoValue=userId%253D7124003%2526loginname%253Djtl_bj%2526grade%253D1%2526name%253Djtl_bj%2526mobileNo%253D%25E4%25BA%25ACMM3767%2526memo%253Dnull%2526timestamp%253D1464922407907%2526hashCode%253D34b72da498118d05574fc2c05cebc497&prohibitValue=null&blackListFlag=&renewalProtectFlag=&knmdFlag=&isCompleteData=&isBeiJingFlag=1&madeDate=&engineNo=FW151330&vehicleFrameNo=LBECFAHC5FZ226987&personnelName=%D5%C5%CE%C4%BA%A3&certificateNo=372527196603254019&mobileTelephone=15311421136&isMortgage=0&BeneficiaryName=";
         StringBuffer paramCarInfo = new StringBuffer();
-//        paramCarInfo.append("defaultAgentCode=1&");
-//        paramCarInfo.append("isVIP=false&");
-//        paramCarInfo.append("newVehicleFlagHidden=0&");
-//        paramCarInfo.append("ecInsureId="+ecInsureId+"&");
-//        paramCarInfo.append("isRenewal=0&");
-//        paramCarInfo.append("isAgent=3212&");
-//        paramCarInfo.append("cityCode=110100&");
-//        paramCarInfo.append("localProvinceCode=110000&");
-//        paramCarInfo.append("planDefineId=3&");
-//        paramCarInfo.append("pageInfo=carPrecisionInfo&");
-////        paramCarInfo.append("bizInsureBeignTime=2016-06-02&");
-////        paramCarInfo.append("forceInsureBeignTime=2016-06-02&");
-//        paramCarInfo.append("cityName=北京市&");
-//        paramCarInfo.append("carcity=京QS78J1&");
-////        paramCarInfo.append("live800_URL_JSP=http://onlinecs.axatp.com/live800/chatClient/chatbox.jsp&");
-//        paramCarInfo.append("gztFlag=0&");
-//        paramCarInfo.append("viewMode=edit&");
-//        paramCarInfo.append("connectType=1&");
-//        paramCarInfo.append("isJZ=1&");
-//        paramCarInfo.append("searchType=0&");
-//        paramCarInfo.append("prohibitValue=null&");
-//        paramCarInfo.append("isBeiJingFlag=1&");
+        paramCarInfo.append("defaultAgentCode=1&");
+        paramCarInfo.append("isVIP=false&");
+        paramCarInfo.append("newVehicleFlagHidden=0&");
+        paramCarInfo.append("ecInsureId="+ecInsureId+"&");
+        paramCarInfo.append("isRenewal=0&");
+        paramCarInfo.append("isAgent=3212&");
+        paramCarInfo.append("cityCode=110100&");
+        paramCarInfo.append("localProvinceCode=110000&");
+        paramCarInfo.append("planDefineId=3&");
+        paramCarInfo.append("pageInfo=carPrecisionInfo&");
+        paramCarInfo.append("bizInsureBeignTime=2016-06-02&");
+        paramCarInfo.append("forceInsureBeignTime=2016-06-02&");
+        paramCarInfo.append("cityName=北京市&");
+        paramCarInfo.append("carcity=京QS78J1&");
+        paramCarInfo.append("live800_URL_JSP=http://onlinecs.axatp.com/live800/chatClient/chatbox.jsp&");
+        paramCarInfo.append("gztFlag=0&");
+        paramCarInfo.append("viewMode=edit&");
+        paramCarInfo.append("connectType=1&");
+        paramCarInfo.append("isJZ=1&");
+        paramCarInfo.append("searchType=0&");
+        paramCarInfo.append("prohibitValue=null&");
+        paramCarInfo.append("isBeiJingFlag=1&");
           paramCarInfo.append("engineNo=574802&");
           paramCarInfo.append("vehicleFrameNo=LFV2A11G473116388&");
-//        paramCarInfo.append("personnelName=张金生&");
-//        paramCarInfo.append("mobileTelephone=13511421136&");
-//        paramCarInfo.append("certificateNo=1&");
-//        paramCarInfo.append("isMortgage=0&");
-//        paramCarInfo.append("transferFlag=0&");
-//        paramCarInfo.append("isRenewal=0&");
+        paramCarInfo.append("personnelName=张金生&");
+        paramCarInfo.append("mobileTelephone=13511421136&");
+        paramCarInfo.append("certificateNo=1&");
+        paramCarInfo.append("isMortgage=0&");
+        paramCarInfo.append("transferFlag=0&");
+        paramCarInfo.append("isRenewal=0&");
         String param = paramCarInfo.toString();
         param = paramCarInfo.substring(0, param.length() - 1);
         String html_selectPage = HttpsUtil.sendPost(url_SelectCarInfo, postParm, cookies, "GBK").get("html");
-//        System.out.println(html_selectPage);
+        System.out.println(html_selectPage);
 //
 
 //

@@ -72,6 +72,51 @@ public class SysConfigInfo {
     /** PICC密码2 */
     public static String PICC_PWD2;
 
+    /** ====================================================人保end====================*/
+
+
+    /** ==================================================== 天平start ====================*/
+
+    /** AXATP业务登录 */
+    public static String AXATP_DOMIAN;
+    /** AXATP用户名 */
+    public static String AXATP_USERNAME;
+    /** AXATP密码 */
+    public static String AXATP_PWD;
+    /** AXATP推荐码 */
+    public static String AXATP_RECOMMENDCODE;
+    /** 天平系统登录 */
+    public static String AXATP_LOGIN;
+    /** 天平系统图片验证码 */
+    public static String AXATP_PIC;
+    /** 天平系统 */
+    public static String AXATP_PRECISIONINDEX;
+    public static String AXATP_TOPREPARATION;
+    public static String AXATP_SAVEPRECISIONINDEXINFOFORPC;
+    public static String AXATP_INITPRECISIONBASICINFO;
+
+    public static String AXATP_CARBASEVEHICLEPRICEQUERY;
+    public static String AXATP_CARQUERYWHERERBCODE;
+
+    public static String AXATP_SAVEPRECISIONCARINFO;
+    public static String AXATP_APPLYQUERY;
+    public static String AXATP_HANDLEAPPLYQUERYRETURN;
+    public static String AXATP_REINSUREVIEW;
+    public static String AXATP_PKGPREMIUMCALC;
+
+    public static String AXATP_SHOWBUSINESSPLANINFO;
+    public static String AXATP_SHOWFORCEPLANINFO;
+
+    public static  String AXATP_BUSINESSPREMIUMCALCULATER;
+    public static  String AXATP_FORCEPREMIUMCALCULATER;
+
+
+
+
+
+    /** ====================================================天平end ====================*/
+
+
     /**----------------------------- 返回错误信息 ----------------------------------*/
     public static Integer ERROR404;
     public static String ERROR404MSG;
@@ -137,6 +182,33 @@ public class SysConfigInfo {
             PICC_HEBAOSEARCHUNDWRTMSG = getString("picc_hebaosearchundwrtmsg","");
 
 
+            //安盛天平 start
+
+             AXATP_DOMIAN = getString("axatp_domain","");
+             AXATP_USERNAME = getString("axatp_username","");
+             AXATP_PWD = getString("axatp_passwd","");
+             AXATP_RECOMMENDCODE = getString("axatp_recommendcode","");
+             AXATP_LOGIN = getString("axatp_login","");
+             AXATP_PIC = getString("axatp_pic","");
+             AXATP_PRECISIONINDEX  = getString("axatp_precisionindex","");
+             AXATP_SAVEPRECISIONINDEXINFOFORPC = getString("axatp_savePrecisionIndexInfoForPc","");
+             AXATP_SHOWBUSINESSPLANINFO = getString("axatp_showbusinessplaninfo","");
+             AXATP_SHOWFORCEPLANINFO = getString("axatp_showforceplaninfo","");
+             AXATP_INITPRECISIONBASICINFO = getString("axatp_initPrecisionBasicInfo","");
+             AXATP_CARBASEVEHICLEPRICEQUERY = getString("axatp_carBasicVehiclePriceQuery","");
+             AXATP_CARQUERYWHERERBCODE =getString("axatp_carQueryWhereRbCode","");
+             AXATP_TOPREPARATION =getString("axatp_toPreparation","");
+             AXATP_SAVEPRECISIONCARINFO = getString("axatp_savePrecisionCarInfo","");
+             AXATP_APPLYQUERY = getString("axatp_applyQuery","");
+             AXATP_HANDLEAPPLYQUERYRETURN = getString("axatp_handleApplyQueryReturn","");
+             AXATP_REINSUREVIEW = getString("axatp_reInsureView","");
+             AXATP_PKGPREMIUMCALC = getString("axatp_pkgPremiumCalc","");
+             AXATP_BUSINESSPREMIUMCALCULATER = getString("axatp_businessPremiumCalculater","");
+             AXATP_FORCEPREMIUMCALCULATER = getString("axatp_forcePremiumCalculater","");
+
+
+
+            //安盛天平 end
 
             //错误信息获取
             ERROR404 = getInt("picc_error404",404);

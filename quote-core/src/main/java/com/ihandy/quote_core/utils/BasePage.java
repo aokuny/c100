@@ -1,14 +1,22 @@
 package com.ihandy.quote_core.utils;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ihandy.quote_core.bean.Request;
 import com.ihandy.quote_core.bean.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.ihandy.quote_common.httpUtil.HttpsUtil;
 import com.ihandy.quote_common.httpUtil.StringBaseUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * Created by fengwen on 2016/5/11.
@@ -18,21 +26,104 @@ public abstract class BasePage {
 	private static Logger logger = Logger.getLogger(BasePage.class);
 
 	public String piccSessionId;//picc登录session
+	public String cookieValue;//axatp登录session
 
 	protected static Map<String, String> piccSessionIdMap = new HashMap<>();//人保登录缓存
+	protected static Map<String, String> axatpSessionIdMap = new HashMap<>();//人保登录缓存
+	public  Map<String, String> axatpMap = new LinkedHashMap<>();//天平登录缓存
 
 	public BasePage(int type){
 		switch (type) {
 			case 1://人保
-				//logger.info("抓取机器人，【初始化PICC登录session开始】");
 				initPiccLogin();//初始化picc登录session
-				//logger.info("抓取机器人，【初始化PICC登录session完成】");
+				break;
+			case 2://天平
+				initAxatpLogin();//初始化axatp登录session
 				break;
 			default:
 				break;
 		}
 	}
+  public void  initAxatpLogin(){
+	  cookieValue = axatpSessionIdMap.get("cookieValue");
+	  if(!StringUtils.isBlank(cookieValue)){
 
+	  }else {
+		  //获取session信息
+		  String url_login = SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_LOGIN;
+		  String cookieValue1 = HttpsUtil.sendGetForAxatp(url_login, null, "GBK").get("cookieValue");
+
+		  //获取要邀请码标识
+		  StringBuffer param_login = new StringBuffer();
+		  param_login.append("memberName=" + SysConfigInfo.AXATP_USERNAME + "&");
+		  param_login.append("flag=ajaxRecommendCode");
+		  Map map1 = HttpsUtil.sendPost(url_login, param_login.toString(), cookieValue1, "GBK");
+		  String login_two = map1.get("html").toString();
+
+
+		  //获取验证码图片
+		  String url_randCode = SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_PIC + "?type=login";
+		  Map imgMap = HttpsUtil.getURLImgOutByte(url_randCode, cookieValue1, "GBK");
+		  String html_getCode = HttpsUtil.uploadFile((byte[]) imgMap.get("byte"),
+				  "http://192.168.4.117:8011/GetSeccode.aspx", "code." + imgMap.get("type"));
+		  JSONObject returnObject = JSON.parseObject(login_two);
+		  String agentCode = returnObject.get("agentCode").toString();
+		  String checkRecommendCode = returnObject.get("checkRecommendCode").toString();
+		  //用户登录
+		  StringBuffer paramSb = new StringBuffer();
+		  paramSb.append("memberName=" + SysConfigInfo.AXATP_USERNAME + "&");
+		  paramSb.append("voucherNoArray=&");
+		  paramSb.append("voucherNoArrayLogin=&");
+		  paramSb.append("defaultAgentCode=1&");
+		  paramSb.append("isVIP=false&");
+		  paramSb.append("linkResource=&");
+		  paramSb.append("flag=login&");
+		  paramSb.append("memberName="+ SysConfigInfo.AXATP_USERNAME +"&");
+		  paramSb.append("password=" + SysConfigInfo.AXATP_PWD + "&");
+		  paramSb.append("showRecommendCode=1&");
+		  paramSb.append("isAgent="+agentCode+"&");
+		  paramSb.append("checkRecommendCode="+checkRecommendCode+"&");
+		  paramSb.append("recommendCode=" + SysConfigInfo.AXATP_RECOMMENDCODE + "&");
+		  paramSb.append("randomCode=" + html_getCode + "&");
+		  String param = paramSb.toString();
+		  param = param.substring(0, param.length() - 1);
+		  System.out.println("cookieValue1 = "+cookieValue1);
+		  Map map = HttpsUtil.sendPost(url_login, param.toString(), cookieValue1, "GBK");
+
+
+
+		  String html_index = map.get("html").toString();
+		  String cookieValue2= map.get("cookieValue").toString();
+		  cookieValue = cookieValue1+ cookieValue2;
+		  cookieValue =cookieValue.replace("Path=/;","");
+		  cookieValue =cookieValue.replace("path=/;","");
+		  cookieValue =cookieValue.replace("httponly;","");
+		  cookieValue =cookieValue.replace("loginedName=;","");
+
+		  axatpSessionIdMap.put("cookieValue", cookieValue);
+
+		  if (!html_index.contains("你已经登录成功，你可以选择以下操作")) {
+				  axatpSessionIdMap.put("cookieValue", "");
+				  initAxatpLogin();
+		  }
+		  else{
+			  Document doc = Jsoup.parse(html_index);
+			  Element e = doc.getElementById("services_query");
+			  Elements es = e.getElementsByClass("userGoTo");
+			  es.get(0).select("a");
+			  String href =es.get(0).select("a").get(0).attributes().get("href").toString();
+			  String[] arrParam = href.split("\\?")[1].split("&");
+			  for(int i=0;i<arrParam.length;i++){
+				  try {
+					  axatpMap.put(arrParam[i].split("=")[0], arrParam[i].split("=")[1]);
+				  }catch (Exception e2){
+					  axatpMap.put(arrParam[i].split("=")[0], "");
+				  }
+			  }
+		  }
+	  }
+
+  }
 	/**
 	 * 初始化picc登录session(已测试)
 	 */

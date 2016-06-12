@@ -390,7 +390,81 @@ public class HttpsUtil {
 		result.put("html", resultBuffer.toString());
 		return result;
 	}
+	/**
+	 * 普通post请求
+	 * @param urlString
+	 * @param sessionId
+	 * @return
+	 */
+	public static Map<String, String> sendPostForAxap(String urlString, String param, String sessionId,String enCode){
+		if(StringUtils.isBlank(enCode)){
+			enCode = "gb2312";
+		}
+		InputStream inputStream = null;
+		InputStreamReader inputStreamReader = null;
+		BufferedReader reader = null;
+		StringBuffer resultBuffer = new StringBuffer();
+		String tempLine = null;
+		URLConnection conn = null;
+		String cookieValue = "";
+		try {
+			URL url = new URL(urlString);
+			conn = url.openConnection();
+			conn.setRequestProperty("Accept", "application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, */*");
+			conn.setRequestProperty("Accept-Language", "zh-CN");
+			conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)");
 
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+			conn.setRequestProperty("Connection", "Keep-Alive");
+			conn.setRequestProperty("Cache-Control", "no-cache");
+			if (StringUtils.isNotBlank(sessionId)) {
+				conn.setRequestProperty("Cookie", sessionId);
+			}
+			conn.setUseCaches(false);
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.getOutputStream().write(param.getBytes());
+			conn.getOutputStream().flush();
+			conn.getOutputStream().close();
+
+			inputStream = conn.getInputStream();
+			inputStreamReader = new InputStreamReader(inputStream,enCode);
+			reader = new BufferedReader(inputStreamReader);
+			while ((tempLine = reader.readLine()) != null) {
+				resultBuffer.append(tempLine);
+			}
+			 //conn.getHeaderField("responses").getHeaders().get("Set-Cookie");
+			Object[] cookieValueArr = (Object[]) conn.getHeaderFields().get("Set-Cookie").toArray();
+            for(int i=0;i<cookieValueArr.length;i++){
+				if(cookieValueArr[i].toString().contains("loginedName=;")){
+				}else {
+					cookieValue = cookieValue + cookieValueArr[i].toString() + ";";
+				}
+		    }
+
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+				if (inputStreamReader != null) {
+					inputStreamReader.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		Map<String, String> result = new HashMap<>();
+		result.put("cookieValue", cookieValue);
+		result.put("html", resultBuffer.toString());
+		return result;
+	}
 
 	/**
 	 * 获取图片流

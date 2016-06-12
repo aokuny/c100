@@ -91,6 +91,7 @@ public class AxatpServiceImpl implements IAxatpService {
                                 Response response12 = handleApplyQueryReturnPage.run(request12);
 
 
+
                                 ReInsureView reInsureView =new ReInsureView(2);
                                 Request request8 = new Request();
                                 request8.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_REINSUREVIEW);
@@ -102,22 +103,15 @@ public class AxatpServiceImpl implements IAxatpService {
                                 request9.setUrl(SysConfigInfo.AXATP_DOMIAN+SysConfigInfo.AXATP_SHOWBUSINESSPLANINFO);
                                 request9.setRequestParam(response8.getResponseMap());
                                 Response response9  = showBusinessPlanInfoPage.run(request9);
-                            }
 
-                          /*  ShowBusinessPlanInfoPage showBusinessPlanInfoPage = new ShowBusinessPlanInfoPage(2);
-                            Request request7 = new Request();
-                            request7.setUrl(SysConfigInfo.AXATP_DOMIAN+SysConfigInfo.AXATP_SHOWBUSINESSPLANINFO);
-                            request7.setRequestParam(response6.getResponseMap());
-                            Response response7  = showBusinessPlanInfoPage.run(request7);*/
+                                CalculaterBusinessPremiumPage calculaterBusinessPremiumPage = new CalculaterBusinessPremiumPage(2);
+                                Request request13 = new Request();
+                                request13.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_HANDLEAPPLYQUERYRETURN);
+                                request13.setRequestParam(response9.getResponseMap());
+                                Response response13 = calculaterBusinessPremiumPage.run(request13);
+                            }
                         }
                     }
-               /*
-                ShowBusinessPlanInfoPage showBusinessPlanInfoPage = new ShowBusinessPlanInfoPage(2);
-                Request request2 = new Request();
-                request2.setUrl(SysConfigInfo.AXATP_DOMIAN+SysConfigInfo.AXATP_SHOWBUSINESSPLANINFO);
-                request2.setRequestParam(response.getResponseMap());
-                Response response2  = showBusinessPlanInfoPage.run(request2);*/
-
                 }
             }
         }

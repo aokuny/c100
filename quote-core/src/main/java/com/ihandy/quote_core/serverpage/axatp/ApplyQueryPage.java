@@ -29,6 +29,7 @@ public class ApplyQueryPage extends BasePage {
         Map paramMap =request.getRequestParam();
         String param = "";
        /* http://dm.axatp.com/applyQuery.do?isJZ=1&ecInsureId=E1E65AD17E74DCCB6C352AC9787FF1604954DCB8087C8760&cityCode=110100&autoModeCode=XDABJD0010&tbsn=*/
+      /*  http://dm.axatp.com/applyQuery.do?isJZ=1&ecInsureId=E1E65AD17E74DCCB6C352AC9787FF1604954DCB8087C8760&cityCode=110100&autoModeCode=XDABJD0010&tbsn=*/
         param = param+"isJZ="+paramMap.get("isJZ")+"&";
         param = param+"ecInsureId="+paramMap.get("ecInsureId")+"&";
         param = param+"cityCode="+paramMap.get("cityCode")+"&";

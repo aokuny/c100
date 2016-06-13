@@ -109,7 +109,10 @@ public class SysConfigInfo {
 
     public static  String AXATP_BUSINESSPREMIUMCALCULATER;
     public static  String AXATP_FORCEPREMIUMCALCULATER;
-
+    public static  String AXATP_SHOWINSUREDINFO;
+    public static  String AXATP_SHOWTEMPORARYINFO;
+    public static  String AXATP_APPLYUNDERWRITE;
+    public static  String AXATP_PAYREQUESTINIT;
 
 
 
@@ -208,6 +211,10 @@ public class SysConfigInfo {
              AXATP_PKGPREMIUMCALC = getString("axatp_pkgPremiumCalc","");
              AXATP_BUSINESSPREMIUMCALCULATER = getString("axatp_businessPremiumCalculater","");
              AXATP_FORCEPREMIUMCALCULATER = getString("axatp_forcePremiumCalculater","");
+             AXATP_SHOWINSUREDINFO = getString("axatp_showInsuredInfo","");
+             AXATP_SHOWTEMPORARYINFO =  getString("axatp_showTemporaryInfo","");
+             AXATP_APPLYUNDERWRITE =  getString("axatp_applyUnderwrite","");
+             AXATP_PAYREQUESTINIT =  getString("axatp_payRequestInit","");
 
 
 

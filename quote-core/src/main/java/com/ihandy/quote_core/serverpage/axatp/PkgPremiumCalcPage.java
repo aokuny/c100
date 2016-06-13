@@ -32,19 +32,21 @@ public class PkgPremiumCalcPage extends BasePage {
         Map paramMap =request.getRequestParam();
 
         StringBuffer param = new StringBuffer();
-
         param.append("ecInsureId="+paramMap.get("ecInsureId")+"&");
-
-        param.append("tbsn="+paramMap.get("tbsn")+"&");
+        param.append("pkgName=class&");
+        param.append("calcFlag=true&");
         param.append("isAgent="+paramMap.get("isAgent")+"&");
         param.append("cityCode="+paramMap.get("cityCode")+"&");
         param.append("localProvinceCode="+paramMap.get("localProvinceCode")+"&");
         param.append("planDefineId="+paramMap.get("planDefineId")+"&");
         param.append("isRenewal="+paramMap.get("isRenewal")+"&");
         param.append("rt="+paramMap.get("rt")+"&");
-        param.append("linkResource="+paramMap.get("linkResource")+"&");
+        param.append("bizInsureBeignTime="+paramMap.get("bizInsureBeignDate"));
+
+
+
         url=url+"?"+param.toString();
-        url = url+"?"+param;
+
         Map map = HttpsUtil.sendGet(url,super.cookieValue,"UTF-8");
         html = map.get("html").toString();
         return html;

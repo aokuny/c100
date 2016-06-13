@@ -20,8 +20,23 @@ public class AxatpServiceImpl implements IAxatpService {
     public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo, String licenseOwner,String cityCode) {
         String engineNo="FW151330";
         String vehicleFrameNo="LBECFAHC5FZ226987";
-        String mobileTelePhone="18810253437";
-        String certificateNo ="132425196903135852";
+        String touBaoMobileTelePhone="18810253437";
+        String beiBaoMobileTelePhone = "18810253437";
+        String toubaoCertificateNo ="132425196903135852";
+        String beibaoCertificateNo ="132425196903135852";
+        String touBaoEmail = "784506957@qq.com";
+        String beiBaoEmail = "784506957@qq.com";
+        String touBaoAddress ="门头沟toubao";
+        String beiBaoAddress ="门头沟beibao";
+
+        String receiveName="张文海";
+        String receivePhone="18810253437";
+        String receiveVoice="发票抬头";
+        String receiveDate="2016-07-01";
+        String receiveAddress="门头沟2403";
+
+
+
         PrecisionIndexPage precisionIndexPage =new PrecisionIndexPage(2);
         Request request1 =new Request();
         request1.setUrl(SysConfigInfo.AXATP_DOMIAN+SysConfigInfo.AXATP_PRECISIONINDEX);
@@ -56,8 +71,8 @@ public class AxatpServiceImpl implements IAxatpService {
                         Map paramMap5 = response4.getResponseMap();
                         paramMap5.put("engineNo", engineNo);
                         paramMap5.put("vehicleFrameNo", vehicleFrameNo);
-                        paramMap5.put("mobileTelePhone", mobileTelePhone);
-                        paramMap5.put("certificateNo", certificateNo);
+                        paramMap5.put("mobileTelePhone", touBaoMobileTelePhone);
+                        paramMap5.put("certificateNo", toubaoCertificateNo);
                         request5.setRequestParam(paramMap5);
                         Response response5 = carBasicVehiclePriceQuery.run(request5);
                         if (response5.getReturnCode() == SysConfigInfo.SUCCESS200) {
@@ -67,48 +82,75 @@ public class AxatpServiceImpl implements IAxatpService {
                             request6.setRequestParam(response5.getResponseMap());
                             Response response6 = carQueryWhereRbCode.run(request6);
                             if(response6.getReturnCode()==SysConfigInfo.SUCCESS200){
-                                SavePrecisionCarInfo savePrecisionCarInfo = new SavePrecisionCarInfo(2);
-                                Request request7 = new Request();
-                                request7.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_SAVEPRECISIONCARINFO);
-                                request7.setRequestParam(response6.getResponseMap());
-                                Response response7 = savePrecisionCarInfo.run(request7);
 
                                 ApplyQueryPage applyQueryPage =new ApplyQueryPage(2);
-                                Request request10 = new Request();
-                                request10.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_APPLYQUERY);
-                                request10.setRequestParam(response7.getResponseMap());
-                                Response response10 = applyQueryPage.run(request10);
+                                Request request7 = new Request();
+                                request7.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_APPLYQUERY);
+                                request7.setRequestParam(response6.getResponseMap());
+                                Response response7 = applyQueryPage.run(request7);
 
-                                Request request11 = new Request();
-                                request11.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_INITPRECISIONBASICINFO);
-                                request11.setRequestParam(response10.getResponseMap());
-                                Response response11 = initPrecisionBasicInfoPage.run(request11);
-
-                                HandleApplyQueryReturnPage handleApplyQueryReturnPage =new HandleApplyQueryReturnPage(2);
-                                Request request12 = new Request();
-                                request12.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_HANDLEAPPLYQUERYRETURN);
-                                request12.setRequestParam(response11.getResponseMap());
-                                Response response12 = handleApplyQueryReturnPage.run(request12);
-
+                                Request request8 = new Request();
+                                request8.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_INITPRECISIONBASICINFO);
+                                request8.setRequestParam(response7.getResponseMap());
+                                Response response8 = initPrecisionBasicInfoPage.run(request8);
 
 
                                 ReInsureView reInsureView =new ReInsureView(2);
-                                Request request8 = new Request();
-                                request8.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_REINSUREVIEW);
-                                request8.setRequestParam(response12.getResponseMap());
-                                Response response8 = reInsureView.run(request8);
+                                Request request9 = new Request();
+                                request9.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_REINSUREVIEW);
+                                request9.setRequestParam(response8.getResponseMap());
+                                Response response9 = reInsureView.run(request9);
 
                                 ShowBusinessPlanInfoPage showBusinessPlanInfoPage = new ShowBusinessPlanInfoPage(2);
-                                Request request9 = new Request();
-                                request9.setUrl(SysConfigInfo.AXATP_DOMIAN+SysConfigInfo.AXATP_SHOWBUSINESSPLANINFO);
-                                request9.setRequestParam(response8.getResponseMap());
-                                Response response9  = showBusinessPlanInfoPage.run(request9);
+                                Request request10 = new Request();
+                                request10.setUrl(SysConfigInfo.AXATP_DOMIAN+SysConfigInfo.AXATP_SHOWBUSINESSPLANINFO);
+                                request10.setRequestParam(response9.getResponseMap());
+                                Response response10  = showBusinessPlanInfoPage.run(request10);
+
 
                                 CalculaterBusinessPremiumPage calculaterBusinessPremiumPage = new CalculaterBusinessPremiumPage(2);
                                 Request request13 = new Request();
-                                request13.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_HANDLEAPPLYQUERYRETURN);
+                                request13.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_BUSINESSPREMIUMCALCULATER);
                                 request13.setRequestParam(response9.getResponseMap());
                                 Response response13 = calculaterBusinessPremiumPage.run(request13);
+
+                                CalculaterForcePremiumPage calculaterForcePremiumPage = new CalculaterForcePremiumPage(2);
+                                Request request14 = new Request();
+                                request14.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_FORCEPREMIUMCALCULATER);
+                                request14.setRequestParam(response13.getResponseMap());
+                                Response response14 = calculaterForcePremiumPage.run(request14);
+
+                                ShowInsuredInfoPage showInsuredInfoPage =new ShowInsuredInfoPage(2);
+                                Request request15 = new Request();
+                                request15.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_SHOWINSUREDINFO);
+                                request15.setRequestParam(response14.getResponseMap());
+                                Response response15 = showInsuredInfoPage.run(request15);
+
+                                ShowTemporaryInfoPage showTemporaryInfoPage =new ShowTemporaryInfoPage(2);
+                                Request request16 = new Request();
+                                request16.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_SHOWTEMPORARYINFO);
+                                Map paramMap16 = response15.getResponseMap();
+                                paramMap16.put("engineNo", engineNo);
+                                paramMap16.put("vehicleFrameNo", vehicleFrameNo);
+                                paramMap16.put("mobileTelePhone", touBaoMobileTelePhone);
+                                paramMap16.put("certificateNo", toubaoCertificateNo);
+                                request16.setRequestParam(paramMap16);
+                                Response response16 = showTemporaryInfoPage.run(request16);
+
+
+                                ApplyUnderwritePage applyUnderwritePage =new ApplyUnderwritePage(2);
+                                Request request17 = new Request();
+                                request17.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_APPLYUNDERWRITE);
+                                request17.setRequestParam(response16.getResponseMap());
+                                Response response17 = applyUnderwritePage.run(request17);
+
+                                PayRequestInitPage payRequestInitPage =new PayRequestInitPage(2);
+                                Request request18 = new Request();
+                                request18.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_PAYREQUESTINIT);
+                                request18.setRequestParam(response17.getResponseMap());
+                                Response response18 = payRequestInitPage.run(request18);
+                                
+
                             }
                         }
                     }

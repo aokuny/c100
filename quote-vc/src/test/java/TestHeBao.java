@@ -37,13 +37,18 @@ public class TestHeBao {
         System.out.println("code = "+code);
     }
 
-	/*@Test
+	@Test
 	public  void  searchHebao(){
-
 		HebaoResponse hebaoResponse = 	irbService.getHebaoResponse("京P55M11");
 		System.out.println("\n");
-		System.out.println("return hebaoResponse = "+hebaoResponse);
-	}*/
+		System.err.println("Source:" + hebaoResponse.getSource());
+		System.err.println("SubmitStatus:" + hebaoResponse.getSubmitStatus());
+		System.err.println("SubmitResult:" + hebaoResponse.getSubmitResult());
+		System.err.println("BizNo:" + hebaoResponse.getBizNo());
+		System.err.println("ForceNo:" + hebaoResponse.getForceNo());
+		System.err.println("BizRate:" + hebaoResponse.getBizRate());
+		System.err.println("ForceRate:" + hebaoResponse.getForceRate());
+	}
      /* @Test
     public void testGetprpAnciInfo() {
         Map nextParamsMap = new HashMap<>();

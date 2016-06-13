@@ -19,6 +19,7 @@ import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -626,110 +627,62 @@ public class RBServiceImpl implements IService {
 
 	@Override
 	public HebaoResponse  getHebaoResponse(String licenseNo) {
-		//HebaoResponse> responseList = new ArrayList<HebaoResponse>();
 		HebaoResponse response = new HebaoResponse();
-		HebaoSearchPrepareQueryCodePage hebaoSearchPrepareQueryCodePage =new HebaoSearchPrepareQueryCodePage(1);
-		Request request1 =new Request();
-		request1.setRequestParam(null);
-		request1.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOPREPARESEARCH);
-		Response response1 = hebaoSearchPrepareQueryCodePage.run(request1);
-		if(response1.getReturnCode()==SysConfigInfo.SUCCESS200){
-			Map paramMap = (LinkedHashMap)	response1.getResponseMap().get("nextParams");
-			HebaoSearchQueryCodePage hebaoSearchQueryCodePage =new HebaoSearchQueryCodePage(1);
-			Request request2 =new Request();
-			try {
-				licenseNo = URLEncoder.encode(licenseNo, "GBK");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		//在缓存中拿出投保单号，并查询
+		Map<String, String> noMap = CacheConstant.proposalNoInfo.get(licenseNo);
+		String biNo = noMap.get("biNo");//商业险投保单号
+		String ciNo = noMap.get("ciNo");//交强险投保单号
+		HebaoSearchQueryUndwrtMsgPage hebaoSearchQueryUndwrtMsgPage =new HebaoSearchQueryUndwrtMsgPage(1);
+		Request request3 =new Request();
+		Map request3ParamMap = new HashMap();
+		request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSEARCHUNDWRTMSG);
+		request3ParamMap.put("bizType", "PROPOSAL");
+		request3ParamMap.put("bizNo", biNo);
+		request3.setRequestParam(request3ParamMap);
+		Response response3 = new Response();
+		Map<String, String> biMap = new HashMap<>();//商业险
+		Map<String, String> ciMap = new HashMap<>();//交强险
+		//执行查询 商业险
+		if(StringUtils.isNoneBlank(biNo)){
+			response3 = hebaoSearchQueryUndwrtMsgPage.run(request3);
+			biMap = (Map)response3.getResponseMap().get("nextParams");
+		}
+		request3ParamMap.remove("bizNo");
+		request3ParamMap.put("bizNoCI", ciNo);
+		//执行查询 交强险
+		if(StringUtils.isNoneBlank(ciNo)){
+			response3 = hebaoSearchQueryUndwrtMsgPage.run(request3);
+			ciMap = (Map)response3.getResponseMap().get("nextParams");
+		}
+		response.setSource(2);//人保
+		response.setBizNo(biNo);
+		response.setForceNo(ciNo);
+		if(!biMap.isEmpty()){//判断商业险信息
+			String msg = biMap.get("msg");
+			logger.info("人保API，【核保信息查询：商业险】，licenseNo：" + licenseNo + "，biNo：" + biNo + "，msg：" + msg);
+			if(msg.contains("不通过") || msg.contains("不成功") || msg.contains("未通过") || msg.contains("未成功")){//未通过
+				response.setSubmitStatus(0);
+				response.setSubmitResult(msg);
+				return response;
 			}
-			paramMap.put("prpCproposalVo.licenseNo", licenseNo);
-			request2.setRequestParam(paramMap);
-			request2.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSEARCH);
-			Response response2 = hebaoSearchQueryCodePage.run(request2);
-			Map lastResultMap = (Map) response2.getResponseMap().get("lastResult");
-			Set set = lastResultMap.keySet();
-			Iterator it = set.iterator();
-			String time = "";
-			int TDAACount = 0;
-			int TDZACount = 0;
-			while(it.hasNext())
-			{
-				int key = Integer.parseInt(it.next().toString());
-				Map map = (Map)lastResultMap.get(key);
-
-				// 根据BizNo获取核保意见 , 根据核保时间选择最后核保的信息
-				HebaoSearchQueryUndwrtMsgPage hebaoSearchQueryUndwrtMsgPage =new HebaoSearchQueryUndwrtMsgPage(1);
-				Request request3 =new Request();
-				Map request3ParamMap = new HashMap();
-				String proposalNo = "";
-				proposalNo = map.get("proposalNo").toString();
-				if(proposalNo.contains("TDAA")){//商业险
-					request3ParamMap.put("bizNo", proposalNo);
-					request3ParamMap.put("bizType", "PROPOSAL");
-					request3.setRequestParam(request3ParamMap);
-					request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSEARCHUNDWRTMSG);
-					Response response3 = hebaoSearchQueryUndwrtMsgPage.run(request3);
-					Map return3Map = (Map)response3.getResponseMap().get("nextParams");
-					String time1 = return3Map.get("time").toString();
-					if(TDAACount==0){//第一条不用比较直接写入
-						time = time1;
-						response.setSubmitResult(return3Map.get("msg").toString());
-						response.setBizNo(proposalNo);
-					}else{
-						int timeflag = StringBaseUtils.compareDate(time1, time);
-						if(timeflag==1){ //time1>time
-							time = time1;
-							response.setSubmitResult(return3Map.get("msg").toString());
-							if(proposalNo.contains("TDAA")){
-								response.setBizNo(proposalNo);
-							}else if (proposalNo.contains("TDZA")){
-								response.setForceNo(proposalNo);
-							}
-						}else{//time1<time || time1=time
-
-						}
-					}
-					TDAACount++;
-				}else if (proposalNo.contains("TDZA")){
-					request3ParamMap.put("bizNoCI", proposalNo);
-					request3ParamMap.put("bizType", "PROPOSAL");
-					request3.setRequestParam(request3ParamMap);
-					request3.setUrl(SysConfigInfo.PICC_DOMIAN + SysConfigInfo.PICC_HEBAOSEARCHUNDWRTMSG);
-					Response response3 = hebaoSearchQueryUndwrtMsgPage.run(request3);
-					Map return3Map = (Map)response3.getResponseMap().get("nextParams");
-					String time1 = return3Map.get("time").toString();
-					if(TDZACount==0){//第一条不用比较直接写入
-						time = time1;
-						response.setSubmitResult(return3Map.get("msg").toString());
-						if(proposalNo.contains("TDAA")){
-							response.setBizNo(proposalNo);
-						}else if (proposalNo.contains("TDZA")){
-							response.setForceNo(proposalNo);
-						}
-					}else{
-						int timeflag = StringBaseUtils.compareDate(time1, time);
-						if(timeflag==1){ //time1>time
-							time = time1;
-							response.setSubmitResult(return3Map.get("msg").toString());
-							if(proposalNo.contains("TDAA")){
-								response.setBizNo(proposalNo);
-							}else if (proposalNo.contains("TDZA")){
-								response.setForceNo(proposalNo);
-							}
-						}else{//time1<time|| time1=time
-
-						}
-					}
-					TDZACount++;
-				}	//else if (TDZA) end
-
-			}	//while end
-			//应该返回一个list
-		}// if success end
-
-		return     response ;
-
+		}
+		if(!ciMap.isEmpty()){//判断商业险信息
+			String msg = ciMap.get("msg");
+			logger.info("人保API，【核保信息查询：交强险】，licenseNo：" + licenseNo + "，ciNo：" + ciNo + "，msg：" + msg);
+			if(msg.contains("不通过") || msg.contains("不成功") || msg.contains("未通过") || msg.contains("未成功")){//未通过
+				response.setSubmitStatus(0);
+				response.setSubmitResult(msg);
+				return response;
+			}
+		}
+		if(biMap.isEmpty() && ciMap.isEmpty()){//都未空的时候，审核中
+			response.setSubmitStatus(3);
+			response.setSubmitResult("核保中");
+			return response;
+		}
+		response.setSubmitStatus(1);
+		response.setSubmitResult("核保成功");
+		return response ;
 	}
 
 	@Override

@@ -205,7 +205,7 @@ public class QuoteThreadPicc extends Thread{
 				logger.info("人保 API接口，【开始插入核保】，牌照：" + LicenseNo);
 				long hebaoStartTime = System.currentTimeMillis();
 				try {
-					this.commitHeBaoInfo(param);
+					this.commitHeBaoInfo(param, LicenseNo);
 				} catch (Exception e) {
 					logger.error("人保 AIP接口，【插入核保报错】，牌照：" + LicenseNo + "，" + e.getMessage());
 					e.printStackTrace();
@@ -1453,7 +1453,7 @@ public class QuoteThreadPicc extends Thread{
 	 * @param url
 	 * @return
 	 */
-	public String commitHeBaoInfo(String url) {
+	public String commitHeBaoInfo(String url, String LicenseNo) {
 		String code="";
 		String DAAno="";
 		String DZAno="";
@@ -1522,14 +1522,23 @@ public class QuoteThreadPicc extends Thread{
 			Response responseCommit2 = hebaoCommitEditSubmitUndwrtPage.run(requestCommit2);
 			//返回核保单号
 			Map mapTDAA = (Map) response6.getResponseMap().get("nextParams");
-			DAAno = mapTDAA.get("TDAA").toString();
+			DAAno = String.valueOf(mapTDAA.get("TDAA"));
 			//返回关联保单号
-			DZAno = mapTDAA.get("TDZA").toString();
+			DZAno = String.valueOf(mapTDAA.get("TDZA"));
 		}else{
 			logger.info("机器人抓取，获取辅助计算核保参数失败");
 		}
 		logger.info("人保AIP，【插入核保结果】，商业险投保单号："  + DAAno + "，交强险投保单号：" + DZAno);
 		code = "DAAno = "+DAAno+",DZAno = "+DZAno;
+		//存放缓存信息，直接覆盖
+		Map<String, String> proposalInfoMap = new HashMap<>();
+		if(StringUtils.isNoneBlank(DAAno) && !"null".equals(DAAno)){
+			proposalInfoMap.put("biNo", DAAno);
+		}
+		if(StringUtils.isNoneBlank(DZAno) && !"null".equals(DZAno)){
+			proposalInfoMap.put("ciNo", DZAno);
+		}
+		CacheConstant.proposalNoInfo.put(LicenseNo, proposalInfoMap);
 		return code;
 	}
 }

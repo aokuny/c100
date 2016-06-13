@@ -32,7 +32,7 @@ public class HebaoSearchQueryCodePage extends BasePage {
         url = url+"?"+"pageSize=10&pageNo=1";
         Map paraMap = request.getRequestParam();
         String param =StringBaseUtils.Map2GetParam(paraMap);
-        System.out.println("param = "+param);
+        //System.out.println("param = "+param);
         Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"UTF-8");
         html = map.get("html").toString();
         return html;
@@ -43,7 +43,7 @@ public class HebaoSearchQueryCodePage extends BasePage {
         //解析{"totalRecords":2,"data":[{"dmFlag":"0","policyNo":"                      ","contractNo":"                      ","specialflag":"初始值","underWriteEndDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"licenseNo":"京P55M11","checkStatus":"初始状态","operateDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"comCode":"11010286","checkFlag":"初始值","proposalNo":"TDAA201611010000955201","underWriteFlag":"见费出单待缴费","insuredName":"朱佳佳","operatorCode":"020083    ","startDate":{"date":26,"day":0,"timezoneOffset":-480,"year":116,"month":5,"hours":0,"seconds":0,"minutes":0,"time":1466870400000,"nanos":0}},{"dmFlag":"0","policyNo":"                      ","contractNo":"                      ","specialflag":"初始值","underWriteEndDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"licenseNo":"京P55M11","checkStatus":"初始状态","operateDate":{"date":25,"day":3,"timezoneOffset":-480,"year":116,"month":4,"hours":0,"seconds":0,"minutes":0,"time":1464105600000,"nanos":0},"comCode":"11010286","checkFlag":"初始值","proposalNo":"TDZA201611010000977639","underWriteFlag":"见费出单待缴费","insuredName":"朱佳佳","operatorCode":"020083    ","startDate":{"date":26,"day":0,"timezoneOffset":-480,"year":116,"month":5,"hours":0,"seconds":0,"minutes":0,"time":1466870400000,"nanos":0}}],"startIndex":1,"recordsReturned":10}
         Response response = new Response();
         if(!html.equals("")||null!=html){
-            System.out.println("html = "+html);
+            //System.out.println("html = "+html);
             Map  returnMap  = new HashMap<>();
             Map lastResultMap = new HashMap<>();
             try{

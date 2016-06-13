@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.ihandy.qoute_common.springutils.SpringMVCUtils;
 import com.ihandy.quote_core.bean.other.CarInfoResponse;
+import com.ihandy.quote_core.bean.other.HebaoResponse;
 import com.ihandy.quote_core.bean.other.PostPrecisePricerResponse;
 import com.ihandy.quote_core.service.IQuoteService;
 import com.ihandy.quote_core.service.IService;
@@ -329,5 +330,41 @@ public class RbController {
 		}
 		SpringMVCUtils.renderJson(response, result);
 	}
-
+	
+	@RequestMapping("/getSubmitInfo")
+	@ResponseBody
+	public void getSubmitInfo(HttpServletRequest request, HttpServletResponse response, String LicenseNo, String IntentionCompany, String Agent, String CustKey, String SecCode) {
+		// 判断是否是get请求
+		if (request.getMethod().equals("GET")) {
+			try {
+				if (StringUtils.isNotBlank(LicenseNo)) {
+					LicenseNo = new String(LicenseNo.getBytes("iso8859-1"), "GBK");
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		HebaoResponse hebaoResponse = new HebaoResponse();
+		JSONObject result = new JSONObject();
+		try {
+			hebaoResponse = rbService.getHebaoResponse(LicenseNo);
+			JSONObject hebaoResponseJson = (JSONObject) JSONObject.toJSON(hebaoResponse);
+			JSONObject resultHebaoResponseJson = new JSONObject();
+			for (Map.Entry<String, Object> entry : hebaoResponseJson.entrySet()) {
+		          String key = entry.getKey();
+		          key  = key.substring(0,1).toUpperCase() + key.substring(1);
+		          Object value = entry.getValue();
+		          resultHebaoResponseJson.put(key, value);
+		    }
+			result.put("Item", resultHebaoResponseJson);
+			result.put("BusinessStatus", 1);
+			result.put("StatusMessage", "核保信息查询成功");
+			logger.info("人保 API接口，【查询续保信息成功】，LicenseNo：" + LicenseNo);
+		} catch (Exception e) {
+			result.put("BusinessStatus", 1);
+			result.put("StatusMessage", "核保信息查询失败，" + e.getMessage());
+			logger.info("人保 API接口，【查询续保信息失败】，LicenseNo：" + LicenseNo + "，" + e.getMessage());
+		}
+		SpringMVCUtils.renderJson(response, result);
+	}
 }

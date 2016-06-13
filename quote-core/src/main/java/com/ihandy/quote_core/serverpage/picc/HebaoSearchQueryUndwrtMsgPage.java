@@ -33,7 +33,7 @@ public class HebaoSearchQueryUndwrtMsgPage extends BasePage {
         param = StringBaseUtils.Map2GetParam(request.getRequestParam());
         Map map = HttpsUtil.sendPost(url,param,super.piccSessionId,"gb2312");
         html = map.get("html").toString();
-        System.out.println("html = "+html);
+        //System.out.println("html = "+html);
         return html;
     }
 

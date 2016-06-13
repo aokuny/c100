@@ -31,10 +31,10 @@ public class TestHeBao {
     private IService irbService;
     @Test
     public  void  testHebao(){
-        Response response = new Response();
+     /*   Response response = new Response();
 
         String code = 	irbService.commitHeBaoInfo(response);
-        System.out.println("code = "+code);
+        System.out.println("code = "+code);*/
     }
 
 	@Test

@@ -30,7 +30,7 @@ public class AxatpServiceImpl implements IAxatpService {
         String beiBaoAddress ="门头沟beibao";
 
         String receiveName="张文海";
-        String receivePhone="18810253437";
+        String receiveMobile="18810253437";
         String receiveVoice="发票抬头";
         String receiveDate="2016-07-01";
         String receiveAddress="门头沟2403";
@@ -130,10 +130,12 @@ public class AxatpServiceImpl implements IAxatpService {
                                 Request request16 = new Request();
                                 request16.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_SHOWTEMPORARYINFO);
                                 Map paramMap16 = response15.getResponseMap();
-                                paramMap16.put("engineNo", engineNo);
-                                paramMap16.put("vehicleFrameNo", vehicleFrameNo);
-                                paramMap16.put("mobileTelePhone", touBaoMobileTelePhone);
-                                paramMap16.put("certificateNo", toubaoCertificateNo);
+                                paramMap16.put("receiveName", receiveName);
+                                paramMap16.put("receiveMobile", receiveMobile);
+                                paramMap16.put("receiveAddress", receiveAddress);
+                                paramMap16.put("invoice", receiveVoice);
+                                paramMap16.put("sendDate", receiveDate);
+
                                 request16.setRequestParam(paramMap16);
                                 Response response16 = showTemporaryInfoPage.run(request16);
 
@@ -149,7 +151,7 @@ public class AxatpServiceImpl implements IAxatpService {
                                 request18.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_PAYREQUESTINIT);
                                 request18.setRequestParam(response17.getResponseMap());
                                 Response response18 = payRequestInitPage.run(request18);
-                                
+
 
                             }
                         }

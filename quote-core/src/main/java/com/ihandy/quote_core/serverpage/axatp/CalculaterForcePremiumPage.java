@@ -78,7 +78,10 @@ public class CalculaterForcePremiumPage extends BasePage{
             double businessPremium = Double.parseDouble(nextParamsMap.get("premium").toString());
             double forcePremium = Double.parseDouble(nextParamsMap.get("forcePremium").toString());
             double vehicleTaxPremium = Double.parseDouble(nextParamsMap.get("vehicleTaxPremium").toString());
+            double forcePremiumTotal = StringBaseUtils.forDight(forcePremium+vehicleTaxPremium,2);
             double premium = StringBaseUtils.forDight(businessPremium+forcePremium+vehicleTaxPremium,2);
+            nextParamsMap.put("businessPremium",businessPremium);
+            nextParamsMap.put("forcePremiumTotal",forcePremiumTotal);
             nextParamsMap.put("premium",premium);
             response.setResponseMap(nextParamsMap);
             response.setReturnCode(SysConfigInfo.SUCCESS200);

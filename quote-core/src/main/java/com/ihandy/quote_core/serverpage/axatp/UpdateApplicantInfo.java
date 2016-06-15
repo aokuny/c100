@@ -10,13 +10,12 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 /**
- * Created by fengwen on 2016/6/6.
+ * Created by fengwen on 2016/6/15.
  */
-public class PayRequestPage extends BasePage {
+public class UpdateApplicantInfo extends BasePage{
+    private static Logger logger = Logger.getLogger(UpdateApplicantInfo.class);
 
-    private static Logger logger = Logger.getLogger(PayRequestPage.class);
-
-    public PayRequestPage(int type) {
+    public UpdateApplicantInfo(int type) {
         super(type);
     }
     @Override
@@ -24,10 +23,15 @@ public class PayRequestPage extends BasePage {
         String html= "";
         String url = request.getUrl();
         Map paramMap = request.getRequestParam();
-        String requestDoc=paramMap.get("requestDoc").toString();
-        String postParam="postpay="+paramMap.get("postpay")+"&requestDoc="+requestDoc+"&ecInsureId="+paramMap.get("ecInsureId")+"&isVech="+paramMap.get("isVech")+"&needValidCode="+paramMap.get("needValidCode")+"&imageUrl="+paramMap.get("imageUrl")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&validateCode="+paramMap.get("validateCode");
-        String cookieValue="s_pers= s_nr=1465970200611-Repeat|1497506200611; s_sess= s_cc=true; s_sq=; s_ppv=100%2C100%2C3536; JSESSIONID=BA8E7ECFE98336CAE31888D9F8AE63BF";
-        Map map = HttpsUtil.sendPostHttps(url,postParam,super.cookieValue);
+        String name = paramMap.get("personnelName").toString();
+        try {
+            name = java.net.URLEncoder.encode(name , "gbk");
+        }catch (Exception e){}
+        String birthday=paramMap.get("birthdayYY").toString()+"-"+paramMap.get("birthdayMM").toString()+"-"+paramMap.get("birthdayDD").toString();
+
+        String postParam="ecInsureId="+paramMap.get("ecInsureId")+"&planDefineId="+paramMap.get("planDefineId")+"&planDefineId2="+paramMap.get("planDefineId2")+"&applyPolicyNo=&policyNo=&lastPolicyNo=&action=updateApplicantInfo&isRenewal="+paramMap.get("isRenewal")+"&selectPayChannel="+paramMap.get("selectPayChannel")+"&linkResource="+paramMap.get("linkResource")+"&isAgent="+paramMap.get("isAgent")+"&personnelName="+name+"&tempIds="+paramMap.get("tempIds")+"&certificateType=1&certificateNo="+paramMap.get("certificateNo")+"&mobileTelephone="+paramMap.get("mobileTelephone_")+"&email="+paramMap.get("email_")+"&sexCode="+paramMap.get("sexCode")+"&birthday="+birthday+"&insuredAddress="+paramMap.get("insuredAddress")+"&postCode=100000";
+
+        Map map = HttpsUtil.sendPost(url,postParam,super.cookieValue,"gb2312");
         html = map.get("html").toString();
         return html;
     }

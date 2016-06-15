@@ -73,8 +73,10 @@ public class CarBasicVehiclePriceQuery extends BasePage{
                 Element radioInput = doc.getElementById("carRdo");
                 String value = radioInput.attributes().get("value").toString();
                 String[] valueArr = value.split(",");
+                //nextParamsMap.put("oldEcInsureId", nextParamsMap.get("ecInsureId"));
                 try {
                     nextParamsMap.put("newCarPrice", valueArr[0]);
+                    nextParamsMap.put("amount_OD", valueArr[0]);
                     nextParamsMap.put("rbCode", valueArr[1]);
                     String autoModelChnName=valueArr[2];
                     try {
@@ -96,10 +98,10 @@ public class CarBasicVehiclePriceQuery extends BasePage{
 
 
                 }catch (Exception e){
-                    nextParamsMap.put("rbCode","");
+                  /*  nextParamsMap.put("rbCode","");
                     nextParamsMap.put("newCarPrice", "");
                     nextParamsMap.put("tons",0);
-                    nextParamsMap.put("exhaustCapability", "");
+                    nextParamsMap.put("exhaustCapability", "");*/
                 }
 
                 response.setResponseMap(nextParamsMap);

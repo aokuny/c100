@@ -34,7 +34,7 @@ public class ApplyQueryPage extends BasePage {
         param = param+"ecInsureId="+paramMap.get("ecInsureId")+"&";
         param = param+"cityCode="+paramMap.get("cityCode")+"&";
         param = param+"autoModeCode="+paramMap.get("rbCode")+"&";
-        param = param+"tbsn="+paramMap.get("tbsn")+"&";
+        param = param+"tbsn=";
 
         url = url+"?"+param;
 

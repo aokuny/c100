@@ -12,11 +12,11 @@ import java.util.Map;
 /**
  * Created by fengwen on 2016/6/6.
  */
-public class PayRequestPage extends BasePage {
+public class SaveValidateCodePage extends BasePage{
 
-    private static Logger logger = Logger.getLogger(PayRequestPage.class);
+    private static Logger logger = Logger.getLogger(SaveValidateCodePage.class);
 
-    public PayRequestPage(int type) {
+    public SaveValidateCodePage(int type) {
         super(type);
     }
     @Override
@@ -24,10 +24,11 @@ public class PayRequestPage extends BasePage {
         String html= "";
         String url = request.getUrl();
         Map paramMap = request.getRequestParam();
-        String requestDoc=paramMap.get("requestDoc").toString();
-        String postParam="postpay="+paramMap.get("postpay")+"&requestDoc="+requestDoc+"&ecInsureId="+paramMap.get("ecInsureId")+"&isVech="+paramMap.get("isVech")+"&needValidCode="+paramMap.get("needValidCode")+"&imageUrl="+paramMap.get("imageUrl")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&validateCode="+paramMap.get("validateCode");
-        String cookieValue="s_pers= s_nr=1465970200611-Repeat|1497506200611; s_sess= s_cc=true; s_sq=; s_ppv=100%2C100%2C3536; JSESSIONID=BA8E7ECFE98336CAE31888D9F8AE63BF";
-        Map map = HttpsUtil.sendPostHttps(url,postParam,super.cookieValue);
+
+
+        String postParam="ecInsureId="+paramMap.get("ecInsureId")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&validateCode="+paramMap.get("validateCode");
+
+        Map map = HttpsUtil.sendPost(url,postParam,super.cookieValue,"gb2312");
         html = map.get("html").toString();
         return html;
     }

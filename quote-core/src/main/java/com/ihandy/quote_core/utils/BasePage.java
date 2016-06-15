@@ -88,7 +88,7 @@ public abstract class BasePage {
 		  String param = paramSb.toString();
 		  param = param.substring(0, param.length() - 1);
 		  System.out.println("cookieValue1 = "+cookieValue1);
-		  Map map = HttpsUtil.sendPost(url_login, param.toString(), cookieValue1, "GBK");
+		  Map map = HttpsUtil.sendPostForAxap(url_login, param.toString(), cookieValue1, "GBK");
 
 
 
@@ -98,6 +98,7 @@ public abstract class BasePage {
 		  cookieValue =cookieValue.replace("Path=/;","");
 		  cookieValue =cookieValue.replace("path=/;","");
 		  cookieValue =cookieValue.replace("httponly;","");
+		  cookieValue =cookieValue.replace("httponly","");
 		  cookieValue =cookieValue.replace("loginedName=;","");
 
 		  axatpSessionIdMap.put("cookieValue", cookieValue);

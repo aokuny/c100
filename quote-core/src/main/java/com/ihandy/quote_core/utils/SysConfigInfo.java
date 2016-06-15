@@ -111,8 +111,13 @@ public class SysConfigInfo {
     public static  String AXATP_FORCEPREMIUMCALCULATER;
     public static  String AXATP_SHOWINSUREDINFO;
     public static  String AXATP_SHOWTEMPORARYINFO;
+    public static  String AXATP_UPDATEINSUREDINFO;
     public static  String AXATP_APPLYUNDERWRITE;
     public static  String AXATP_PAYREQUESTINIT;
+    public static  String AXATP_SENDVALIDATECODE;
+    public static  String AXATP_SAVEVALIDATECODE;
+    public static  String AXATP_PAYREQUEST;
+
 
 
 
@@ -215,6 +220,10 @@ public class SysConfigInfo {
              AXATP_SHOWTEMPORARYINFO =  getString("axatp_showTemporaryInfo","");
              AXATP_APPLYUNDERWRITE =  getString("axatp_applyUnderwrite","");
              AXATP_PAYREQUESTINIT =  getString("axatp_payRequestInit","");
+             AXATP_UPDATEINSUREDINFO = getString("axatp_updateInsuredInfo","");
+             AXATP_SENDVALIDATECODE = getString("axatp_sendValidateCode","");
+             AXATP_SAVEVALIDATECODE = getString("axatp_saveValidateCode","");
+             AXATP_PAYREQUEST = getString("axatp_payRequest","");
 
 
 

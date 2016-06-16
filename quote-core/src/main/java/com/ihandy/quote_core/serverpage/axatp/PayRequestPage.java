@@ -27,7 +27,20 @@ public class PayRequestPage extends BasePage {
         String requestDoc=paramMap.get("requestDoc").toString();
         String postParam="postpay="+paramMap.get("postpay")+"&requestDoc="+requestDoc+"&ecInsureId="+paramMap.get("ecInsureId")+"&isVech="+paramMap.get("isVech")+"&needValidCode="+paramMap.get("needValidCode")+"&imageUrl="+paramMap.get("imageUrl")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&validateCode="+paramMap.get("validateCode");
         String cookieValue="s_pers= s_nr=1465970200611-Repeat|1497506200611; s_sess= s_cc=true; s_sq=; s_ppv=100%2C100%2C3536; JSESSIONID=BA8E7ECFE98336CAE31888D9F8AE63BF";
-        Map map = HttpsUtil.sendPostHttps(url,postParam,super.cookieValue);
+       // String iCookie = new Cookie("captcha", cookieValue);
+        String cookieValue1 = super.cookieValue;
+        String newCookieValue="";
+        String[] cookieValueArr = cookieValue1.split(";");
+        for(int i=0;i<cookieValueArr.length;i++){
+            if(cookieValueArr[i].contains("JSESSIONID")){
+                newCookieValue =  newCookieValue+cookieValueArr[i]+";";
+            }else if(cookieValueArr[i].contains("s_pers")){
+                newCookieValue =  newCookieValue+cookieValueArr[i]+";";
+            }else if(cookieValueArr[i].contains("s_sess")){
+                newCookieValue =  newCookieValue+cookieValueArr[i]+";";
+            }
+        }
+        Map map = HttpsUtil.sendPostHttps(url,postParam,newCookieValue);
         html = map.get("html").toString();
         return html;
     }

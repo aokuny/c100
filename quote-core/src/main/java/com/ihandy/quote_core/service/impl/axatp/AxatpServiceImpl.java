@@ -17,10 +17,11 @@ import java.util.Map;
 @Service
 public class AxatpServiceImpl implements IAxatpService {
     @Override
-    public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo, String licenseOwner,String cityCode) {
-        String engineNo="FW151330";
-        String vehicleFrameNo="LBECFAHC5FZ226987";
-        String touBaoMobileTelePhone="18810253437";
+    public SaveQuoteResponse getQuoteInfoByCarInfo(String licenseNo,String engineNo,String vehicleFrameNo, String licenseOwner,String mobilePhone,String certificateNo,String cheSun,String sanZhe,String siJi,String chengKe,String daoQiang,String boLi,String huaHen,String ziRan,String sheShui) {
+        SaveQuoteResponse saveQuoteResponse = new SaveQuoteResponse();
+        // String engineNo="FW151330";
+        // String vehicleFrameNo="LBECFAHC5FZ226987";
+       /* String touBaoMobileTelePhone="18810253437";
         String beiBaoMobileTelePhone = "18810253437";
         String toubaoCertificateNo ="132425196903135852";
         String beibaoCertificateNo ="132425196903135852";
@@ -35,7 +36,7 @@ public class AxatpServiceImpl implements IAxatpService {
         String receiveDate="2016-07-01";
         String receiveAddress="mentougou2414";
 
-        String validateCode="WPKD2B";
+        String validateCode="WPKD2B";*/
 
 
 
@@ -73,8 +74,8 @@ public class AxatpServiceImpl implements IAxatpService {
                         Map paramMap5 = response4.getResponseMap();
                         paramMap5.put("engineNo", engineNo);
                         paramMap5.put("vehicleFrameNo", vehicleFrameNo);
-                        paramMap5.put("mobileTelephone", touBaoMobileTelePhone);
-                        paramMap5.put("certificateNo", toubaoCertificateNo);
+                        paramMap5.put("mobileTelephone", mobilePhone);
+                        paramMap5.put("certificateNo", certificateNo);
                         request5.setRequestParam(paramMap5);
                         Response response5 = carBasicVehiclePriceQuery.run(request5);
                         if (response5.getReturnCode() == SysConfigInfo.SUCCESS200) {
@@ -119,7 +120,18 @@ public class AxatpServiceImpl implements IAxatpService {
                                 CalculaterBusinessPremiumPage calculaterBusinessPremiumPage = new CalculaterBusinessPremiumPage(2);
                                 Request request13 = new Request();
                                 request13.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_BUSINESSPREMIUMCALCULATER);
-                                request13.setRequestParam(response11.getResponseMap());
+                                Map map13 = response11.getResponseMap();
+                                map13.put("select_OD",cheSun);
+                                map13.put("select_TP",sanZhe);
+                                map13.put("select_DL",siJi);
+                                map13.put("select_PL",chengKe);
+                                map13.put("select_THEFT",daoQiang);
+                                map13.put("select_GLASS",boLi);
+                                map13.put("select_NICK",huaHen);
+                                map13.put("select_NDNE",ziRan);
+                                map13.put("select_FEDPC",sheShui);
+
+                                request13.setRequestParam(map13);
                                 Response response13 = calculaterBusinessPremiumPage.run(request13);
 
                                 CalculaterForcePremiumPage calculaterForcePremiumPage = new CalculaterForcePremiumPage(2);
@@ -127,8 +139,66 @@ public class AxatpServiceImpl implements IAxatpService {
                                 request14.setUrl(SysConfigInfo.AXATP_DOMIAN + SysConfigInfo.AXATP_FORCEPREMIUMCALCULATER);
                                 request14.setRequestParam(response13.getResponseMap());
                                 Response response14 = calculaterForcePremiumPage.run(request14);
+                                Map resultMap = response14.getResponseMap();
+                                saveQuoteResponse.setSource(3);
+                                try{
+                                saveQuoteResponse.setBoli(Double.parseDouble(resultMap.get("premium_GLASS").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setBoli(0);
+                                }
+                                saveQuoteResponse.setCheDeng(0);
+                                try{
+                                saveQuoteResponse.setChengKe(Double.parseDouble(resultMap.get("premium_PL").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setChengKe(0);
+                                }
+                                try{
+                                saveQuoteResponse.setCheSun(Double.parseDouble(resultMap.get("premium_OD").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setCheSun(0);
+                                }
+                                try{
+                                saveQuoteResponse.setDaoQiang(Double.parseDouble(resultMap.get("premium_THEFT").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setDaoQiang(0);
+                                }
+                                try{
+                                saveQuoteResponse.setHuaHen(Double.parseDouble(resultMap.get("premium_NICK").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setHuaHen(0);
+                                }
+                                try{
+                                saveQuoteResponse.setSanZhe(Double.parseDouble(resultMap.get("premium_TP").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setSanZhe(0);
+                                }
+                                try{
+                                saveQuoteResponse.setSheShui(Double.parseDouble(resultMap.get("premium_FEDPC").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setSheShui(0);
+                                }
+                                try{
+                                saveQuoteResponse.setSiJi(Double.parseDouble(resultMap.get("premium_DL").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setSiJi(0);
+                                }
+                                try{
+                                saveQuoteResponse.setZiRan(Double.parseDouble(resultMap.get("premium_NDNE").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setZiRan(0);
+                                }
+                                try{
+                                    saveQuoteResponse.setJiaoqiang(Double.parseDouble(resultMap.get("forcePremium").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setJiaoqiang(0);
+                                }
+                                try{
+                                    saveQuoteResponse.setChechuan(Double.parseDouble(resultMap.get("vehicleTaxPremium").toString()));}
+                                catch(Exception e){
+                                    saveQuoteResponse.setChechuan(0);
+                                }
 
-                                ShowInsuredInfoPage showInsuredInfoPage =new ShowInsuredInfoPage(2);
+                               /* ShowInsuredInfoPage showInsuredInfoPage =new ShowInsuredInfoPage(2);
                                 Request request15 = new Request();
                                 Map paramMap15 = response14.getResponseMap();
                                 try {
@@ -216,7 +286,7 @@ public class AxatpServiceImpl implements IAxatpService {
                                 Request requestPay = new Request();
                                 requestPay.setRequestParam( response20.getResponseMap());
                                 requestPay.setUrl(SysConfigInfo.AXATP_PAYREQUEST);
-                                Response payResponse = payRequestPage.run(requestPay);
+                                Response payResponse = payRequestPage.run(requestPay);*/
 
                             }
                         }
@@ -224,6 +294,6 @@ public class AxatpServiceImpl implements IAxatpService {
                 }
             }
         }
-        return null;
+        return saveQuoteResponse;
     }
 }

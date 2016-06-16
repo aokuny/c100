@@ -319,9 +319,10 @@ public class BihuHttpUtil{
             //String carNO = "京P2QZ85";
             //String carNO = "京NQA575";
             //String carNO = "京Q2PE81";
-            String carNO = "京LQ1190";
+             //String carNO = "京LQ1190";
             //String carNO = "津HGD056";
             //String carNO = "京MM3767";
+            String carNO ="冀F20403";
 
             String custKey = "e8370f8fb7d7d6ec7bcaa8b3b738e409";
 

@@ -25,6 +25,9 @@ public class PayRequestPage extends BasePage {
         String url = request.getUrl();
         Map paramMap = request.getRequestParam();
         String requestDoc=paramMap.get("requestDoc").toString();
+        try{
+            requestDoc = java.net.URLEncoder.encode(requestDoc , "gbk");
+        }catch (Exception e){}
         String postParam="postpay="+paramMap.get("postpay")+"&requestDoc="+requestDoc+"&ecInsureId="+paramMap.get("ecInsureId")+"&isVech="+paramMap.get("isVech")+"&needValidCode="+paramMap.get("needValidCode")+"&imageUrl="+paramMap.get("imageUrl")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&validateCode="+paramMap.get("validateCode");
         String cookieValue="s_pers= s_nr=1465970200611-Repeat|1497506200611; s_sess= s_cc=true; s_sq=; s_ppv=100%2C100%2C3536; JSESSIONID=BA8E7ECFE98336CAE31888D9F8AE63BF";
        // String iCookie = new Cookie("captcha", cookieValue);
@@ -40,6 +43,7 @@ public class PayRequestPage extends BasePage {
                 newCookieValue =  newCookieValue+cookieValueArr[i]+";";
             }
         }
+        newCookieValue="s_pers=%20s_nr%3D1466059110645-Repeat%7C1497595110645%3B; s_sess=%20s_cc%3Dtrue%3B%20s_sq%3D%3B%20s_ppv%3D100%252C42%252C1530%3B; JSESSIONID=29AA4C874AF1A1D64AB96EE90C4B918B";
         Map map = HttpsUtil.sendPostHttps(url,postParam,newCookieValue);
         html = map.get("html").toString();
         return html;

@@ -56,8 +56,6 @@ public class CarBasicVehiclePriceQuery extends BasePage{
             }catch (Exception e){}
             String  postParam1= "defaultAgentCode="+paramMap.get("defaultAgentCode")+"&isVIP="+paramMap.get("isVIP")+"&birthdayYY="+paramMap.get("birthdayYY")+"&birthdayMM="+paramMap.get("birthdayMM")+"&birthdayDD="+paramMap.get("birthdayDD")+"&newVehicleFlagHidden="+paramMap.get("newVehicleFlagHidden")+"&lastForcePolicyNo="+paramMap.get("lastForcePolicyNo")+"&ecInsureId="+paramMap.get("ecInsureId")+"&isRenewal="+paramMap.get("isRenewal")+"&linkResource="+paramMap.get("linkResource")+"&isAgent="+paramMap.get("isAgent")+"&cityCode="+paramMap.get("cityCode")+"&localProvinceCode="+paramMap.get("localProvinceCode")+"&planDefineId="+paramMap.get("planDefineId")+"&selectPayChannel=&pageInfo=carPrecisionInfo&tbsn=&buyerNick=&orderId=&auctionId="+paramMap.get("auctionId")+"&cityPlat="+paramMap.get("cityPlat")+"&rt="+paramMap.get("rt")+"&ms="+paramMap.get("ms")+"&timedefault="+paramMap.get("timedefault")+"&mark="+paramMap.get("mark")+"&licenceLimits="+paramMap.get("licenceLimits")+"&licenceLimitsMsg="+paramMap.get("licenceLimitsMsg")+"&city_beijing="+paramMap.get("city_beijing")+"&bizInsureBeignTime="+paramMap.get("bizInsureBeignTime")+"&forceInsureBeignTime="+paramMap.get("forceInsureBeignTime")+"&pagereferrer="+paramMap.get("pagereferrer")+"&cityName="+cityName+"&carcity="+licenceNo+"&live800_URL_JSP="+paramMap.get("live800_URL_JSP")+"&gztFlag="+paramMap.get("gztFlag")+"&viewMode="+paramMap.get("viewMode")+"&hideFamilyName="+paramMap.get("hideFamilyName")+"&connectType&isFirstIframe="+paramMap.get("isFirstIframe")+"&vehicleId="+paramMap.get("vehicleId")+"&newCarPriceOld="+paramMap.get("newCarPriceOld")+"&newCarPrice="+paramMap.get("newCarPrice")+"&newCarSeats="+paramMap.get("newCarSeats")+"&isJZ="+paramMap.get("isJZ")+"&ecEnginNo="+paramMap.get("ecEnginNo")+"&searchType="+paramMap.get("searchType")+"&flag="+paramMap.get("flag")+"&messages=&infoValue="+paramMap.get("infoValue")+"&prohibitValue=&blackListFlag="+paramMap.get("blackListFlag")+"&renewalProtectFlag="+paramMap.get("renewalProtectFlag")+"&knmdFlag=&isCompleteData="+paramMap.get("isCompleteData")+"&isBeiJingFlag="+paramMap.get("isBeiJingFlag")+"&madeDate="+paramMap.get("madeDate")+"&engineNo="+paramMap.get("engineNo")+"&vehicleFrameNo="+paramMap.get("vehicleFrameNo")+"&personnelName="+personnelName+"&certificateNo="+paramMap.get("certificateNo")+"&mobileTelephone="+paramMap.get("mobileTelePhone")+"&isMortgage=&BeneficiaryName=";
 
-
-
             Map map = HttpsUtil.sendPost(url,postParam1,super.cookieValue,"gb2312");
             html = map.get("html").toString();
             return html;
@@ -67,46 +65,55 @@ public class CarBasicVehiclePriceQuery extends BasePage{
         public Response getResponse(String html, Request request) {
             Response response = new Response();
             if(!html.equals("")||null!=html){
-                Map nextParamsMap = new HashMap<>();
-                nextParamsMap = request.getRequestParam();
-                Document doc = Jsoup.parse(html);
-                Element radioInput = doc.getElementById("carRdo");
-                String value = radioInput.attributes().get("value").toString();
-                String[] valueArr = value.split(",");
-                //nextParamsMap.put("oldEcInsureId", nextParamsMap.get("ecInsureId"));
-                try {
-                    nextParamsMap.put("newCarPrice", valueArr[0]);
-                    nextParamsMap.put("amount_OD", valueArr[0]);
-                    nextParamsMap.put("rbCode", valueArr[1]);
-                    String autoModelChnName=valueArr[2];
+                if(html.contains("获取车价信息:外部平台报错：当外地车时，车辆型号、初次登记日期、行驶证车辆描述不能为空")){
+                    logger.info("天平 API，【获取新车价格失败】，当外地车时，车辆型号、初次登记日期、行驶证车辆描述不能为空 LicenseNo：" + request.getRequestParam().get("licenceNo"));
+                    response.setResponseMap(null);
+                    response.setReturnCode(SysConfigInfo.ERROR404);
+                    response.setErrMsg(SysConfigInfo.ERROR404MSG);
+                }else {
+                    Map nextParamsMap = new HashMap<>();
+                    nextParamsMap = request.getRequestParam();
+                    Document doc = Jsoup.parse(html);
+                    Element radioInput = doc.getElementById("carRdo");
+                    String value = radioInput.attributes().get("value").toString();
+                    String[] valueArr = value.split(",");
+                    //nextParamsMap.put("oldEcInsureId", nextParamsMap.get("ecInsureId"));
                     try {
-                        autoModelChnName = java.net.URLEncoder.encode(autoModelChnName , "gbk");
-                    }catch (Exception e){}
-                    nextParamsMap.put("autoModelChnName",autoModelChnName);
-                    String brandChnName=valueArr[3];
-                    try {
-                        brandChnName = java.net.URLEncoder.encode(brandChnName , "gbk");
-                    }catch (Exception e){}
-                    nextParamsMap.put("brandChnName",brandChnName);
-                    nextParamsMap.put("engineNo",valueArr[4]);
-                    nextParamsMap.put("vehicleFrameNo",valueArr[5]);
-                    nextParamsMap.put("exhaustCapability", valueArr[6]);
-                    nextParamsMap.put("tons",valueArr[7]);
-                    nextParamsMap.put("seats",valueArr[8]);
-                    nextParamsMap.put("firstRegisterDate",valueArr[9]);
-                    nextParamsMap.put("licenceTypeCode", valueArr[11]);
+                        nextParamsMap.put("newCarPrice", valueArr[0]);
+                        nextParamsMap.put("amount_OD", valueArr[0]);
+                        nextParamsMap.put("rbCode", valueArr[1]);
+                        String autoModelChnName = valueArr[2];
+                        try {
+                            autoModelChnName = java.net.URLEncoder.encode(autoModelChnName, "gbk");
+                        } catch (Exception e) {
+                        }
+                        nextParamsMap.put("autoModelChnName", autoModelChnName);
+                        String brandChnName = valueArr[3];
+                        try {
+                            brandChnName = java.net.URLEncoder.encode(brandChnName, "gbk");
+                        } catch (Exception e) {
+                        }
+                        nextParamsMap.put("brandChnName", brandChnName);
+                        nextParamsMap.put("engineNo", valueArr[4]);
+                        nextParamsMap.put("vehicleFrameNo", valueArr[5]);
+                        nextParamsMap.put("exhaustCapability", valueArr[6]);
+                        nextParamsMap.put("tons", valueArr[7]);
+                        nextParamsMap.put("seats", valueArr[8]);
+                        nextParamsMap.put("firstRegisterDate", valueArr[9]);
+                        nextParamsMap.put("licenceTypeCode", valueArr[11]);
 
 
-                }catch (Exception e){
+                    } catch (Exception e) {
                   /*  nextParamsMap.put("rbCode","");
                     nextParamsMap.put("newCarPrice", "");
                     nextParamsMap.put("tons",0);
                     nextParamsMap.put("exhaustCapability", "");*/
-                }
+                    }
 
-                response.setResponseMap(nextParamsMap);
-                response.setReturnCode(SysConfigInfo.SUCCESS200);
-                response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
+                    response.setResponseMap(nextParamsMap);
+                    response.setReturnCode(SysConfigInfo.SUCCESS200);
+                    response.setErrMsg(SysConfigInfo.SUCCESS200MSG);
+                }
             }else{
                 response.setResponseMap(null);
                 response.setReturnCode(SysConfigInfo.ERROR404);

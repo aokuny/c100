@@ -134,6 +134,8 @@ public interface IQuoteService {
 	 * 				调用平台标识 必需
 	 * @param SecCode 
 	 * 				除了secCode参数之外的所有参数拼接后再加密钥的字符串后的MD5值（32位小写）（壁虎提供）必需
+	 * @param RunMiles
+	 * 				行使里程数 10000 优惠 30000 无优惠
 	 * @return
 	 */
     public PostPrecisePricerResponse postPrecisePrice(String LicenseNo, String CarOwnersName, String IdCard,
@@ -147,7 +149,7 @@ public interface IQuoteService {
 			String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
 			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode);
+			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode, String RunMiles);
     
     /**
      * 查询数据

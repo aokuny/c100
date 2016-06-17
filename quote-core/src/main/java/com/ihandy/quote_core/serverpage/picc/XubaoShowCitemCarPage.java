@@ -62,8 +62,10 @@ public class XubaoShowCitemCarPage extends BasePage{
                 if (elementCarUsedType.tagName().equals("select")) {
                     Elements CarUsedTypeElements = elementCarUsedType.getAllElements();
                     for (int i = 0; i < CarUsedTypeElements.size(); i++) {
-                        if (CarUsedTypeElements.get(i).attributes().hasKey("selected")) {
-                            CarUsedType = CarUsedTypeElements.get(9).text();
+                    	Element CarUsedTypeElement = CarUsedTypeElements.get(i);
+                    	String attrHtml = CarUsedTypeElement.attributes().html();
+                        if (attrHtml.contains("selected")) {
+                            CarUsedType = CarUsedTypeElement.text();
                             lastResult.put("CarUsedType",CarUsedType);
                         }
                     }

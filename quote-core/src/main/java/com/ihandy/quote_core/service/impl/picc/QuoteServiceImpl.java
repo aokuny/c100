@@ -38,7 +38,7 @@ public class QuoteServiceImpl implements IQuoteService {
 													  String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
 													  String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 													  String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-													  String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
+													  String DAmount3, String PDate3, String CustKey, String Agent, String SecCode, String RunMiles) {
 		PostPrecisePricerResponse postPrecisePricerResponse = new PostPrecisePricerResponse();
 		// 验证参数
 		postPrecisePricerResponse = this.verifyPostPrecisePriceParam(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit,
@@ -71,7 +71,7 @@ public class QuoteServiceImpl implements IQuoteService {
 		if(IsSingleSubmitInt == 1 && IntentionCompanyInt > -1){//一家报价，一家核保
 			IsSingleSubmit = "1";//核保
 		}
-		Map<String, String> param = this.takeParamToMap(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit, IntentionCompany, InsuredName, InsuredIdCard, InsuredIdType, InsuredMobile, IsNewCar, CarType, CarUsedType, CityCode, EngineNo, CarVin, RegisterDate, MoldName, ForceTax, BizStartDate, BoLi, BuJiMianCheSun, BuJiMianDaoQiang, BuJiMianFuJia, BuJiMianRenYuan, BuJiMianSanZhe, CheDeng, SheShui, HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount, TonCount, HcSheBeiSunshi, HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue, HcXiuLiChang, DName, DQuantity, DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2, DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode);
+		Map<String, String> param = this.takeParamToMap(LicenseNo, CarOwnersName, IdCard, IsSingleSubmit, IntentionCompany, InsuredName, InsuredIdCard, InsuredIdType, InsuredMobile, IsNewCar, CarType, CarUsedType, CityCode, EngineNo, CarVin, RegisterDate, MoldName, ForceTax, BizStartDate, BoLi, BuJiMianCheSun, BuJiMianDaoQiang, BuJiMianFuJia, BuJiMianRenYuan, BuJiMianSanZhe, CheDeng, SheShui, HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount, TonCount, HcSheBeiSunshi, HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue, HcXiuLiChang, DName, DQuantity, DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2, DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode, RunMiles);
 		cacheParamMap.put(IntentionCompany, param);
 		CacheConstant.uploadInsurInfo.put(LicenseNo, cacheParamMap);
 		//开启线程进行查询
@@ -329,8 +329,9 @@ public class QuoteServiceImpl implements IQuoteService {
 											   String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
 											   String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 											   String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-											   String DAmount3, String PDate3, String CustKey, String Agent, String SecCode){
+											   String DAmount3, String PDate3, String CustKey, String Agent, String SecCode, String RunMiles){
 		Map<String, String> map = new HashMap<>();
+		map.put("RunMiles", RunMiles);
 		map.put("LicenseNo", LicenseNo);
 		map.put("CarOwnersName", CarOwnersName);
 		map.put("IdCard", IdCard);
@@ -385,6 +386,7 @@ public class QuoteServiceImpl implements IQuoteService {
 		map.put("CustKey", CustKey);
 		map.put("Agent", Agent);
 		map.put("SecCode", SecCode);
+		map.put("IsNewCar", IsNewCar);
 		return map;
 	}
 

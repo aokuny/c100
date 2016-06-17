@@ -49,7 +49,10 @@ public class QuoteGetCarInfoPage extends BasePage {
 			String enrollDateStr = sdf.format(enrollDate);
 			String seatCount = carInfoObj.getString("seatCount");//座位数目
 			String modelCodeAlias = carInfoObj.getString("brandName1") + carInfoObj.getString("modelCode");//modelCodeAlias
-			int useYears = DateBaseUtils.yearBetweenRound(enrollDate, new Date());//使用年份
+			String nowYear = sdf.format(new Date()).split("-")[0];
+			String enrollYear = enrollDateStr.split("-")[0];
+			//int useYears = DateBaseUtils.yearBetweenRound(enrollDate, new Date());//使用年份
+			int useYears = Integer.parseInt(nowYear) - Integer.parseInt(enrollYear);
 			returnMap.put("engineNo", engineNo);
 			returnMap.put("vin", vin);
 			returnMap.put("enrollDate", enrollDateStr);

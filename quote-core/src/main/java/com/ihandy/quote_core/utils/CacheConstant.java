@@ -22,6 +22,8 @@ public class CacheConstant {
 	
 	public static Map<String, Map<String, String>> proposalNoInfo = new HashMap<>();//存放车辆投保单号
 	
+	public static Map<String, Map<String, Object>> queryparam = new HashMap<>();//存放报价参数
+	
 	static{//测试数据
 		Map<String, Object> map = new HashMap<>();
 		map.put("reCiPolicyNo", "PDAT20151102T000182528");//上一年交强险投保单号

@@ -50,5 +50,5 @@ public interface IService {
      * @param CityCode
      * @return
      */
-    public JSONObject getRenewalInfo(String licenseNo, int CityCode, String CustKey);
+    public JSONObject getRenewalInfo(String licenseNo, int CityCode, String CustKey, String IsPublic);
 }

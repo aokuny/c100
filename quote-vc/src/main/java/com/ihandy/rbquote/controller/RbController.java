@@ -50,7 +50,7 @@ public class RbController {
 	 */
 	@RequestMapping("/getRenewalInfo")
 	@Transactional
-	public void getRenewalInfo(HttpServletRequest request, HttpServletResponse response, String LicenseNo, int CityCode, String CustKey, String SecCode) {
+	public void getRenewalInfo(HttpServletRequest request, HttpServletResponse response, String LicenseNo, int CityCode, String CustKey, String SecCode, String IsPublic) {
 		if (request.getMethod().equals("GET")) {
 			try {
 				if (StringUtils.isNotBlank(LicenseNo)) {
@@ -62,7 +62,7 @@ public class RbController {
 		}
 		JSONObject renewalInfoJson = new JSONObject();
 		try {
-			renewalInfoJson = rbService.getRenewalInfo(LicenseNo, CityCode, CustKey);
+			renewalInfoJson = rbService.getRenewalInfo(LicenseNo, CityCode, CustKey, IsPublic);
 			logger.info("人保 API，【获取续保信息成功】，LicenseNo：" + LicenseNo);
 		} catch (Exception e) {
 			logger.info("人保 API，【获取续保信息失败】，LicenseNo：" + LicenseNo + "，" + e.getMessage());
@@ -219,6 +219,8 @@ public class RbController {
 	 *            调用平台标识 必需
 	 * @param SecCode
 	 *            除了secCode参数之外的所有参数拼接后再加密钥的字符串后的MD5值（32位小写）（壁虎提供）必需
+	 * @param RunMiles
+	 * 			  形式里程数 10000 优惠，30000 无优惠
 	 * @return
 	 */
 	@RequestMapping("/postPrecisePrice")
@@ -235,7 +237,7 @@ public class RbController {
 			String HcJingShenSunShi, String HcSanFangTeYue, String HcXiuLiChang, String DName, String DQuantity,
 			String DAmount, String PDate, String DName1, String DQuantity1, String DAmount1, String PDate1,
 			String DName2, String DQuantity2, String DAmount2, String PDate2, String DName3, String DQuantity3,
-			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode) {
+			String DAmount3, String PDate3, String CustKey, String Agent, String SecCode, String RunMiles) {
 		// 判断是否是get请求,chakan
 		if (request.getMethod().equals("GET")) {
 			try {
@@ -264,7 +266,7 @@ public class RbController {
 					BuJiMianSanZhe, CheDeng, SheShui, HuaHen, SiJi, ChengKe, CheSun, DaoQiang, SanZhe, ZiRan, SeatCount,
 					TonCount, HcSheBeiSunshi, HcHuoWuZeRen, HcFeiYongBuChang, HcJingShenSunShi, HcSanFangTeYue,
 					HcXiuLiChang, DName, DQuantity, DAmount, PDate, DName1, DQuantity1, DAmount1, PDate1, DName2,
-					DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode);
+					DQuantity2, DAmount2, PDate2, DName3, DQuantity3, DAmount3, PDate3, CustKey, Agent, SecCode, RunMiles);
 			logger.info("PICC API ，【上传险种信息响应成功】，LicenseNo：" + LicenseNo);
 		} catch (Exception e) {
 			postPrecisePricerResponse.setBusinessStatus("-1");

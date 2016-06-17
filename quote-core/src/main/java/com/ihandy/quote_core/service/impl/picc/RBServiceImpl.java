@@ -686,7 +686,14 @@ public class RBServiceImpl implements IService {
 	}
 
 	@Override
-	public JSONObject getRenewalInfo(String licenseNo, int CityCode, String CustKey) {
+	public JSONObject getRenewalInfo(String licenseNo, int CityCode, String CustKey, String IsPublic) {
+		//缓存是否是公车
+		if(StringUtils.isBlank(IsPublic)){
+			IsPublic = "0";
+		}
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("IsPublic", IsPublic);//是否是公车：0 否、1 是
+		CacheConstant.queryparam.put(licenseNo, paramMap);
 		//TODO 这里可以做缓存
 		JSONObject renewalInfoJson = new JSONObject();
 		JSONObject UserInfo = new JSONObject();

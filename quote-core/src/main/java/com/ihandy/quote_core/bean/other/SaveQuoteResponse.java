@@ -5,7 +5,7 @@ package com.ihandy.quote_core.bean.other;
  */
 public class SaveQuoteResponse {
 
-    private int Source;//来源 0：平安 1：太平洋 2：人保
+    private int Source;//来源 0：平安 1：太平洋 2：人保 3:  天平
 
     private double CheSun;//车损
     private double SanZhe;//三者
@@ -26,10 +26,17 @@ public class SaveQuoteResponse {
     private double CheDeng;//车灯
     private double ZiRan;//自燃
 
+    private double jiaoqiang;//交强险
+    private double chechuan; // 车船
+
 
     private double getBizTotal()
     {
         return  (this.CheSun + this.SanZhe + this.DaoQiang + this.SiJi + this.ChengKe + this.Boli + this.HuaHen + this.BuJiMianCheSun + this.BuJiMianSanZhe + this.BuJiMianDaoQiang + this.BuJiMianRenYuan + this.BuJiMianFuJia  + this.SheShui + this.CheDeng + this.ZiRan);
+    }
+
+    private double getForceTotal(){
+        return (this.jiaoqiang+this.getChechuan());
     }
 
     public int getSource() {
@@ -158,5 +165,21 @@ public class SaveQuoteResponse {
 
     public void setZiRan(double ziRan) {
         ZiRan = ziRan;
+    }
+
+    public double getJiaoqiang() {
+        return jiaoqiang;
+    }
+
+    public void setJiaoqiang(double jiaoqiang) {
+        this.jiaoqiang = jiaoqiang;
+    }
+
+    public double getChechuan() {
+        return chechuan;
+    }
+
+    public void setChechuan(double chechuan) {
+        this.chechuan = chechuan;
     }
 }

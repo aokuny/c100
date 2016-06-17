@@ -62,7 +62,11 @@ public class PayRequestInitPage extends BasePage {
                 Element e = hideinputs.get(i);
                 String type = e.attributes().get("type");
                 if (type.equals("hidden")) {
+
                     String key = e.attributes().get("id");
+                    if(key.equals("")){
+                        key = e.attributes().get("name");
+                    }
                     String value = e.attributes().get("value");
                     nextParamsMap.put(key, value);
                 }

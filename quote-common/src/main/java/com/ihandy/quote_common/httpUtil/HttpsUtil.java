@@ -426,7 +426,10 @@ public class HttpsUtil {
 			conn.setUseCaches(false);
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
+
 			conn.getOutputStream().write(param.getBytes());
+
+
 			conn.getOutputStream().flush();
 			conn.getOutputStream().close();
 

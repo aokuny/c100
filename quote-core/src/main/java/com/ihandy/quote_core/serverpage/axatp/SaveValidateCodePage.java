@@ -12,14 +12,11 @@ import java.util.Map;
 /**
  * Created by fengwen on 2016/6/6.
  */
-public class SendValidateCodePage extends BasePage{
+public class SaveValidateCodePage extends BasePage{
 
-    //{"data":null,"en_moreMoney":"","moreMsg":"","msg":"","statCode":"1","status":"1"}
-    //ecInsureId=10803316061504478599&mobileTelephone=188****3437
+    private static Logger logger = Logger.getLogger(SaveValidateCodePage.class);
 
-    private static Logger logger = Logger.getLogger(SendValidateCodePage.class);
-
-    public SendValidateCodePage(int type) {
+    public SaveValidateCodePage(int type) {
         super(type);
     }
     @Override
@@ -29,7 +26,7 @@ public class SendValidateCodePage extends BasePage{
         Map paramMap = request.getRequestParam();
 
 
-        String postParam="ecInsureId="+paramMap.get("ecInsureId")+"&mobileTelephone="+paramMap.get("mobileTelephone");
+        String postParam="ecInsureId="+paramMap.get("ecInsureId")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&validateCode="+paramMap.get("validateCode");
 
         Map map = HttpsUtil.sendPost(url,postParam,super.cookieValue,"gb2312");
         html = map.get("html").toString();

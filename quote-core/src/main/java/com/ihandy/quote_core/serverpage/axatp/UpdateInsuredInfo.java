@@ -6,20 +6,20 @@ import com.ihandy.quote_core.bean.Response;
 import com.ihandy.quote_core.utils.BasePage;
 import com.ihandy.quote_core.utils.SysConfigInfo;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.Map;
 
 /**
- * Created by fengwen on 2016/6/6.
+ * Created by fengwen on 2016/6/15.
  */
-public class SendValidateCodePage extends BasePage{
+public class UpdateInsuredInfo extends BasePage{
+    private static Logger logger = Logger.getLogger(UpdateInsuredInfo.class);
 
-    //{"data":null,"en_moreMoney":"","moreMsg":"","msg":"","statCode":"1","status":"1"}
-    //ecInsureId=10803316061504478599&mobileTelephone=188****3437
-
-    private static Logger logger = Logger.getLogger(SendValidateCodePage.class);
-
-    public SendValidateCodePage(int type) {
+    public UpdateInsuredInfo(int type) {
         super(type);
     }
     @Override
@@ -27,9 +27,13 @@ public class SendValidateCodePage extends BasePage{
         String html= "";
         String url = request.getUrl();
         Map paramMap = request.getRequestParam();
+        String name = paramMap.get("personnelName").toString();
+        try {
+            name = java.net.URLEncoder.encode(name , "gbk");
+        }catch (Exception e){}
+        String birthday=paramMap.get("birthdayYY").toString()+"-"+paramMap.get("birthdayMM").toString()+"-"+paramMap.get("birthdayDD").toString();
 
-
-        String postParam="ecInsureId="+paramMap.get("ecInsureId")+"&mobileTelephone="+paramMap.get("mobileTelephone");
+        String postParam="ecInsureId="+paramMap.get("ecInsureId")+"&planDefineId="+paramMap.get("planDefineId")+"&planDefineId2="+paramMap.get("planDefineId2")+"&applyPolicyNo=&policyNo=&lastPolicyNo=&action=updateInsuredInfo&isRenewal="+paramMap.get("isRenewal")+"&selectPayChannel="+paramMap.get("selectPayChannel")+"&linkResource="+paramMap.get("linkResource")+"&isAgent="+paramMap.get("isAgent")+"&personnelName="+name+"&tempIds="+paramMap.get("tempIds")+"&certificateType=1&certificateNo="+paramMap.get("certificateNo")+"&mobileTelephone="+paramMap.get("mobileTelephone")+"&email="+paramMap.get("email")+"&sexCode="+paramMap.get("sexCode")+"&birthday="+birthday+"&insuredAddress="+paramMap.get("insuredAddress")+"&postCode=100000";
 
         Map map = HttpsUtil.sendPost(url,postParam,super.cookieValue,"gb2312");
         html = map.get("html").toString();

@@ -76,9 +76,20 @@ public class CalculaterForcePremiumPage extends BasePage{
                 }
             }
             double businessPremium = Double.parseDouble(nextParamsMap.get("premium").toString());
-            double forcePremium = Double.parseDouble(nextParamsMap.get("forcePremium").toString());
-            double vehicleTaxPremium = Double.parseDouble(nextParamsMap.get("vehicleTaxPremium").toString());
+            double forcePremium =0;
+            try {
+                forcePremium = Double.parseDouble(nextParamsMap.get("forcePremium").toString());
+            }catch (Exception e){}
+            double vehicleTaxPremium =0;
+            try{
+                vehicleTaxPremium= Double.parseDouble(nextParamsMap.get("vehicleTaxPremium").toString());
+            }catch (Exception e){
+
+            }
+            double forcePremiumTotal = StringBaseUtils.forDight(forcePremium+vehicleTaxPremium,2);
             double premium = StringBaseUtils.forDight(businessPremium+forcePremium+vehicleTaxPremium,2);
+            nextParamsMap.put("businessPremium",businessPremium);
+            nextParamsMap.put("forcePremiumTotal",forcePremiumTotal);
             nextParamsMap.put("premium",premium);
             response.setResponseMap(nextParamsMap);
             response.setReturnCode(SysConfigInfo.SUCCESS200);

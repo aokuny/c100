@@ -22,7 +22,10 @@ public class TestAxatp {
     private IAxatpService iAxatpService;
     @Test
     public void testLogin(){
-      iAxatpService.getQuoteInfoByCarInfo("京MM3767","张文海","110100");
+
+    /*  iAxatpService.getQuoteInfoByCarInfo("京MM3767","FW151330","LBECFAHC5FZ226987","张文海","18812345678","11010819830123722X","OD","300000","20000","20000","N","N","N","NDNE","FEDPC");*/
+
+        iAxatpService.createOrderByCarInfo("京MM3767","FW151330","LBECFAHC5FZ226987","张文海","18810253437","11010819830123722X","OD","300000","20000","20000","N","N","N","NDNE","FEDPC");
 
     }
 }

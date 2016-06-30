@@ -99,7 +99,7 @@ public class RequestModel {
                 returnType = "html";
             }
             responseData = HttpsUtil.sendPost(this.url, paramsData, cookieValue, "UTF-8").get(returnType);
-            System.out.println("responseData_"+this.type+"_"+this.title+":" + responseData);
+            System.out.println("responseData_"+this.title+"_"+this.type+":" + responseData);
         }
         return responseData;
     }
